@@ -122,6 +122,7 @@
                 <div class="w-2.5 h-2.5 bg-gray-400 rounded-full animate-dot-3"></div>
               </div>
               <p class="text-gray-400 text-sm">Создаём изображение...</p>
+              <p class="text-gray-500 text-xs mt-2">Это может занять 20-30 секунд</p>
             </div>
 
             <div v-else-if="generatedImages.length === 0" class="flex flex-col items-center justify-center h-full">
@@ -256,18 +257,72 @@ const generateImage = async () => {
   
   isGenerating.value = true
   
-  setTimeout(() => {
+  try {
+    const models = {
+      'realistic': 'stabilityai/stable-diffusion-2-1',
+      'artistic': 'prompthero/openjourney',
+      'anime': 'Linaqruf/anything-v3.0',
+      'digital': 'dreamlike-art/dreamlike-diffusion-1.0',
+      '3d': 'stabilityai/stable-diffusion-2-1'
+    }
+    
+    const selectedModel = models[selectedStyle.value] || models['realistic']
+    
+    const stylePrompts = {
+      'realistic': ', photorealistic, highly detailed, 8k',
+      'artistic': ', artistic painting, oil painting style',
+      'anime': ', anime style, manga art',
+      'digital': ', digital art, concept art',
+      '3d': ', 3d render, octane render'
+    }
+    
+    const enhancedPrompt = prompt.value + (stylePrompts[selectedStyle.value] || '')
+    
+    const response = await fetch(
+      `https://api-inference.huggingface.co/models/${selectedModel}`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          inputs: enhancedPrompt,
+          parameters: {
+            negative_prompt: 'blurry, bad quality, distorted, ugly',
+            num_inference_steps: selectedQuality.value === 'hd' ? 50 : 30,
+            guidance_scale: 7.5
+          }
+        })
+      }
+    )
+    
+    if (!response.ok) {
+      if (response.status === 503) {
+        throw new Error('Модель загружается, попробуйте через 20 секунд')
+      }
+      throw new Error('Ошибка генерации изображения')
+    }
+    
+    const blob = await response.blob()
+    const imageUrl = URL.createObjectURL(blob)
+    
     const mockImage = {
-      url: `https://picsum.photos/seed/${Date.now()}/${selectedSize.value.split('x')[0]}/${selectedSize.value.split('x')[1]}`,
+      url: imageUrl,
       prompt: prompt.value,
       size: selectedSize.value,
       style: selectedStyle.value,
-      quality: selectedQuality.value
+      quality: selectedQuality.value,
+      model: selectedModel,
+      timestamp: Date.now()
     }
     
     generatedImages.value.unshift(mockImage)
     isGenerating.value = false
-  }, 3000)
+  } catch (error) {
+    console.error('Ошибка генерации:', error)
+    alert(error.message || 'Не удалось сгенерировать изображение. Попробуйте ещё раз.')
+    isGenerating.value = false
+  }
 }
 
 const openImagePreview = (image) => {
@@ -280,27 +335,44 @@ const closeImagePreview = () => {
 
 const downloadImage = async (image) => {
   try {
-    const response = await fetch(image.url)
-    const blob = await response.blob()
+    let blob
+    
+    if (image.url.startsWith('blob:')) {
+      const response = await fetch(image.url)
+      blob = await response.blob()
+    } else {
+      const response = await fetch(image.url)
+      blob = await response.blob()
+    }
+    
     const url = window.URL.createObjectURL(blob)
     const link = document.createElement('a')
     link.href = url
-    link.download = `reddchat-${Date.now()}.jpg`
+    link.download = `reddchat-${image.timestamp || Date.now()}.png`
     document.body.appendChild(link)
     link.click()
     document.body.removeChild(link)
     window.URL.revokeObjectURL(url)
   } catch (error) {
     console.error('Ошибка при скачивании:', error)
+    alert('Не удалось скачать изображение')
   }
 }
 
 const shareImage = async (image) => {
   if (navigator.share) {
     try {
-      const response = await fetch(image.url)
-      const blob = await response.blob()
-      const file = new File([blob], `reddchat-${Date.now()}.jpg`, { type: 'image/jpeg' })
+      let blob
+      
+      if (image.url.startsWith('blob:')) {
+        const response = await fetch(image.url)
+        blob = await response.blob()
+      } else {
+        const response = await fetch(image.url)
+        blob = await response.blob()
+      }
+      
+      const file = new File([blob], `reddchat-${image.timestamp || Date.now()}.png`, { type: 'image/png' })
       
       await navigator.share({
         title: 'REDDCHAT - Сгенерированное изображение',
@@ -318,8 +390,9 @@ const shareImage = async (image) => {
 }
 
 const copyImageLink = (image) => {
-  navigator.clipboard.writeText(image.url)
-  alert('Ссылка на изображение скопирована в буфер обмена')
+  const shareText = `Изображение создано с помощью REDDCHAT\nПромпт: ${image.prompt}\nСтиль: ${image.style}`
+  navigator.clipboard.writeText(shareText)
+  alert('Информация об изображении скопирована в буфер обмена')
 }
 </script>
 
