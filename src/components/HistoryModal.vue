@@ -5,17 +5,17 @@
       class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-6"
       @click.self="$emit('close')"
     >
-      <div class="bg-gray-900/30 backdrop-blur-xl rounded-3xl border border-gray-700/30 w-full max-w-7xl h-[90vh] flex shadow-2xl overflow-hidden">
+      <div class="bg-white/10 backdrop-blur-xl rounded-3xl border border-white/10 w-full max-w-7xl h-[90vh] flex shadow-2xl overflow-hidden">
         
-        <div class="w-96 flex flex-col border-r border-gray-700/30">
+        <div class="w-96 flex flex-col border-r border-white/10">
           
-          <div class="p-6 border-b border-gray-700/50">
+          <div class="p-6 border-b border-white/10">
             <h2 class="text-xl text-white mb-1" style="font-family: 'Space Grotesk', sans-serif;">История диалогов</h2>
             <p class="text-gray-400 text-sm">Всего: {{ conversations.length }}</p>
           </div>
 
           
-          <div class="p-4 border-b border-gray-700/50">
+          <div class="p-4 border-b border-white/10">
             <div class="relative">
               <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -24,7 +24,7 @@
                 v-model="searchQuery"
                 type="text"
                 placeholder="Поиск..."
-                class="w-full pl-10 pr-3 py-2 bg-gray-800/60 text-white text-sm placeholder-gray-400 rounded-xl border border-gray-700/50 focus:outline-none focus:border-gray-600 transition-all"
+                class="w-full pl-10 pr-3 py-2 bg-white/5 text-white text-sm placeholder-gray-400 rounded-xl border border-white/10 focus:outline-none focus:border-white/15 transition-all"
               />
             </div>
           </div>
@@ -42,8 +42,8 @@
               <div
                 v-for="conv in filteredConversations"
                 :key="conv.id"
-                class="group relative bg-transparent hover:bg-gray-800/50 rounded-xl p-3 cursor-pointer transition-all duration-75"
-                :class="{ 'bg-gray-800/70': conv.id === selectedConvId }"
+                class="group relative bg-transparent hover:bg-white/5 rounded-xl p-3 cursor-pointer transition-all duration-75"
+                :class="{ 'bg-white/10': conv.id === selectedConvId }"
                 @click="selectedConvId = conv.id"
               >
                 <div class="flex items-start justify-between gap-2">
@@ -72,7 +72,7 @@
         
         <div class="flex-1 flex flex-col">
           
-          <div class="flex items-center justify-between p-6 border-b border-gray-700/50">
+          <div class="flex items-center justify-between p-6 border-b border-white/10">
             <div v-if="selectedConversation">
               <h2 class="text-xl text-white mb-1" style="font-family: 'Space Grotesk', sans-serif;">{{ selectedConversation.title }}</h2>
               <p class="text-gray-400 text-sm">{{ formatDate(selectedConversation.createdAt) }}</p>
@@ -82,7 +82,7 @@
             </div>
             <button 
               @click="$emit('close')"
-              class="p-2 hover:bg-gray-800/70 rounded-xl transition-all duration-75 text-gray-400 hover:text-white"
+              class="p-2 hover:bg-white/10 rounded-xl transition-all duration-75 text-gray-400 hover:text-white"
             >
               <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
@@ -118,8 +118,8 @@
                 <div
                   class="max-w-2xl rounded-2xl px-4 py-3"
                   :class="message.role === 'user' 
-                    ? 'bg-gray-800/60 text-white' 
-                    : 'bg-gray-800/40 text-white'"
+                    ? 'bg-white/5 text-white' 
+                    : 'bg-white/5 text-white'"
                 >
                   <p class="text-sm whitespace-pre-wrap">{{ message.content }}</p>
                 </div>
@@ -137,7 +137,7 @@
           </div>
 
           
-          <div v-if="selectedConversation" class="p-4 border-t border-gray-700/50 flex items-center justify-end gap-3">
+          <div v-if="selectedConversation" class="p-4 border-t border-white/10 flex items-center justify-end gap-3">
             <button
               @click="openConversation"
               class="px-6 py-2.5 bg-white hover:bg-gray-100 text-gray-900 rounded-xl transition-all duration-75"

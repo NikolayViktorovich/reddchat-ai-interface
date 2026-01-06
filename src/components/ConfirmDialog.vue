@@ -5,9 +5,9 @@
       class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-6"
       @click.self="cancel"
     >
-      <div class="bg-gray-900/30 backdrop-blur-xl rounded-3xl border border-gray-700/30 w-full max-w-md shadow-2xl">
+      <div class="bg-gray-900/30 backdrop-blur-xl rounded-3xl border border-white/10 w-full max-w-md shadow-2xl">
         
-        <div class="p-6 border-b border-gray-700/50">
+        <div class="p-6 border-b border-white/10">
           <h2 class="text-xl font-bold text-white" style="font-family: 'Space Grotesk', sans-serif;">{{ title }}</h2>
         </div>
 
@@ -23,7 +23,7 @@
                 v-model="dontAskAgain"
                 class="sr-only peer"
               />
-              <div class="w-5 h-5 rounded-md border-2 border-gray-600 bg-gray-800/60 peer-checked:bg-white peer-checked:border-white transition-all duration-75 flex items-center justify-center">
+              <div class="w-5 h-5 rounded-md border-2 border-white/15 bg-white/5 peer-checked:bg-white peer-checked:border-white transition-all duration-75 flex items-center justify-center">
                 <svg 
                   v-if="dontAskAgain"
                   class="w-3 h-3 text-gray-900" 
@@ -40,10 +40,10 @@
         </div>
 
         
-        <div class="p-6 border-t border-gray-700/50 flex items-center justify-end gap-3">
+        <div class="p-6 border-t border-white/10 flex items-center justify-end gap-3">
           <button
             @click="cancel"
-            class="px-6 py-2.5 bg-gray-800/60 hover:bg-gray-800/80 text-white rounded-xl transition-all duration-75"
+            class="px-6 py-2.5 bg-white/5 hover:bg-gray-800/80 text-white rounded-xl transition-all duration-75"
           >
             Отмена
           </button>

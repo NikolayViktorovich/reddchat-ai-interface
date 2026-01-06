@@ -5,9 +5,9 @@
       class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-6"
       @click.self="$emit('close')"
     >
-      <div class="bg-gray-900/30 backdrop-blur-xl rounded-3xl border border-gray-700/30 w-full max-w-5xl h-[90vh] flex shadow-2xl overflow-hidden">
+      <div class="bg-white/10 backdrop-blur-xl rounded-3xl border border-white/10 w-full max-w-5xl h-[90vh] flex shadow-2xl overflow-hidden">
         
-        <div class="w-96 flex flex-col border-r border-gray-700/30 p-6">
+        <div class="w-96 flex flex-col border-r border-white/10 p-6">
           <div class="mb-6">
             <h2 class="text-2xl text-white mb-2" style="font-family: 'Space Grotesk', sans-serif;">Генерация изображений</h2>
             <p class="text-gray-400 text-sm">Создайте изображение по описанию</p>
@@ -19,7 +19,7 @@
               <textarea
                 v-model="prompt"
                 placeholder="Опишите что вы хотите увидеть..."
-                class="w-full h-32 px-4 py-3 bg-gray-800/60 text-white placeholder-gray-500 rounded-2xl border border-gray-700/50 focus:outline-none focus:border-gray-600 transition-all resize-none text-sm"
+                class="w-full h-32 px-4 py-3 bg-white/5 text-white placeholder-gray-500 rounded-2xl border border-white/10 focus:outline-none focus:border-white/15 transition-all resize-none text-sm"
               ></textarea>
             </div>
 
@@ -33,7 +33,7 @@
                   class="px-4 py-2 rounded-xl text-sm transition-all duration-75"
                   :class="selectedSize === size.value 
                     ? 'bg-white text-gray-900' 
-                    : 'bg-gray-800/40 text-gray-400 hover:bg-gray-800/60'"
+                    : 'bg-white/5 text-gray-400 hover:bg-white/5'"
                 >
                   {{ size.label }}
                 </button>
@@ -45,7 +45,7 @@
               <div class="relative">
                 <button
                   @click="showStyleDropdown = !showStyleDropdown"
-                  class="w-full px-4 py-3 bg-gray-800/60 text-white rounded-2xl border border-gray-700/50 hover:border-gray-600 focus:outline-none focus:border-gray-600 transition-all text-sm flex items-center justify-between"
+                  class="w-full px-4 py-3 bg-white/5 text-white rounded-2xl border border-white/10 hover:border-white/15 focus:outline-none focus:border-white/15 transition-all text-sm flex items-center justify-between"
                 >
                   <span>{{ styles.find(s => s.value === selectedStyle)?.label }}</span>
                   <svg class="w-4 h-4 transition-transform duration-75" :class="showStyleDropdown ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -55,7 +55,7 @@
                 <transition name="dropdown">
                   <div
                     v-if="showStyleDropdown"
-                    class="absolute z-10 w-full mt-2 bg-gray-800/95 backdrop-blur-xl rounded-2xl border border-gray-700/50 overflow-hidden shadow-2xl"
+                    class="absolute z-10 w-full mt-2 bg-white/10 backdrop-blur-xl rounded-2xl border border-white/10 overflow-hidden shadow-2xl"
                   >
                     <button
                       v-for="style in styles"
@@ -81,7 +81,7 @@
                   class="flex-1 px-4 py-2 rounded-xl text-sm transition-all duration-75"
                   :class="selectedQuality === quality 
                     ? 'bg-white text-gray-900' 
-                    : 'bg-gray-800/40 text-gray-400 hover:bg-gray-800/60'"
+                    : 'bg-white/5 text-gray-400 hover:bg-white/5'"
                 >
                   {{ quality }}
                 </button>
@@ -95,18 +95,18 @@
             class="w-full py-3 rounded-2xl transition-all duration-75 mt-4"
             :class="prompt.trim() && !isGenerating
               ? 'bg-white hover:bg-gray-100 text-gray-900'
-              : 'bg-gray-800/40 text-gray-500 cursor-not-allowed'"
+              : 'bg-white/5 text-gray-500 cursor-not-allowed'"
           >
             {{ isGenerating ? 'Генерация...' : 'Создать изображение' }}
           </button>
         </div>
 
         <div class="flex-1 flex flex-col">
-          <div class="flex items-center justify-between p-6 border-b border-gray-700/50">
+          <div class="flex items-center justify-between p-6 border-b border-white/10">
             <h3 class="text-lg text-white" style="font-family: 'Space Grotesk', sans-serif;">Результат</h3>
             <button 
               @click="$emit('close')"
-              class="p-2 hover:bg-gray-800/70 rounded-xl transition-all duration-75 text-gray-400 hover:text-white"
+              class="p-2 hover:bg-white/10 rounded-xl transition-all duration-75 text-gray-400 hover:text-white"
             >
               <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
@@ -137,7 +137,7 @@
               <div
                 v-for="(image, index) in generatedImages"
                 :key="index"
-                class="group relative bg-gray-800/40 rounded-2xl overflow-hidden border border-gray-700/30 hover:border-gray-600/50 transition-all duration-75 cursor-pointer"
+                class="group relative bg-white/5 rounded-2xl overflow-hidden border border-white/10 hover:border-white/15/50 transition-all duration-75 cursor-pointer"
                 @click="openImagePreview(image)"
               >
                 <img :src="image.url" :alt="image.prompt" class="w-full h-auto" />

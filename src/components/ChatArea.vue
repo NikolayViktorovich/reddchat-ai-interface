@@ -2,7 +2,7 @@
   <div class="flex-1 flex flex-col overflow-hidden">
     <transition name="mode-indicator">
       <div v-if="currentMode === 'programmer'" class="px-6 pt-4 pb-2">
-        <div class="max-w-4xl mx-auto flex items-center justify-between bg-gray-800/40 backdrop-blur-sm rounded-2xl px-4 py-3 border border-gray-700/30">
+        <div class="max-w-4xl mx-auto flex items-center justify-between bg-white/5 backdrop-blur-xl rounded-2xl px-4 py-3 border border-white/10">
           <div class="flex items-center gap-3">
             <div>
               <p class="text-white text-sm">Режим программиста</p>
@@ -30,7 +30,7 @@
             v-for="(prompt, index) in examplePrompts"
             :key="index"
             @click="$emit('send-message', prompt)"
-            class="px-4 py-2 bg-gray-800/40 hover:bg-gray-800/60 text-gray-300 text-sm rounded-full transition-all backdrop-blur-sm border border-gray-700/30"
+            class="px-4 py-2 bg-white/5 hover:bg-white/5 text-gray-300 text-sm rounded-full transition-all backdrop-blur-sm border border-white/10"
           >
             {{ prompt }}
           </button>
@@ -41,7 +41,7 @@
             <div
               v-for="(file, index) in attachedFiles"
               :key="index"
-              class="flex items-center gap-2 px-3 py-2 bg-gray-800/60 rounded-xl border border-gray-700/30 text-sm"
+              class="flex items-center gap-2 px-3 py-2 bg-white/5 rounded-xl border border-white/10 text-sm"
             >
               <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -58,7 +58,7 @@
             </div>
           </div>
           
-          <div class="relative bg-gray-800/60 backdrop-blur-md rounded-3xl border border-gray-700/50 shadow-xl">
+          <div class="relative bg-white/5 backdrop-blur-xl rounded-3xl border border-white/10 shadow-xl">
             <button 
               @click="$refs.fileInputWelcome.click()"
               class="absolute left-5 top-1/2 -translate-y-1/2 p-2 hover:bg-gray-700/50 rounded-xl transition-colors"
@@ -90,7 +90,7 @@
               class="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full flex items-center justify-center transition-all duration-75"
               :class="inputMessage.trim() && !isLoading
                 ? 'border-2 border-white/60 text-white/60 hover:bg-white/10 hover:border-white hover:text-white'
-                : 'border-2 border-gray-700/50 text-gray-500 cursor-not-allowed'"
+                : 'border-2 border-white/10 text-gray-500 cursor-not-allowed'"
             >
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
@@ -150,7 +150,7 @@
           <div
             v-for="(file, index) in attachedFiles"
             :key="index"
-            class="flex items-center gap-2 px-3 py-2 bg-gray-800/60 rounded-xl border border-gray-700/30 text-sm"
+            class="flex items-center gap-2 px-3 py-2 bg-white/5 rounded-xl border border-white/10 text-sm"
           >
             <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -167,7 +167,7 @@
           </div>
         </div>
         
-        <div class="relative bg-gray-800/60 backdrop-blur-md rounded-3xl border border-gray-700/50 shadow-xl">
+        <div class="relative bg-white/5 backdrop-blur-xl rounded-3xl border border-white/10 shadow-xl">
           <button 
             @click="$refs.fileInput.click()"
             class="absolute left-5 top-1/2 -translate-y-1/2 p-2 hover:bg-gray-700/50 rounded-xl transition-colors"
@@ -199,7 +199,7 @@
             class="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full flex items-center justify-center transition-all duration-75"
             :class="inputMessage.trim() && !isLoading
               ? 'border-2 border-white/60 text-white/60 hover:bg-white/10 hover:border-white hover:text-white'
-              : 'border-2 border-gray-700/50 text-gray-500 cursor-not-allowed'"
+              : 'border-2 border-white/10 text-gray-500 cursor-not-allowed'"
           >
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />

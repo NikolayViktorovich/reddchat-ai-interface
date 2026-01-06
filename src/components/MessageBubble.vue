@@ -2,7 +2,7 @@
   <div class="mb-8 animate-fade-in">
     <div v-if="message.role === 'user'" class="flex justify-end">
       <div class="max-w-3xl">
-        <div class="bg-gray-800/30 backdrop-blur-sm text-white rounded-3xl px-6 py-4 border border-gray-700/30">
+        <div class="bg-white/5 backdrop-blur-sm text-white rounded-3xl px-6 py-4 border border-white/10">
           <p class="text-base leading-relaxed whitespace-pre-wrap">{{ message.content }}</p>
         </div>
         <p class="text-xs text-gray-500 mt-2 text-right">{{ formatTime(message.timestamp) }}</p>

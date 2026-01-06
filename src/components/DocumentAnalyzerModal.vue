@@ -5,9 +5,9 @@
       class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-6"
       @click.self="$emit('close')"
     >
-      <div class="bg-gray-900/30 backdrop-blur-xl rounded-3xl border border-gray-700/30 w-full max-w-5xl h-[90vh] flex shadow-2xl overflow-hidden">
+      <div class="bg-white/10 backdrop-blur-xl rounded-3xl border border-white/10 w-full max-w-5xl h-[90vh] flex shadow-2xl overflow-hidden">
         
-        <div class="w-96 flex flex-col border-r border-gray-700/30 p-6">
+        <div class="w-96 flex flex-col border-r border-white/10 p-6">
           <div class="mb-6">
             <h2 class="text-2xl text-white mb-2" style="font-family: 'Space Grotesk', sans-serif;">Анализ документов</h2>
             <p class="text-gray-400 text-sm">Загрузите документ для анализа</p>
@@ -28,7 +28,7 @@
               
               <div 
                 class="absolute inset-0 border-2 border-dashed rounded-2xl transition-all duration-75"
-                :class="isDragging ? 'border-white/60 animate-pulse' : 'border-gray-700/40 group-hover:border-gray-600/60'"
+                :class="isDragging ? 'border-white/60 animate-pulse' : 'border-gray-700/40 group-hover:border-white/15/60'"
               ></div>
               
               <div 
@@ -42,7 +42,7 @@
               
               <div class="relative flex flex-col items-center">
                 <div 
-                  class="w-14 h-14 rounded-2xl bg-gradient-to-br from-gray-700/80 to-gray-800/80 backdrop-blur-sm flex items-center justify-center mb-3 transition-all duration-75 border border-gray-600/30"
+                  class="w-14 h-14 rounded-2xl bg-gradient-to-br from-gray-700/80 to-gray-800/80 backdrop-blur-sm flex items-center justify-center mb-3 transition-all duration-75 border border-white/15/30"
                   :class="isDragging ? 'scale-110 rotate-6' : 'group-hover:scale-105'"
                 >
                   <svg 
@@ -80,7 +80,7 @@
               <div
                 v-for="(file, index) in uploadedFiles"
                 :key="index"
-                class="flex items-center justify-between p-3 bg-gray-800/40 rounded-xl border border-gray-700/30"
+                class="flex items-center justify-between p-3 bg-white/5 rounded-xl border border-white/10"
               >
                 <div class="flex items-center gap-3 flex-1 min-w-0">
                   <svg class="w-5 h-5 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -112,7 +112,7 @@
                   class="w-full px-4 py-3 rounded-xl text-sm text-left transition-all duration-75"
                   :class="selectedAnalysisType === type.value 
                     ? 'bg-white text-gray-900' 
-                    : 'bg-gray-800/40 text-gray-400 hover:bg-gray-800/60'"
+                    : 'bg-white/5 text-gray-400 hover:bg-white/5'"
                 >
                   <div class="flex items-center gap-3">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -134,18 +134,18 @@
             class="w-full py-3 rounded-2xl transition-all duration-75 mt-4"
             :class="uploadedFiles.length > 0 && !isAnalyzing
               ? 'bg-white hover:bg-gray-100 text-gray-900'
-              : 'bg-gray-800/40 text-gray-500 cursor-not-allowed'"
+              : 'bg-white/5 text-gray-500 cursor-not-allowed'"
           >
             {{ isAnalyzing ? 'Анализ...' : 'Начать анализ' }}
           </button>
         </div>
 
         <div class="flex-1 flex flex-col">
-          <div class="flex items-center justify-between p-6 border-b border-gray-700/50">
+          <div class="flex items-center justify-between p-6 border-b border-white/10">
             <h3 class="text-lg text-white" style="font-family: 'Space Grotesk', sans-serif;">Результаты анализа</h3>
             <button 
               @click="$emit('close')"
-              class="p-2 hover:bg-gray-800/70 rounded-xl transition-all duration-75 text-gray-400 hover:text-white"
+              class="p-2 hover:bg-white/10 rounded-xl transition-all duration-75 text-gray-400 hover:text-white"
             >
               <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
@@ -172,7 +172,7 @@
             </div>
 
             <div v-else class="space-y-6">
-              <div class="bg-gray-800/40 rounded-2xl p-6 border border-gray-700/30">
+              <div class="bg-white/5 rounded-2xl p-6 border border-white/10">
                 <h4 class="text-white text-lg mb-4" style="font-family: 'Space Grotesk', sans-serif;">Основная информация</h4>
                 <div class="grid grid-cols-2 gap-4">
                   <div>
@@ -210,12 +210,12 @@
                 </div>
               </div>
 
-              <div class="bg-gray-800/40 rounded-2xl p-6 border border-gray-700/30">
+              <div class="bg-white/5 rounded-2xl p-6 border border-white/10">
                 <h4 class="text-white text-lg mb-4" style="font-family: 'Space Grotesk', sans-serif;">Краткое содержание</h4>
                 <p class="text-gray-300 text-sm leading-relaxed">{{ analysisResult.summary }}</p>
               </div>
 
-              <div class="bg-gray-800/40 rounded-2xl p-6 border border-gray-700/30">
+              <div class="bg-white/5 rounded-2xl p-6 border border-white/10">
                 <h4 class="text-white text-lg mb-4" style="font-family: 'Space Grotesk', sans-serif;">Ключевые темы</h4>
                 <div class="flex flex-wrap gap-2">
                   <span
@@ -231,7 +231,7 @@
               <div class="flex gap-3">
                 <button 
                   @click="downloadReport"
-                  class="flex-1 px-4 py-3 bg-gray-800/60 hover:bg-gray-800/80 text-white rounded-xl transition-all duration-75 flex items-center justify-center gap-2"
+                  class="flex-1 px-4 py-3 bg-white/5 hover:bg-gray-800/80 text-white rounded-xl transition-all duration-75 flex items-center justify-center gap-2"
                 >
                   <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
@@ -240,7 +240,7 @@
                 </button>
                 <button 
                   @click="shareReport"
-                  class="flex-1 px-4 py-3 bg-gray-800/60 hover:bg-gray-800/80 text-white rounded-xl transition-all duration-75 flex items-center justify-center gap-2"
+                  class="flex-1 px-4 py-3 bg-white/5 hover:bg-gray-800/80 text-white rounded-xl transition-all duration-75 flex items-center justify-center gap-2"
                 >
                   <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
