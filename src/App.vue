@@ -9,6 +9,7 @@
         @delete-conversation="deleteConversation"
         @show-history="showHistory = true"
         @show-image-generator="showImageGenerator = true"
+        @show-document-analyzer="showDocumentAnalyzer = true"
       />
 
       <div class="flex-1 flex flex-col">
@@ -43,6 +44,11 @@
       :isOpen="showImageGenerator"
       @close="showImageGenerator = false"
     />
+
+    <DocumentAnalyzerModal
+      :isOpen="showDocumentAnalyzer"
+      @close="showDocumentAnalyzer = false"
+    />
   </div>
 </template>
 
@@ -55,6 +61,7 @@ import SettingsModal from './components/SettingsModal.vue'
 import HistoryModal from './components/HistoryModal.vue'
 import ConfirmDialog from './components/ConfirmDialog.vue'
 import ImageGeneratorModal from './components/ImageGeneratorModal.vue'
+import DocumentAnalyzerModal from './components/DocumentAnalyzerModal.vue'
 
 const conversations = ref([])
 const currentConversationId = ref(null)
@@ -62,6 +69,7 @@ const isLoading = ref(false)
 const showSettings = ref(false)
 const showHistory = ref(false)
 const showImageGenerator = ref(false)
+const showDocumentAnalyzer = ref(false)
 const currentModel = ref('GPT-4 Turbo')
 const confirmDialog = ref(null)
 let currentTypingTimeout = null

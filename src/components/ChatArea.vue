@@ -1,12 +1,12 @@
 <template>
   <div class="flex-1 flex flex-col overflow-hidden">
     <div ref="messagesContainer" class="flex-1 overflow-y-auto scrollbar-thin">
-      <div v-if="showWelcome" class="h-full flex flex-col items-center justify-center px-6 pb-20">
+      <div v-if="showWelcome" class="h-full flex flex-col items-center justify-center px-6 pb-32">
         <h2 class="text-7xl text-white/30 mb-2 min-h-[84px]" style="font-family: 'Josefin Sans', sans-serif; font-weight: 100; letter-spacing: -0.02em; line-height: 1.2;">
           {{ typingText }}<span class="animate-pulse">|</span>
         </h2>
 
-        <div class="flex flex-wrap justify-center gap-3 max-w-4xl mb-8 mt-12">
+        <div class="flex flex-wrap justify-center gap-3 max-w-4xl mb-8 mt-8">
           <button
             v-for="(prompt, index) in examplePrompts"
             :key="index"
