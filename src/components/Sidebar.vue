@@ -32,7 +32,11 @@
         <span>Анализ документов</span>
       </button>
 
-      <button class="w-full flex items-center gap-3 px-4 py-2.5 text-gray-400 hover:bg-gray-800/70 hover:text-white active:bg-gray-800/90 transition-all duration-75 text-sm">
+      <button 
+        class="w-full flex items-center gap-3 px-4 py-2.5 text-gray-400 hover:bg-gray-800/70 hover:text-white active:bg-gray-800/90 transition-all duration-75 text-sm"
+        :class="currentMode === 'programmer' ? 'bg-gray-800/70 text-white' : ''"
+        @click="$emit('change-mode', 'programmer')"
+      >
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
         </svg>
@@ -95,10 +99,11 @@ import { ref } from 'vue'
 
 defineProps({
   conversations: Array,
-  currentConversationId: Number
+  currentConversationId: Number,
+  currentMode: String
 })
 
-const emit = defineEmits(['new-chat', 'select-conversation', 'delete-conversation', 'show-history', 'show-image-generator', 'show-document-analyzer'])
+const emit = defineEmits(['new-chat', 'select-conversation', 'delete-conversation', 'show-history', 'show-image-generator', 'show-document-analyzer', 'change-mode'])
 
 const formatDate = (date) => {
   const d = new Date(date)

@@ -1,5 +1,24 @@
 <template>
   <div class="flex-1 flex flex-col overflow-hidden">
+    <transition name="mode-indicator">
+      <div v-if="currentMode === 'programmer'" class="px-6 pt-4 pb-2">
+        <div class="max-w-4xl mx-auto flex items-center justify-between bg-gray-800/40 backdrop-blur-sm rounded-2xl px-4 py-3 border border-gray-700/30">
+          <div class="flex items-center gap-3">
+            <div>
+              <p class="text-white text-sm">Режим программиста</p>
+              <p class="text-gray-400 text-xs">Можно загружать файлы кода</p>
+            </div>
+          </div>
+          <button 
+            @click="$emit('change-mode', 'chat')"
+            class="text-gray-400 hover:text-white text-xs transition-all duration-75"
+          >
+            Выйти
+          </button>
+        </div>
+      </div>
+    </transition>
+    
     <div ref="messagesContainer" class="flex-1 overflow-y-auto scrollbar-thin">
       <div v-if="showWelcome" class="h-full flex flex-col items-center justify-center px-6 pb-32">
         <h2 class="text-7xl text-white/30 mb-2 min-h-[84px]" style="font-family: 'Josefin Sans', sans-serif; font-weight: 100; letter-spacing: -0.02em; line-height: 1.2;">
@@ -18,12 +37,44 @@
         </div>
 
         <div class="w-full max-w-3xl">
+          <div v-if="attachedFiles.length > 0" class="mb-3 flex flex-wrap gap-2">
+            <div
+              v-for="(file, index) in attachedFiles"
+              :key="index"
+              class="flex items-center gap-2 px-3 py-2 bg-gray-800/60 rounded-xl border border-gray-700/30 text-sm"
+            >
+              <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+              <span class="text-white">{{ file.name }}</span>
+              <button
+                @click="removeFile(index)"
+                class="text-gray-400 hover:text-red-400 transition-colors"
+              >
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+          </div>
+          
           <div class="relative bg-gray-800/60 backdrop-blur-md rounded-3xl border border-gray-700/50 shadow-xl">
-            <button class="absolute left-5 top-1/2 -translate-y-1/2 p-2 hover:bg-gray-700/50 rounded-xl transition-colors">
+            <button 
+              @click="$refs.fileInputWelcome.click()"
+              class="absolute left-5 top-1/2 -translate-y-1/2 p-2 hover:bg-gray-700/50 rounded-xl transition-colors"
+            >
               <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
               </svg>
             </button>
+            <input
+              ref="fileInputWelcome"
+              type="file"
+              class="hidden"
+              :accept="currentMode === 'programmer' ? '*' : 'image/*,.pdf,.doc,.docx,.txt,.md'"
+              multiple
+              @change="handleFileSelect"
+            />
             
             <input
               v-model="inputMessage"
@@ -95,12 +146,44 @@
 
     <div v-if="!showWelcome" class="px-6 py-4">
       <div class="max-w-4xl mx-auto">
+        <div v-if="attachedFiles.length > 0" class="mb-3 flex flex-wrap gap-2">
+          <div
+            v-for="(file, index) in attachedFiles"
+            :key="index"
+            class="flex items-center gap-2 px-3 py-2 bg-gray-800/60 rounded-xl border border-gray-700/30 text-sm"
+          >
+            <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+            <span class="text-white">{{ file.name }}</span>
+            <button
+              @click="removeFile(index)"
+              class="text-gray-400 hover:text-red-400 transition-colors"
+            >
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+        </div>
+        
         <div class="relative bg-gray-800/60 backdrop-blur-md rounded-3xl border border-gray-700/50 shadow-xl">
-          <button class="absolute left-5 top-1/2 -translate-y-1/2 p-2 hover:bg-gray-700/50 rounded-xl transition-colors">
+          <button 
+            @click="$refs.fileInput.click()"
+            class="absolute left-5 top-1/2 -translate-y-1/2 p-2 hover:bg-gray-700/50 rounded-xl transition-colors"
+          >
             <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
             </svg>
           </button>
+          <input
+            ref="fileInput"
+            type="file"
+            class="hidden"
+            :accept="currentMode === 'programmer' ? '*' : 'image/*,.pdf,.doc,.docx,.txt,.md'"
+            multiple
+            @change="handleFileSelect"
+          />
           
           <input
             v-model="inputMessage"
@@ -135,13 +218,17 @@ import MessageBubble from './MessageBubble.vue'
 const props = defineProps({
   messages: Array,
   isLoading: Boolean,
-  showWelcome: Boolean
+  showWelcome: Boolean,
+  currentMode: String
 })
 
-const emit = defineEmits(['send-message'])
+const emit = defineEmits(['send-message', 'change-mode'])
 
 const inputMessage = ref('')
 const messagesContainer = ref(null)
+const attachedFiles = ref([])
+const fileInput = ref(null)
+const fileInputWelcome = ref(null)
 
 const examplePrompts = [
   'Составь план задач',
@@ -209,9 +296,28 @@ onUnmounted(() => {
 
 const sendMessage = () => {
   if (inputMessage.value.trim() && !props.isLoading) {
-    emit('send-message', inputMessage.value.trim())
+    let messageContent = inputMessage.value.trim()
+    
+    if (attachedFiles.value.length > 0) {
+      messageContent += '\n\n📎 Прикрепленные файлы:\n'
+      attachedFiles.value.forEach(file => {
+        messageContent += `- ${file.name}\n`
+      })
+    }
+    
+    emit('send-message', messageContent)
     inputMessage.value = ''
+    attachedFiles.value = []
   }
+}
+
+const handleFileSelect = (event) => {
+  const files = Array.from(event.target.files)
+  attachedFiles.value.push(...files)
+}
+
+const removeFile = (index) => {
+  attachedFiles.value.splice(index, 1)
 }
 
 watch(() => props.messages, () => {
@@ -222,3 +328,21 @@ watch(() => props.messages, () => {
   })
 }, { deep: true })
 </script>
+
+
+<style scoped>
+.mode-indicator-enter-active,
+.mode-indicator-leave-active {
+  transition: all 0.08s ease;
+}
+
+.mode-indicator-enter-from {
+  opacity: 0;
+  transform: translateY(-10px);
+}
+
+.mode-indicator-leave-to {
+  opacity: 0;
+  transform: translateY(-10px);
+}
+</style>

@@ -4,12 +4,14 @@
       <Sidebar 
         :conversations="conversations"
         :currentConversationId="currentConversationId"
+        :currentMode="currentMode"
         @new-chat="createNewChat"
         @select-conversation="selectConversation"
         @delete-conversation="deleteConversation"
         @show-history="showHistory = true"
         @show-image-generator="showImageGenerator = true"
         @show-document-analyzer="showDocumentAnalyzer = true"
+        @change-mode="changeMode"
       />
 
       <div class="flex-1 flex flex-col">
@@ -17,7 +19,9 @@
           :messages="currentMessages"
           :isLoading="isLoading"
           :showWelcome="showWelcome"
+          :currentMode="currentMode"
           @send-message="handleSendMessage"
+          @change-mode="changeMode"
         />
       </div>
     </div>
@@ -71,6 +75,7 @@ const showHistory = ref(false)
 const showImageGenerator = ref(false)
 const showDocumentAnalyzer = ref(false)
 const currentModel = ref('GPT-4 Turbo')
+const currentMode = ref('chat')
 const confirmDialog = ref(null)
 let currentTypingTimeout = null
 let isCurrentlyTyping = false
@@ -221,10 +226,16 @@ const updateModel = (model) => {
   saveToLocalStorage()
 }
 
+const changeMode = (mode) => {
+  currentMode.value = mode
+  saveToLocalStorage()
+}
+
 const saveToLocalStorage = () => {
   localStorage.setItem('conversations', JSON.stringify(conversations.value))
   localStorage.setItem('currentConversationId', currentConversationId.value)
   localStorage.setItem('currentModel', currentModel.value)
+  localStorage.setItem('currentMode', currentMode.value)
 }
 
 const loadFromLocalStorage = () => {
@@ -241,6 +252,11 @@ const loadFromLocalStorage = () => {
   const savedModel = localStorage.getItem('currentModel')
   if (savedModel) {
     currentModel.value = savedModel
+  }
+  
+  const savedMode = localStorage.getItem('currentMode')
+  if (savedMode) {
+    currentMode.value = savedMode
   }
 }
 

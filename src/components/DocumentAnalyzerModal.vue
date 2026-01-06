@@ -18,15 +18,48 @@
               @dragover.prevent="isDragging = true"
               @dragleave.prevent="isDragging = false"
               @drop.prevent="handleDrop"
-              class="border-2 border-dashed rounded-2xl p-8 text-center transition-all duration-75 cursor-pointer"
-              :class="isDragging ? 'border-white/50 bg-gray-800/40' : 'border-gray-700/50 hover:border-gray-600/50'"
+              class="relative rounded-2xl p-6 text-center transition-all duration-75 cursor-pointer overflow-hidden group"
               @click="$refs.fileInput.click()"
             >
-              <svg class="w-12 h-12 text-gray-500 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
-              </svg>
-              <p class="text-gray-400 text-sm mb-1">Перетащите файл сюда</p>
-              <p class="text-gray-500 text-xs">или нажмите для выбора</p>
+              <div 
+                class="absolute inset-0 bg-gradient-to-br from-gray-800/40 via-gray-800/20 to-transparent transition-all duration-75"
+                :class="isDragging ? 'opacity-100 scale-105' : 'opacity-60 group-hover:opacity-100'"
+              ></div>
+              
+              <div 
+                class="absolute inset-0 border-2 border-dashed rounded-2xl transition-all duration-75"
+                :class="isDragging ? 'border-white/60 animate-pulse' : 'border-gray-700/40 group-hover:border-gray-600/60'"
+              ></div>
+              
+              <div 
+                class="absolute top-0 left-0 w-20 h-20 bg-white/5 rounded-full blur-2xl transition-all duration-75"
+                :class="isDragging ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'"
+              ></div>
+              <div 
+                class="absolute bottom-0 right-0 w-20 h-20 bg-white/5 rounded-full blur-2xl transition-all duration-75"
+                :class="isDragging ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'"
+              ></div>
+              
+              <div class="relative flex flex-col items-center">
+                <div 
+                  class="w-14 h-14 rounded-2xl bg-gradient-to-br from-gray-700/80 to-gray-800/80 backdrop-blur-sm flex items-center justify-center mb-3 transition-all duration-75 border border-gray-600/30"
+                  :class="isDragging ? 'scale-110 rotate-6' : 'group-hover:scale-105'"
+                >
+                  <svg 
+                    class="w-7 h-7 text-gray-300 transition-all duration-75" 
+                    :class="isDragging ? 'animate-bounce' : ''"
+                    fill="none" 
+                    stroke="currentColor" 
+                    viewBox="0 0 24 24"
+                  >
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                  </svg>
+                </div>
+                <p class="text-white text-sm mb-1 font-medium">
+                  {{ isDragging ? 'Отпустите файл' : 'Перетащите файл сюда' }}
+                </p>
+                <p class="text-gray-500 text-xs">или нажмите для выбора</p>
+              </div>
               <input
                 ref="fileInput"
                 type="file"

@@ -72,6 +72,54 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { marked } from 'marked'
+import hljs from 'highlight.js/lib/core'
+import javascript from 'highlight.js/lib/languages/javascript'
+import python from 'highlight.js/lib/languages/python'
+import java from 'highlight.js/lib/languages/java'
+import cpp from 'highlight.js/lib/languages/cpp'
+import csharp from 'highlight.js/lib/languages/csharp'
+import php from 'highlight.js/lib/languages/php'
+import ruby from 'highlight.js/lib/languages/ruby'
+import go from 'highlight.js/lib/languages/go'
+import rust from 'highlight.js/lib/languages/rust'
+import typescript from 'highlight.js/lib/languages/typescript'
+import css from 'highlight.js/lib/languages/css'
+import xml from 'highlight.js/lib/languages/xml'
+import sql from 'highlight.js/lib/languages/sql'
+import bash from 'highlight.js/lib/languages/bash'
+import json from 'highlight.js/lib/languages/json'
+
+hljs.registerLanguage('javascript', javascript)
+hljs.registerLanguage('python', python)
+hljs.registerLanguage('java', java)
+hljs.registerLanguage('cpp', cpp)
+hljs.registerLanguage('csharp', csharp)
+hljs.registerLanguage('php', php)
+hljs.registerLanguage('ruby', ruby)
+hljs.registerLanguage('go', go)
+hljs.registerLanguage('rust', rust)
+hljs.registerLanguage('typescript', typescript)
+hljs.registerLanguage('css', css)
+hljs.registerLanguage('xml', xml)
+hljs.registerLanguage('html', xml)
+hljs.registerLanguage('sql', sql)
+hljs.registerLanguage('bash', bash)
+hljs.registerLanguage('json', json)
+
+marked.setOptions({
+  highlight: function(code, lang) {
+    if (lang && hljs.getLanguage(lang)) {
+      try {
+        return hljs.highlight(code, { language: lang }).value
+      } catch (err) {
+        console.error(err)
+      }
+    }
+    return hljs.highlightAuto(code).value
+  },
+  breaks: true,
+  gfm: true
+})
 
 const props = defineProps({
   message: Object
@@ -80,10 +128,7 @@ const props = defineProps({
 const copied = ref(false)
 
 const formattedContent = computed(() => {
-  return marked(props.message.content, {
-    breaks: true,
-    gfm: true
-  })
+  return marked(props.message.content)
 })
 
 const formatTime = (timestamp) => {
@@ -103,3 +148,85 @@ const copyToClipboard = async () => {
   }
 }
 </script>
+
+<style>
+@import 'highlight.js/styles/atom-one-dark.css';
+
+.markdown-content {
+  line-height: 1.7;
+}
+
+.markdown-content pre {
+  background: #282c34;
+  border-radius: 12px;
+  padding: 16px;
+  overflow-x: auto;
+  margin: 12px 0;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.markdown-content code {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.9em;
+}
+
+.markdown-content pre code {
+  background: transparent;
+  padding: 0;
+  border-radius: 0;
+}
+
+.markdown-content :not(pre) > code {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 2px 6px;
+  border-radius: 4px;
+  color: #e06c75;
+}
+
+.markdown-content h1,
+.markdown-content h2,
+.markdown-content h3 {
+  margin-top: 24px;
+  margin-bottom: 12px;
+  font-family: 'Space Grotesk', sans-serif;
+}
+
+.markdown-content ul,
+.markdown-content ol {
+  margin: 12px 0;
+  padding-left: 24px;
+}
+
+.markdown-content li {
+  margin: 6px 0;
+}
+
+.markdown-content blockquote {
+  border-left: 3px solid rgba(255, 255, 255, 0.2);
+  padding-left: 16px;
+  margin: 12px 0;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.markdown-content a {
+  color: #61afef;
+  text-decoration: underline;
+}
+
+.markdown-content table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 12px 0;
+}
+
+.markdown-content th,
+.markdown-content td {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 8px 12px;
+  text-align: left;
+}
+
+.markdown-content th {
+  background: rgba(255, 255, 255, 0.05);
+}
+</style>
