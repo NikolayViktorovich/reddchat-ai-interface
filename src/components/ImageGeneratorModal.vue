@@ -122,7 +122,7 @@
                 <div class="w-2.5 h-2.5 bg-gray-400 rounded-full animate-dot-3"></div>
               </div>
               <p class="text-gray-400 text-sm">Создаём изображение...</p>
-              <p class="text-gray-500 text-xs mt-2">Это может занять 20-30 секунд</p>
+              <p class="text-gray-500 text-xs mt-2">Обычно занимает 10-15 секунд</p>
             </div>
 
             <div v-else-if="generatedImages.length === 0" class="flex flex-col items-center justify-center h-full">
@@ -258,49 +258,36 @@ const generateImage = async () => {
   isGenerating.value = true
   
   try {
-    const models = {
-      'realistic': 'stabilityai/stable-diffusion-2-1',
-      'artistic': 'prompthero/openjourney',
-      'anime': 'Linaqruf/anything-v3.0',
-      'digital': 'dreamlike-art/dreamlike-diffusion-1.0',
-      '3d': 'stabilityai/stable-diffusion-2-1'
-    }
-    
-    const selectedModel = models[selectedStyle.value] || models['realistic']
-    
     const stylePrompts = {
-      'realistic': ', photorealistic, highly detailed, 8k',
-      'artistic': ', artistic painting, oil painting style',
-      'anime': ', anime style, manga art',
-      'digital': ', digital art, concept art',
-      '3d': ', 3d render, octane render'
+      'realistic': ', photorealistic, highly detailed, 8k quality',
+      'artistic': ', artistic painting, oil painting style, masterpiece',
+      'anime': ', anime style, manga art, vibrant colors',
+      'digital': ', digital art, concept art, trending on artstation',
+      '3d': ', 3d render, octane render, cinematic lighting'
     }
     
     const enhancedPrompt = prompt.value + (stylePrompts[selectedStyle.value] || '')
     
-    const response = await fetch(
-      `https://api-inference.huggingface.co/models/${selectedModel}`,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          inputs: enhancedPrompt,
-          parameters: {
-            negative_prompt: 'blurry, bad quality, distorted, ugly',
-            num_inference_steps: selectedQuality.value === 'hd' ? 50 : 30,
-            guidance_scale: 7.5
-          }
-        })
-      }
-    )
+    const formData = new FormData()
+    formData.append('prompt', enhancedPrompt)
+    formData.append('output_format', 'jpeg')
+    
+    if (selectedQuality.value === 'hd') {
+      formData.append('mode', 'image-to-image')
+    }
+    
+    const response = await fetch('https://api.stability.ai/v2beta/stable-image/generate/sd3', {
+      method: 'POST',
+      headers: {
+        'Authorization': 'Bearer sk-31UHbA1wu6lMDcoZSioFaEH8pklLr1T0a5dXi7ehLVUEBc86',
+        'Accept': 'image/*'
+      },
+      body: formData
+    })
     
     if (!response.ok) {
-      if (response.status === 503) {
-        throw new Error('Модель загружается, попробуйте через 20 секунд')
-      }
-      throw new Error('Ошибка генерации изображения')
+      const errorText = await response.text()
+      throw new Error(`Ошибка ${response.status}: ${errorText}`)
     }
     
     const blob = await response.blob()
@@ -312,7 +299,7 @@ const generateImage = async () => {
       size: selectedSize.value,
       style: selectedStyle.value,
       quality: selectedQuality.value,
-      model: selectedModel,
+      model: 'stable-diffusion-3',
       timestamp: Date.now()
     }
     
@@ -335,24 +322,36 @@ const closeImagePreview = () => {
 
 const downloadImage = async (image) => {
   try {
-    let blob
-    
-    if (image.url.startsWith('blob:')) {
+    if (image.url.startsWith('data:')) {
+      const link = document.createElement('a')
+      link.href = image.url
+      link.download = `reddchat-${image.timestamp || Date.now()}.png`
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
+    } else if (image.url.startsWith('blob:')) {
       const response = await fetch(image.url)
-      blob = await response.blob()
+      const blob = await response.blob()
+      const url = window.URL.createObjectURL(blob)
+      const link = document.createElement('a')
+      link.href = url
+      link.download = `reddchat-${image.timestamp || Date.now()}.png`
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
+      window.URL.revokeObjectURL(url)
     } else {
       const response = await fetch(image.url)
-      blob = await response.blob()
+      const blob = await response.blob()
+      const url = window.URL.createObjectURL(blob)
+      const link = document.createElement('a')
+      link.href = url
+      link.download = `reddchat-${image.timestamp || Date.now()}.png`
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
+      window.URL.revokeObjectURL(url)
     }
-    
-    const url = window.URL.createObjectURL(blob)
-    const link = document.createElement('a')
-    link.href = url
-    link.download = `reddchat-${image.timestamp || Date.now()}.png`
-    document.body.appendChild(link)
-    link.click()
-    document.body.removeChild(link)
-    window.URL.revokeObjectURL(url)
   } catch (error) {
     console.error('Ошибка при скачивании:', error)
     alert('Не удалось скачать изображение')
@@ -364,7 +363,16 @@ const shareImage = async (image) => {
     try {
       let blob
       
-      if (image.url.startsWith('blob:')) {
+      if (image.url.startsWith('data:')) {
+        const base64Data = image.url.split(',')[1]
+        const byteCharacters = atob(base64Data)
+        const byteNumbers = new Array(byteCharacters.length)
+        for (let i = 0; i < byteCharacters.length; i++) {
+          byteNumbers[i] = byteCharacters.charCodeAt(i)
+        }
+        const byteArray = new Uint8Array(byteNumbers)
+        blob = new Blob([byteArray], { type: 'image/png' })
+      } else if (image.url.startsWith('blob:')) {
         const response = await fetch(image.url)
         blob = await response.blob()
       } else {

@@ -11,6 +11,7 @@
         @show-history="showHistory = true"
         @show-image-generator="showImageGenerator = true"
         @show-document-analyzer="showDocumentAnalyzer = true"
+        @show-translator="showTranslator = true"
         @change-mode="changeMode"
       />
 
@@ -53,6 +54,11 @@
       :isOpen="showDocumentAnalyzer"
       @close="showDocumentAnalyzer = false"
     />
+
+    <TranslatorModal
+      :isOpen="showTranslator"
+      @close="showTranslator = false"
+    />
   </div>
 </template>
 
@@ -66,6 +72,7 @@ import HistoryModal from './components/HistoryModal.vue'
 import ConfirmDialog from './components/ConfirmDialog.vue'
 import ImageGeneratorModal from './components/ImageGeneratorModal.vue'
 import DocumentAnalyzerModal from './components/DocumentAnalyzerModal.vue'
+import TranslatorModal from './components/TranslatorModal.vue'
 
 const conversations = ref([])
 const currentConversationId = ref(null)
@@ -74,6 +81,7 @@ const showSettings = ref(false)
 const showHistory = ref(false)
 const showImageGenerator = ref(false)
 const showDocumentAnalyzer = ref(false)
+const showTranslator = ref(false)
 const currentModel = ref('GPT-4 Turbo')
 const currentMode = ref('chat')
 const confirmDialog = ref(null)
@@ -159,7 +167,81 @@ const handleSendMessage = async (content) => {
   isLoading.value = true
   saveToLocalStorage()
 
-  setTimeout(() => {
+  try {
+    const apiMessages = conv.messages.map(msg => ({
+      role: msg.role,
+      content: msg.content
+    }))
+
+    const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Authorization': 'Bearer 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',
+        'HTTP-Referer': 'https://reddchat.app',
+        'X-Title': 'REDDCHAT',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        model: 'mistralai/devstral-2512:free',
+        messages: apiMessages
+      })
+    })
+
+    if (!response.ok) {
+      throw new Error('API request failed')
+    }
+
+    const result = await response.json()
+    const assistantMessage = result.choices[0].message
+    
+    const aiMessage = {
+      id: Date.now() + 1,
+      role: 'assistant',
+      content: '',
+      displayContent: '',
+      timestamp: new Date(),
+      isTyping: true,
+      isStopped: false,
+      wordCount: 0
+    }
+    conv.messages.push(aiMessage)
+    isLoading.value = false
+    isCurrentlyTyping = true
+    
+    const fullResponse = assistantMessage.content
+    let currentIndex = 0
+    let lastWordCount = 0
+    const typingSpeed = 15
+    
+    const typeNextChar = () => {
+      if (currentIndex < fullResponse.length && isCurrentlyTyping) {
+        const messageIndex = conv.messages.findIndex(m => m.id === aiMessage.id)
+        if (messageIndex !== -1) {
+          const currentText = fullResponse.substring(0, currentIndex + 1)
+          conv.messages[messageIndex].content = currentText
+          
+          const wordCount = currentText.trim().split(/\s+/).length
+          if (wordCount > lastWordCount) {
+            conv.messages[messageIndex].wordCount = wordCount
+            lastWordCount = wordCount
+          }
+        }
+        currentIndex++
+        currentTypingTimeout = setTimeout(typeNextChar, typingSpeed)
+      } else {
+        const messageIndex = conv.messages.findIndex(m => m.id === aiMessage.id)
+        if (messageIndex !== -1) {
+          conv.messages[messageIndex].isTyping = false
+        }
+        isCurrentlyTyping = false
+        saveToLocalStorage()
+      }
+    }
+    
+    currentTypingTimeout = setTimeout(typeNextChar, 100)
+  } catch (error) {
+    console.error('API Error:', error)
+    
     const fullResponse = generateMockResponse(content)
     
     const aiMessage = {
@@ -206,7 +288,7 @@ const handleSendMessage = async (content) => {
     }
     
     currentTypingTimeout = setTimeout(typeNextChar, 100)
-  }, 1500)
+  }
 }
 
 const generateMockResponse = (userInput) => {

@@ -37,33 +37,26 @@
 }
 
 .gradient-bg {
-  background: linear-gradient(135deg, 
-    #1e3a5f 0%, 
-    #2d4a6f 15%, 
-    #3d5a7f 30%, 
-    #4a5a8f 45%, 
-    #5a4a8f 60%, 
-    #6a4a9f 75%, 
-    #7a4aaf 90%, 
-    #8a5abf 100%
-  );
-  background-size: 200% 200%;
-  animation: gradientShift 15s ease infinite;
+  background: #2e2e31;
   position: relative;
 }
 
 .gradient-bg::before {
   content: '';
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
+  top: -10%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 150%;
+  height: 60%;
+  background: 
+    radial-gradient(ellipse at 30% 20%, rgba(139, 92, 246, 0.4) 0%, transparent 50%),
+    radial-gradient(ellipse at 70% 30%, rgba(20, 184, 166, 0.35) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 10%, rgba(99, 102, 241, 0.3) 0%, transparent 60%);
+  filter: blur(60px);
   pointer-events: none;
-  opacity: 0.8;
-  mix-blend-mode: overlay;
   z-index: 1;
+  animation: gradientFloat 10s ease-in-out infinite;
 }
 
 .gradient-bg::after {
@@ -73,20 +66,21 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.2);
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
   pointer-events: none;
+  opacity: 0.5;
+  mix-blend-mode: overlay;
   z-index: 2;
 }
 
-@keyframes gradientShift {
-  0% {
-    background-position: 0% 50%;
+@keyframes gradientFloat {
+  0%, 100% {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
   }
   50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
+    transform: translateX(-50%) translateY(-5%);
+    opacity: 0.9;
   }
 }
 
