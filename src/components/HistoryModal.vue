@@ -10,7 +10,7 @@
         <div class="w-96 flex flex-col border-r border-gray-700/30">
           
           <div class="p-6 border-b border-gray-700/50">
-            <h2 class="text-xl font-bold text-white mb-1" style="font-family: 'Space Grotesk', sans-serif;">История диалогов</h2>
+            <h2 class="text-xl text-white mb-1" style="font-family: 'Space Grotesk', sans-serif;">История диалогов</h2>
             <p class="text-gray-400 text-sm">Всего: {{ conversations.length }}</p>
           </div>
 
@@ -48,7 +48,7 @@
               >
                 <div class="flex items-start justify-between gap-2">
                   <div class="flex-1 min-w-0">
-                    <h3 class="text-white text-sm font-semibold mb-1 truncate">{{ conv.title }}</h3>
+                    <h3 class="text-white text-sm mb-1 truncate">{{ conv.title }}</h3>
                     <p class="text-gray-400 text-xs mb-1">{{ formatDate(conv.createdAt) }}</p>
                     <p class="text-gray-500 text-xs">
                       {{ conv.messages.length }} {{ conv.messages.length === 1 ? 'сообщение' : 'сообщений' }}
@@ -74,11 +74,11 @@
           
           <div class="flex items-center justify-between p-6 border-b border-gray-700/50">
             <div v-if="selectedConversation">
-              <h2 class="text-xl font-bold text-white mb-1" style="font-family: 'Space Grotesk', sans-serif;">{{ selectedConversation.title }}</h2>
+              <h2 class="text-xl text-white mb-1" style="font-family: 'Space Grotesk', sans-serif;">{{ selectedConversation.title }}</h2>
               <p class="text-gray-400 text-sm">{{ formatDate(selectedConversation.createdAt) }}</p>
             </div>
             <div v-else>
-              <h2 class="text-xl font-bold text-white" style="font-family: 'Space Grotesk', sans-serif;">Предпросмотр</h2>
+              <h2 class="text-xl text-white" style="font-family: 'Space Grotesk', sans-serif;">Предпросмотр</h2>
             </div>
             <button 
               @click="$emit('close')"
@@ -140,7 +140,7 @@
           <div v-if="selectedConversation" class="p-4 border-t border-gray-700/50 flex items-center justify-end gap-3">
             <button
               @click="openConversation"
-              class="px-6 py-2.5 bg-white hover:bg-gray-100 text-gray-900 font-semibold rounded-xl transition-all duration-75"
+              class="px-6 py-2.5 bg-white hover:bg-gray-100 text-gray-900 rounded-xl transition-all duration-75"
             >
               Открыть диалог
             </button>

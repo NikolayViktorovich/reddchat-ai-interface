@@ -9,7 +9,7 @@
         
         <div class="w-96 flex flex-col border-r border-gray-700/30 p-6">
           <div class="mb-6">
-            <h2 class="text-2xl font-bold text-white mb-2" style="font-family: 'Space Grotesk', sans-serif;">Генерация изображений</h2>
+            <h2 class="text-2xl text-white mb-2" style="font-family: 'Space Grotesk', sans-serif;">Генерация изображений</h2>
             <p class="text-gray-400 text-sm">Создайте изображение по описанию</p>
           </div>
 
@@ -103,7 +103,7 @@
 
         <div class="flex-1 flex flex-col">
           <div class="flex items-center justify-between p-6 border-b border-gray-700/50">
-            <h3 class="text-lg font-bold text-white" style="font-family: 'Space Grotesk', sans-serif;">Результат</h3>
+            <h3 class="text-lg text-white" style="font-family: 'Space Grotesk', sans-serif;">Результат</h3>
             <button 
               @click="$emit('close')"
               class="p-2 hover:bg-gray-800/70 rounded-xl transition-all duration-75 text-gray-400 hover:text-white"
