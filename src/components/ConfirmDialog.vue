@@ -5,7 +5,7 @@
       class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-6"
       @click.self="cancel"
     >
-      <div class="bg-gray-900/30 backdrop-blur-xl rounded-3xl border border-white/10 w-full max-w-md shadow-2xl">
+      <div class="bg-[#1a1a1d] rounded-3xl border border-white/10 w-full max-w-md shadow-2xl">
         
         <div class="p-6 border-b border-white/10">
           <h2 class="text-xl font-bold text-white" style="font-family: 'Space Grotesk', sans-serif;">{{ title }}</h2>

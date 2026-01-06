@@ -5,7 +5,7 @@
       class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-6"
       @click.self="$emit('close')"
     >
-      <div class="bg-white/10 backdrop-blur-xl rounded-3xl border border-white/10 w-full max-w-7xl h-[90vh] flex shadow-2xl overflow-hidden">
+      <div class="bg-[#1a1a1d] rounded-3xl border border-white/10 w-full max-w-7xl h-[90vh] flex shadow-2xl overflow-hidden">
         
         <div class="w-96 flex flex-col border-r border-white/10">
           
@@ -32,7 +32,7 @@
           
           <div class="flex-1 overflow-y-auto scrollbar-thin p-3">
             <div v-if="filteredConversations.length === 0" class="text-center py-12">
-              <svg class="w-12 h-12 text-gray-600 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg class="w-12 h-12 text-gray-500 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
               </svg>
               <p class="text-gray-400 text-sm">{{ searchQuery ? 'Ничего не найдено' : 'История пуста' }}</p>
@@ -57,7 +57,7 @@
                   
                   <button
                     @click.stop="deleteConversation(conv.id)"
-                    class="opacity-0 group-hover:opacity-100 p-1.5 hover:bg-gray-700/70 rounded-lg transition-all duration-75 text-gray-400 hover:text-red-400"
+                    class="opacity-0 group-hover:opacity-100 p-1.5 hover:bg-white/5/70 rounded-lg transition-all duration-75 text-gray-400 hover:text-red-400"
                   >
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
@@ -93,7 +93,7 @@
           
           <div class="flex-1 overflow-y-auto scrollbar-thin p-6">
             <div v-if="!selectedConversation" class="flex flex-col items-center justify-center h-full">
-              <svg class="w-16 h-16 text-gray-600 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg class="w-16 h-16 text-gray-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
               </svg>
               <p class="text-gray-400 text-lg">Выбери разговор для предпросмотра</p>

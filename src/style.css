@@ -121,15 +121,21 @@
 }
 
 .markdown-content code {
-  @apply bg-gray-800 px-1.5 py-0.5 rounded text-sm font-mono text-cyan-400;
+  @apply px-1.5 py-0.5 rounded text-sm font-mono text-cyan-400;
+  background: rgba(255, 255, 255, 0.1);
 }
 
 .markdown-content pre {
-  @apply bg-gray-950 text-gray-100 p-4 rounded-lg mb-4 overflow-x-auto border border-gray-800;
+  @apply p-4 rounded-lg mb-4 overflow-x-auto;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #e5e7eb;
 }
 
 .markdown-content pre code {
-  @apply bg-transparent p-0 text-gray-100;
+  @apply p-0;
+  background: transparent;
+  color: #e5e7eb;
 }
 
 .markdown-content blockquote {
@@ -149,7 +155,7 @@
 }
 
 .markdown-content th {
-  @apply bg-gray-800 font-semibold text-gray-100;
+  background: rgba(255, 255, 255, 0.05);
 }
 
 /* Loading animations */

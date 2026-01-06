@@ -22,7 +22,7 @@
     <div ref="messagesContainer" class="flex-1 overflow-y-auto scrollbar-thin">
       <div v-if="showWelcome" class="h-full flex flex-col items-center justify-center px-6 pb-32">
         <h2 class="text-7xl text-white/30 mb-2 min-h-[84px]" style="font-family: 'Josefin Sans', sans-serif; font-weight: 100; letter-spacing: -0.02em; line-height: 1.2;">
-          {{ typingText }}<span class="animate-pulse">|</span>
+          {{ typingText }}
         </h2>
 
         <div class="flex flex-wrap justify-center gap-3 max-w-4xl mb-8 mt-8">
@@ -61,7 +61,7 @@
           <div class="relative bg-white/5 backdrop-blur-xl rounded-3xl border border-white/10 shadow-xl">
             <button 
               @click="$refs.fileInputWelcome.click()"
-              class="absolute left-5 top-1/2 -translate-y-1/2 p-2 hover:bg-gray-700/50 rounded-xl transition-colors"
+              class="absolute left-5 top-1/2 -translate-y-1/2 p-2 hover:bg-white/5/50 rounded-xl transition-colors"
             >
               <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
@@ -80,7 +80,7 @@
               v-model="inputMessage"
               @keydown.enter.exact.prevent="sendMessage"
               type="text"
-              placeholder="Общаться голосом"
+              placeholder="Напишите сообщение..."
               class="w-full pl-16 pr-16 py-5 bg-transparent text-white placeholder-gray-500 focus:outline-none text-sm"
             />
             
@@ -170,7 +170,7 @@
         <div class="relative bg-white/5 backdrop-blur-xl rounded-3xl border border-white/10 shadow-xl">
           <button 
             @click="$refs.fileInput.click()"
-            class="absolute left-5 top-1/2 -translate-y-1/2 p-2 hover:bg-gray-700/50 rounded-xl transition-colors"
+            class="absolute left-5 top-1/2 -translate-y-1/2 p-2 hover:bg-white/5/50 rounded-xl transition-colors"
           >
             <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
@@ -189,7 +189,7 @@
             v-model="inputMessage"
             @keydown.enter.exact.prevent="sendMessage"
             type="text"
-            placeholder="Общаться голосом"
+            placeholder="Напишите сообщение..."
             class="w-full pl-16 pr-16 py-5 bg-transparent text-white placeholder-gray-500 focus:outline-none text-sm"
           />
           
@@ -206,6 +206,10 @@
             </svg>
           </button>
         </div>
+        
+        <p class="text-center text-gray-500 text-xs mt-3">
+          © 2026 REDDCHAT. Все права защищены. Проект создан в образовательных целях.
+        </p>
       </div>
     </div>
   </div>

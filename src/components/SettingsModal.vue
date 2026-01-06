@@ -39,7 +39,7 @@
                     Рекомендуется
                   </span>
                 </div>
-                <p class="text-sm text-gray-600">{{ model.description }}</p>
+                <p class="text-sm text-gray-500">{{ model.description }}</p>
                 <div class="flex items-center gap-4 mt-2 text-xs text-gray-500">
                   <span>Скорость: {{ model.speed }}</span>
                   <span>Качество: {{ model.quality }}</span>
@@ -53,7 +53,7 @@
         <div class="mb-6">
           <div class="flex items-center justify-between mb-3">
             <h3 class="text-sm font-semibold text-black">Температура</h3>
-            <span class="text-sm text-gray-600">{{ temperature }}</span>
+            <span class="text-sm text-gray-500">{{ temperature }}</span>
           </div>
           <input
             type="range"
@@ -74,7 +74,7 @@
         <div class="mb-6">
           <div class="flex items-center justify-between mb-3">
             <h3 class="text-sm font-semibold text-black">Максимум токенов</h3>
-            <span class="text-sm text-gray-600">{{ maxTokens }}</span>
+            <span class="text-sm text-gray-500">{{ maxTokens }}</span>
           </div>
           <input
             type="range"

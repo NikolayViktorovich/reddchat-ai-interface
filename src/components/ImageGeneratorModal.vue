@@ -5,7 +5,7 @@
       class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-6"
       @click.self="$emit('close')"
     >
-      <div class="bg-white/10 backdrop-blur-xl rounded-3xl border border-white/10 w-full max-w-5xl h-[90vh] flex shadow-2xl overflow-hidden">
+      <div class="bg-[#1a1a1d] rounded-3xl border border-white/10 w-full max-w-5xl h-[90vh] flex shadow-2xl overflow-hidden">
         
         <div class="w-96 flex flex-col border-r border-white/10 p-6">
           <div class="mb-6">
@@ -55,14 +55,14 @@
                 <transition name="dropdown">
                   <div
                     v-if="showStyleDropdown"
-                    class="absolute z-10 w-full mt-2 bg-white/10 backdrop-blur-xl rounded-2xl border border-white/10 overflow-hidden shadow-2xl"
+                    class="absolute z-10 w-full mt-2 bg-[#1a1a1d] rounded-2xl border border-white/10 overflow-hidden shadow-2xl"
                   >
                     <button
                       v-for="style in styles"
                       :key="style.value"
                       @click="selectStyle(style.value)"
-                      class="w-full px-4 py-3 text-left text-sm transition-all duration-75 hover:bg-gray-700/50"
-                      :class="selectedStyle === style.value ? 'text-white bg-gray-700/30' : 'text-gray-400'"
+                      class="w-full px-4 py-3 text-left text-sm transition-all duration-75 hover:bg-white/5/50"
+                      :class="selectedStyle === style.value ? 'text-white bg-white/5/30' : 'text-gray-400'"
                     >
                       {{ style.label }}
                     </button>
@@ -126,7 +126,7 @@
             </div>
 
             <div v-else-if="generatedImages.length === 0" class="flex flex-col items-center justify-center h-full">
-              <svg class="w-20 h-20 text-gray-600 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg class="w-20 h-20 text-gray-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
               </svg>
               <p class="text-gray-400 text-lg mb-2">Изображения появятся здесь</p>
@@ -177,7 +177,7 @@
             <div class="absolute top-4 right-4 flex gap-2">
               <button 
                 @click="downloadImage(previewImage)"
-                class="p-3 bg-gray-900/80 hover:bg-gray-900 rounded-xl transition-all duration-75 backdrop-blur-sm"
+                class="p-3 bg-white/5/80 hover:bg-white/5 rounded-xl transition-all duration-75 backdrop-blur-sm"
               >
                 <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
@@ -185,7 +185,7 @@
               </button>
               <button 
                 @click="shareImage(previewImage)"
-                class="p-3 bg-gray-900/80 hover:bg-gray-900 rounded-xl transition-all duration-75 backdrop-blur-sm"
+                class="p-3 bg-white/5/80 hover:bg-white/5 rounded-xl transition-all duration-75 backdrop-blur-sm"
               >
                 <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
@@ -193,7 +193,7 @@
               </button>
               <button 
                 @click="closeImagePreview"
-                class="p-3 bg-gray-900/80 hover:bg-gray-900 rounded-xl transition-all duration-75 backdrop-blur-sm"
+                class="p-3 bg-white/5/80 hover:bg-white/5 rounded-xl transition-all duration-75 backdrop-blur-sm"
               >
                 <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
@@ -201,7 +201,7 @@
               </button>
             </div>
 
-            <div class="absolute bottom-4 left-4 right-4 bg-gray-900/80 backdrop-blur-sm rounded-xl p-4">
+            <div class="absolute bottom-4 left-4 right-4 bg-white/5/80 backdrop-blur-sm rounded-xl p-4">
               <p class="text-white text-sm">{{ previewImage.prompt }}</p>
               <p class="text-gray-400 text-xs mt-1">{{ previewImage.size }} • {{ previewImage.style }} • {{ previewImage.quality }}</p>
             </div>

@@ -67,7 +67,7 @@
           <p class="truncate">{{ conv.title }}</p>
           <button
             @click.stop="$emit('delete-conversation', conv.id)"
-            class="absolute right-2 top-2 opacity-0 group-hover:opacity-100 p-1 hover:bg-gray-700 rounded transition-opacity"
+            class="absolute right-2 top-2 opacity-0 group-hover:opacity-100 p-1 hover:bg-white/5 rounded transition-opacity"
           >
             <svg class="w-3 h-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
@@ -82,7 +82,7 @@
         <p class="text-white text-base font-semibold mb-1">Премиум возможности</p>
         <p class="text-white text-base font-bold mb-3">REDDCHAT Pro</p>
         <p class="text-gray-400 text-sm mb-4 leading-relaxed">Безлимитные запросы, генерация изображений, анализ кода и документов, приоритетная поддержка</p>
-        <button class="w-full bg-white hover:bg-gray-100 text-gray-900 text-sm font-semibold py-3 rounded-2xl transition-all duration-75 shadow-lg">
+        <button class="w-full bg-white hover:bg-gray-100 text-gray-900 text-sm font-semibold py-3 rounded-3xl transition-all duration-75 shadow-lg">
           Активировать Pro
         </button>
       </div>

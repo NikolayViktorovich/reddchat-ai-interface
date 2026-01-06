@@ -28,7 +28,7 @@
           <div v-if="!message.isTyping" class="flex items-center gap-1.5">
             <button
               @click="copyToClipboard"
-              class="p-1.5 hover:bg-gray-700/50 rounded-lg transition-all duration-75 group"
+              class="p-1.5 hover:bg-white/5/50 rounded-lg transition-all duration-75 group"
               title="Копировать"
             >
               <svg v-if="!copied" class="w-4 h-4 text-gray-500 group-hover:text-gray-300 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -39,7 +39,7 @@
               </svg>
             </button>
             <button
-              class="p-1.5 hover:bg-gray-700/50 rounded-lg transition-all duration-75 group"
+              class="p-1.5 hover:bg-white/5/50 rounded-lg transition-all duration-75 group"
               title="Хорошо"
             >
               <svg class="w-4 h-4 text-gray-500 group-hover:text-green-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -47,7 +47,7 @@
               </svg>
             </button>
             <button
-              class="p-1.5 hover:bg-gray-700/50 rounded-lg transition-all duration-75 group"
+              class="p-1.5 hover:bg-white/5/50 rounded-lg transition-all duration-75 group"
               title="Плохо"
             >
               <svg class="w-4 h-4 text-gray-500 group-hover:text-red-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -55,7 +55,7 @@
               </svg>
             </button>
             <button
-              class="p-1.5 hover:bg-gray-700/50 rounded-lg transition-all duration-75 group"
+              class="p-1.5 hover:bg-white/5/50 rounded-lg transition-all duration-75 group"
               title="Поделиться"
             >
               <svg class="w-4 h-4 text-gray-500 group-hover:text-blue-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -157,7 +157,7 @@ const copyToClipboard = async () => {
 }
 
 .markdown-content pre {
-  background: #282c34;
+  background: rgba(0, 0, 0, 0.3);
   border-radius: 12px;
   padding: 16px;
   overflow-x: auto;

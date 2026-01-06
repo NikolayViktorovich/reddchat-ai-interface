@@ -5,7 +5,7 @@
       class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-6"
       @click.self="$emit('close')"
     >
-      <div class="bg-white/10 backdrop-blur-xl rounded-3xl border border-white/10 w-full max-w-5xl h-[90vh] flex shadow-2xl overflow-hidden">
+      <div class="bg-[#1a1a1d] rounded-3xl border border-white/10 w-full max-w-5xl h-[90vh] flex shadow-2xl overflow-hidden">
         
         <div class="w-96 flex flex-col border-r border-white/10 p-6">
           <div class="mb-6">
@@ -93,7 +93,7 @@
                 </div>
                 <button
                   @click="removeFile(index)"
-                  class="p-1.5 hover:bg-gray-700/50 rounded-lg transition-all duration-75 text-gray-400 hover:text-red-400"
+                  class="p-1.5 hover:bg-white/5/50 rounded-lg transition-all duration-75 text-gray-400 hover:text-red-400"
                 >
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
@@ -164,7 +164,7 @@
             </div>
 
             <div v-else-if="!analysisResult" class="flex flex-col items-center justify-center h-full">
-              <svg class="w-20 h-20 text-gray-600 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg class="w-20 h-20 text-gray-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
               </svg>
               <p class="text-gray-400 text-lg mb-2">Результаты появятся здесь</p>
@@ -221,7 +221,7 @@
                   <span
                     v-for="(topic, index) in analysisResult.topics"
                     :key="index"
-                    class="px-3 py-1.5 bg-gray-700/50 text-gray-300 text-sm rounded-full"
+                    class="px-3 py-1.5 bg-white/5/50 text-gray-300 text-sm rounded-full"
                   >
                     {{ topic }}
                   </span>

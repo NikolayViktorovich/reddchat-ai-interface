@@ -5,7 +5,7 @@
       class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-6"
       @click.self="$emit('close')"
     >
-      <div class="bg-white/10 backdrop-blur-xl rounded-3xl border border-white/10 w-full max-w-6xl h-[90vh] flex flex-col shadow-2xl overflow-hidden">
+      <div class="bg-[#1a1a1d] rounded-3xl border border-white/10 w-full max-w-6xl h-[90vh] flex flex-col shadow-2xl overflow-hidden">
         
         <div class="flex items-center justify-between p-6 border-b border-white/10">
           <div>
@@ -38,14 +38,14 @@
                 <transition name="dropdown">
                   <div
                     v-if="showSourceLangDropdown"
-                    class="absolute z-10 mt-2 w-64 bg-white/10 backdrop-blur-xl rounded-2xl border border-white/10 overflow-hidden shadow-2xl max-h-80 overflow-y-auto"
+                    class="absolute z-10 mt-2 w-64 bg-[#1a1a1d] rounded-2xl border border-white/10 overflow-hidden shadow-2xl max-h-80 overflow-y-auto"
                   >
                     <button
                       v-for="lang in languages"
                       :key="lang.code"
                       @click="selectSourceLang(lang.code)"
-                      class="w-full px-4 py-3 text-left text-sm transition-all duration-75 hover:bg-gray-700/50"
-                      :class="sourceLang === lang.code ? 'text-white bg-gray-700/30' : 'text-gray-400'"
+                      class="w-full px-4 py-3 text-left text-sm transition-all duration-75 hover:bg-white/5/50"
+                      :class="sourceLang === lang.code ? 'text-white bg-white/5/30' : 'text-gray-400'"
                     >
                       {{ lang.name }}
                     </button>
@@ -111,14 +111,14 @@
                 <transition name="dropdown">
                   <div
                     v-if="showTargetLangDropdown"
-                    class="absolute z-10 mt-2 w-64 bg-white/10 backdrop-blur-xl rounded-2xl border border-white/10 overflow-hidden shadow-2xl max-h-80 overflow-y-auto"
+                    class="absolute z-10 mt-2 w-64 bg-[#1a1a1d] rounded-2xl border border-white/10 overflow-hidden shadow-2xl max-h-80 overflow-y-auto"
                   >
                     <button
                       v-for="lang in languages"
                       :key="lang.code"
                       @click="selectTargetLang(lang.code)"
-                      class="w-full px-4 py-3 text-left text-sm transition-all duration-75 hover:bg-gray-700/50"
-                      :class="targetLang === lang.code ? 'text-white bg-gray-700/30' : 'text-gray-400'"
+                      class="w-full px-4 py-3 text-left text-sm transition-all duration-75 hover:bg-white/5/50"
+                      :class="targetLang === lang.code ? 'text-white bg-white/5/30' : 'text-gray-400'"
                     >
                       {{ lang.name }}
                     </button>
@@ -136,7 +136,7 @@
                 </div>
               </div>
               <div v-else-if="!translatedText" class="flex flex-col items-center justify-center h-full">
-                <svg class="w-16 h-16 text-gray-600 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-16 h-16 text-gray-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" />
                 </svg>
                 <p class="text-gray-400 text-lg">Перевод появится здесь</p>
