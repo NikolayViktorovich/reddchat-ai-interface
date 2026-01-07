@@ -4,10 +4,10 @@
     class="fixed inset-0 bg-black/70 flex items-end md:items-center justify-center z-50 md:p-6 animate-fade-in"
     @click.self="$emit('close')"
   >
-    <div class="bg-[#1a1a1d] w-full md:max-w-6xl h-[90vh] md:rounded-2xl rounded-t-3xl border-t md:border border-white/10 flex flex-col shadow-2xl overflow-hidden animate-slide-up md:animate-scale-in">
-      <div class="flex items-center justify-between p-4 border-b border-white/10">
+    <div class="glass-modal w-full md:max-w-6xl h-[90vh] md:rounded-2xl rounded-t-3xl border-t md:border border-white/20 flex flex-col shadow-2xl overflow-hidden animate-slide-up md:animate-scale-in">
+      <div class="flex items-center justify-between p-4 border-b border-white/20">
         <h2 class="text-lg text-white font-medium">Переводчик</h2>
-        <button @click="$emit('close')" class="p-2 text-gray-400">
+        <button @click="$emit('close')" class="p-2 text-gray-400 hover:text-white transition-colors">
           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
           </svg>
@@ -128,9 +128,7 @@
               </div>
             </div>
             <div v-else-if="!translatedText" class="flex flex-col items-center justify-center h-full">
-              <div class="w-16 h-16 rounded-2xl bg-white/5 flex items-center justify-center mb-4">
-                <svg class="w-8 h-8 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" /></svg>
-              </div>
+              <svg class="w-12 h-12 text-gray-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" /></svg>
               <p class="text-gray-400 text-lg">Перевод появится здесь</p>
             </div>
             <div v-else class="text-white text-base leading-relaxed whitespace-pre-wrap">{{ translatedText }}</div>

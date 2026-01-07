@@ -223,11 +223,18 @@ const handleSendMessage = async (content) => {
   saveToLocalStorage()
 
   try {
-    // УБРАН system prompt из запроса
-    const apiMessages = conv.messages.map(m => ({ 
-      role: m.role, 
-      content: m.apiContent || m.content 
-    }))
+    const systemPrompt = {
+      role: 'system',
+      content: 'Ты полезный и профессиональный AI-ассистент. Отвечай на русском языке. Используй Markdown форматирование: заголовки (##), списки (- или 1.), **жирный**, *курсив*, `код`, ```блоки кода с указанием языка```. Структурируй ответы для лучшей читаемости.'
+    }
+    
+    const apiMessages = [
+      systemPrompt,
+      ...conv.messages.map(m => ({ 
+        role: m.role, 
+        content: m.apiContent || m.content 
+      }))
+    ]
     
     const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
       method: 'POST',
@@ -239,7 +246,7 @@ const handleSendMessage = async (content) => {
       },
       body: JSON.stringify({
         model: 'nex-agi/deepseek-v3.1-nex-n1:free',
-        messages: apiMessages, // Теперь без system prompt
+        messages: apiMessages,
         stream: true
       })
     })

@@ -1,12 +1,15 @@
 <template>
   <div class="flex-1 flex flex-col overflow-hidden">
-    <div class="lg:hidden flex items-center justify-between px-4 py-3 border-b border-white/10">
+    <div class="lg:hidden flex items-center justify-between px-4 py-3">
       <button @click="$emit('toggle-sidebar')" class="p-2 text-gray-400 active:text-white">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
         </svg>
       </button>
-      <h1 class="text-white text-sm font-semibold tracking-wider" style="font-family: 'Orbitron', sans-serif;">REDDCHAT</h1>
+      <div class="text-center">
+        <p class="text-base text-white/90 tracking-wide leading-none" style="font-family: 'Orbitron', sans-serif; font-weight: 300;">REDD</p>
+        <p class="text-base text-white/90 tracking-wide leading-none" style="font-family: 'Orbitron', sans-serif; font-weight: 600;">CHAT</p>
+      </div>
       <div class="w-10"></div>
     </div>
 
@@ -25,7 +28,7 @@
     
     <div ref="messagesContainer" class="flex-1 overflow-y-auto scrollbar-thin">
       <div v-if="showWelcome" class="h-full flex flex-col items-center justify-center px-4 md:px-6 pb-20 md:pb-32">
-        <h2 class="text-3xl sm:text-5xl md:text-7xl text-white/30 mb-2 h-[50px] sm:h-[70px] md:h-[84px] flex items-center justify-center text-center" style="font-family: 'Josefin Sans', sans-serif; font-weight: 100;">
+        <h2 class="text-3xl sm:text-5xl md:text-7xl text-white/30 mb-2 h-[50px] sm:h-[70px] md:h-[84px] flex items-center justify-center text-center font-light">
           {{ typingText }}
         </h2>
 
@@ -100,7 +103,7 @@
       </div>
     </div>
 
-    <div v-if="!showWelcome" class="px-4 md:px-6 py-3 md:py-4 pb-8 md:pb-4">
+    <div v-if="!showWelcome" class="px-4 md:px-6 py-3 md:py-4 pb-16 md:pb-4">
       <div class="max-w-4xl mx-auto">
         <div v-if="attachedFiles.length" class="mb-3 flex flex-wrap gap-2">
           <div v-for="(file, index) in attachedFiles" :key="index" class="flex items-center gap-2 px-3 py-2 bg-white/5 rounded-xl border border-white/10 text-sm">
@@ -135,7 +138,7 @@
             </svg>
           </button>
         </div>
-        <p class="text-center text-gray-500 text-xs mt-2 md:mt-3">© 2026 REDDCHAT</p>
+
       </div>
     </div>
   </div>

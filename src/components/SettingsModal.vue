@@ -4,10 +4,10 @@
     class="fixed inset-0 bg-black/70 flex items-end md:items-center justify-center z-50 md:p-6 animate-fade-in" 
     @click.self="$emit('close')"
   >
-    <div class="bg-[#1a1a1d] w-full md:max-w-lg md:rounded-2xl rounded-t-3xl border-t md:border border-white/10 shadow-2xl overflow-hidden max-h-[90vh] flex flex-col animate-slide-up md:animate-scale-in">
-      <div class="flex items-center justify-between p-4 md:p-6 border-b border-white/10">
+    <div class="glass-modal w-full md:max-w-lg md:rounded-2xl rounded-t-3xl border-t md:border border-white/20 shadow-2xl overflow-hidden max-h-[90vh] flex flex-col animate-slide-up md:animate-scale-in">
+      <div class="flex items-center justify-between p-4 md:p-6 border-b border-white/20">
         <h2 class="text-lg text-white font-medium">Настройки</h2>
-        <button @click="$emit('close')" class="p-2 text-gray-400 hover:text-white">
+        <button @click="$emit('close')" class="p-2 text-gray-400 hover:text-white transition-colors">
           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
         </button>
       </div>
@@ -58,7 +58,7 @@
         </div>
       </div>
 
-      <div class="p-4 md:p-6 border-t border-white/10 flex gap-3">
+      <div class="p-4 md:p-6 border-t border-white/20 flex gap-3">
         <button @click="$emit('close')" class="flex-1 py-3 bg-white/5 text-white rounded-2xl text-sm hover:bg-white/10">Отмена</button>
         <button @click="saveSettings" class="flex-1 py-3 bg-white/10 text-white rounded-2xl text-sm border border-white/20 hover:bg-white/15">Сохранить</button>
       </div>

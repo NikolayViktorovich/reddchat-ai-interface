@@ -38,7 +38,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, watch, nextTick } from 'vue'
 import { marked } from 'marked'
 import hljs from 'highlight.js/lib/core'
 import javascript from 'highlight.js/lib/languages/javascript'
@@ -48,6 +48,15 @@ import css from 'highlight.js/lib/languages/css'
 import xml from 'highlight.js/lib/languages/xml'
 import bash from 'highlight.js/lib/languages/bash'
 import json from 'highlight.js/lib/languages/json'
+import java from 'highlight.js/lib/languages/java'
+import cpp from 'highlight.js/lib/languages/cpp'
+import csharp from 'highlight.js/lib/languages/csharp'
+import php from 'highlight.js/lib/languages/php'
+import ruby from 'highlight.js/lib/languages/ruby'
+import go from 'highlight.js/lib/languages/go'
+import rust from 'highlight.js/lib/languages/rust'
+import sql from 'highlight.js/lib/languages/sql'
+import yaml from 'highlight.js/lib/languages/yaml'
 
 hljs.registerLanguage('javascript', javascript)
 hljs.registerLanguage('js', javascript)
@@ -60,15 +69,46 @@ hljs.registerLanguage('xml', xml)
 hljs.registerLanguage('html', xml)
 hljs.registerLanguage('bash', bash)
 hljs.registerLanguage('sh', bash)
+hljs.registerLanguage('shell', bash)
 hljs.registerLanguage('json', json)
+hljs.registerLanguage('java', java)
+hljs.registerLanguage('cpp', cpp)
+hljs.registerLanguage('c++', cpp)
+hljs.registerLanguage('c', cpp)
+hljs.registerLanguage('csharp', csharp)
+hljs.registerLanguage('cs', csharp)
+hljs.registerLanguage('php', php)
+hljs.registerLanguage('ruby', ruby)
+hljs.registerLanguage('rb', ruby)
+hljs.registerLanguage('go', go)
+hljs.registerLanguage('golang', go)
+hljs.registerLanguage('rust', rust)
+hljs.registerLanguage('rs', rust)
+hljs.registerLanguage('sql', sql)
+hljs.registerLanguage('yaml', yaml)
+hljs.registerLanguage('yml', yaml)
+
+const renderer = new marked.Renderer()
+
+renderer.code = (code, language) => {
+  const lang = language || ''
+  let highlighted = code
+  
+  if (lang && hljs.getLanguage(lang)) {
+    try {
+      highlighted = hljs.highlight(code, { language: lang }).value
+    } catch {}
+  } else {
+    try {
+      highlighted = hljs.highlightAuto(code).value
+    } catch {}
+  }
+  
+  return `<pre><code class="hljs language-${lang}">${highlighted}</code></pre>`
+}
 
 marked.setOptions({
-  highlight: (code, lang) => {
-    if (lang && hljs.getLanguage(lang)) {
-      try { return hljs.highlight(code, { language: lang }).value } catch {}
-    }
-    return code
-  },
+  renderer,
   breaks: true,
   gfm: true
 })
@@ -93,17 +133,29 @@ const copy = async () => {
 </script>
 
 <style>
-@import 'highlight.js/styles/atom-one-dark.css';
-
 .markdown-content { line-height: 1.6; }
-.markdown-content pre { background: rgba(0,0,0,0.3); border-radius: 10px; padding: 12px; overflow-x: auto; margin: 10px 0; border: 1px solid rgba(255,255,255,0.1); }
+.markdown-content pre { background: rgba(0,0,0,0.4); border-radius: 12px; padding: 16px; overflow-x: auto; margin: 12px 0; border: 1px solid rgba(255,255,255,0.1); }
 .markdown-content code { font-family: 'JetBrains Mono', monospace; font-size: 0.85em; }
-.markdown-content pre code { background: transparent; padding: 0; }
-.markdown-content :not(pre) > code { background: rgba(255,255,255,0.1); padding: 2px 5px; border-radius: 4px; color: #e06c75; }
+.markdown-content pre code { background: transparent; padding: 0; color: #abb2bf; }
+.markdown-content :not(pre) > code { background: rgba(255,255,255,0.1); padding: 2px 6px; border-radius: 4px; color: #e06c75; }
 .markdown-content h1, .markdown-content h2, .markdown-content h3 { margin-top: 20px; margin-bottom: 10px; }
 .markdown-content ul, .markdown-content ol { margin: 10px 0; padding-left: 20px; }
 .markdown-content li { margin: 4px 0; }
 .markdown-content blockquote { border-left: 3px solid rgba(255,255,255,0.2); padding-left: 12px; margin: 10px 0; color: rgba(255,255,255,0.7); }
 .markdown-content a { color: #61afef; }
 .markdown-content p { margin-bottom: 10px; }
+
+/* Highlight.js Atom One Dark theme colors */
+.hljs { color: #abb2bf; }
+.hljs-comment, .hljs-quote { color: #5c6370; font-style: italic; }
+.hljs-doctag, .hljs-keyword, .hljs-formula { color: #c678dd; }
+.hljs-section, .hljs-name, .hljs-selector-tag, .hljs-deletion, .hljs-subst { color: #e06c75; }
+.hljs-literal { color: #56b6c2; }
+.hljs-string, .hljs-regexp, .hljs-addition, .hljs-attribute, .hljs-meta .hljs-string { color: #98c379; }
+.hljs-attr, .hljs-variable, .hljs-template-variable, .hljs-type, .hljs-selector-class, .hljs-selector-attr, .hljs-selector-pseudo, .hljs-number { color: #d19a66; }
+.hljs-symbol, .hljs-bullet, .hljs-link, .hljs-meta, .hljs-selector-id, .hljs-title { color: #61afef; }
+.hljs-built_in, .hljs-title.class_, .hljs-class .hljs-title { color: #e6c07b; }
+.hljs-emphasis { font-style: italic; }
+.hljs-strong { font-weight: bold; }
+.hljs-link { text-decoration: underline; }
 </style>

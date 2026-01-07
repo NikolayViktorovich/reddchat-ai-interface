@@ -1,10 +1,10 @@
 <template>
   <div v-if="isOpen" class="fixed inset-0 bg-black/70 flex items-end md:items-center justify-center z-50 md:p-6 animate-fade-in" @click.self="$emit('close')">
-    <div class="bg-[#1a1a1d] w-full md:max-w-5xl h-[90vh] md:rounded-2xl rounded-t-3xl border-t md:border border-white/10 flex flex-col md:flex-row overflow-hidden animate-slide-up md:animate-scale-in">
+    <div class="glass-modal w-full md:max-w-5xl h-[90vh] md:rounded-2xl rounded-t-3xl border-t md:border border-white/20 flex flex-col md:flex-row overflow-hidden animate-slide-up md:animate-scale-in">
       
-      <div class="md:hidden flex items-center justify-between p-4 border-b border-white/10">
+      <div class="md:hidden flex items-center justify-between p-4 border-b border-white/20">
         <h2 class="text-lg text-white font-medium">Анализ</h2>
-        <button @click="$emit('close')" class="p-2 text-gray-400">
+        <button @click="$emit('close')" class="p-2 text-gray-400 hover:text-white transition-colors">
           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
         </button>
       </div>
@@ -41,12 +41,12 @@
           <div class="bg-white/5 rounded-xl p-4"><h4 class="text-white text-sm font-medium mb-2">Содержание</h4><p class="text-gray-300 text-sm">{{ result.summary }}</p></div>
           <div class="bg-white/5 rounded-xl p-4"><h4 class="text-white text-sm font-medium mb-2">Темы</h4><div class="flex flex-wrap gap-2"><span v-for="(t, i) in result.topics" :key="i" class="px-3 py-1 bg-white/5 text-gray-300 text-xs rounded-full">{{ t }}</span></div></div>
         </div>
-        <div v-if="!result" class="p-4 border-t border-white/10">
+        <div v-if="!result" class="p-4 border-t border-white/20">
           <button @click="analyze" :disabled="!files.length || loading" class="w-full py-3 rounded-2xl text-sm transition-fast" :class="files.length && !loading ? 'bg-white/10 text-white border border-white/20' : 'bg-white/5 text-gray-500 border border-white/10'">{{ loading ? 'Анализ...' : 'Начать' }}</button>
         </div>
       </div>
 
-      <div class="hidden md:flex w-96 flex-col border-r border-white/10 p-6">
+      <div class="hidden md:flex w-96 flex-col border-r border-white/20 p-6">
         <h2 class="text-2xl text-white mb-6">Анализ</h2>
         <div class="flex-1 overflow-y-auto scrollbar-thin space-y-4">
           <div @dragover.prevent="drag = true" @dragleave.prevent="drag = false" @drop.prevent="handleDrop" @click="$refs.fileInput.click()" class="rounded-2xl p-6 text-center cursor-pointer border-2 border-dashed transition-fast" :class="drag ? 'border-white/40 bg-white/5' : 'border-white/20'">
@@ -65,9 +65,9 @@
       </div>
 
       <div class="hidden md:flex flex-1 flex-col">
-        <div class="flex items-center justify-between p-6 border-b border-white/10">
+        <div class="flex items-center justify-between p-6 border-b border-white/20">
           <h3 class="text-lg text-white">Результаты</h3>
-          <button @click="$emit('close')" class="p-2 hover:bg-white/10 rounded-xl text-gray-400 hover:text-white transition-fast"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg></button>
+          <button @click="$emit('close')" class="p-2 text-gray-400 hover:text-white transition-colors"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg></button>
         </div>
         <div class="flex-1 overflow-y-auto scrollbar-thin p-6">
           <div v-if="loading" class="flex flex-col items-center justify-center h-full">

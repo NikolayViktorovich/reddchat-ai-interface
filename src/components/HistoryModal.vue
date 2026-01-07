@@ -1,15 +1,15 @@
 <template>
   <div v-if="isOpen" class="fixed inset-0 bg-black/70 flex items-end md:items-center justify-center z-50 md:p-6 animate-fade-in" @click.self="$emit('close')">
-    <div class="bg-[#1a1a1d] w-full md:max-w-7xl h-[90vh] md:rounded-2xl rounded-t-3xl border-t md:border border-white/10 flex flex-col md:flex-row overflow-hidden animate-slide-up md:animate-scale-in">
-      <div class="md:hidden flex items-center justify-between p-4 border-b border-white/10">
+    <div class="glass-modal w-full md:max-w-7xl h-[90vh] md:rounded-2xl rounded-t-3xl border-t md:border border-white/20 flex flex-col md:flex-row overflow-hidden animate-slide-up md:animate-scale-in">
+      <div class="md:hidden flex items-center justify-between p-4 border-b border-white/20">
         <h2 class="text-lg text-white font-medium">История диалогов</h2>
-        <button @click="$emit('close')" class="p-2 text-gray-400">
+        <button @click="$emit('close')" class="p-2 text-gray-400 hover:text-white transition-colors">
           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
         </button>
       </div>
 
       <div class="md:hidden flex-1 flex flex-col overflow-hidden">
-        <div class="p-3 border-b border-white/10">
+        <div class="p-3 border-b border-white/20">
           <div class="relative">
             <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
             <input v-model="searchQuery" type="text" placeholder="Поиск..." class="w-full pl-10 pr-3 py-2.5 bg-white/5 text-white text-sm placeholder-gray-400 rounded-xl border border-white/10 focus:outline-none" />
@@ -18,9 +18,6 @@
 
         <div v-if="!mobileSelectedConv" class="flex-1 overflow-y-auto">
           <div v-if="filteredConversations.length === 0" class="flex flex-col items-center justify-center h-full p-6">
-            <div class="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center mb-3">
-              <svg class="w-6 h-6 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" /></svg>
-            </div>
             <p class="text-gray-400 text-sm">{{ searchQuery ? 'Ничего не найдено' : 'История пуста' }}</p>
           </div>
           <div v-else class="divide-y divide-white/5">
@@ -35,7 +32,7 @@
         </div>
 
         <div v-else class="flex-1 flex flex-col overflow-hidden">
-          <div class="flex items-center gap-3 p-4 border-b border-white/10">
+          <div class="flex items-center gap-3 p-4 border-b border-white/20">
             <button @click="mobileSelectedConv = null" class="p-1 text-gray-400">
               <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
             </button>
@@ -45,22 +42,25 @@
             </div>
           </div>
           <div class="flex-1 overflow-y-auto p-4 space-y-3">
-            <div v-for="message in mobileSelectedConv.messages" :key="message.id" class="flex gap-2" :class="message.role === 'user' ? 'justify-end' : 'justify-start'">
-              <div class="max-w-[85%] rounded-2xl px-3 py-2 text-sm" :class="message.role === 'user' ? 'bg-white/10 text-white' : 'bg-white/5 text-white'">{{ message.content }}</div>
+            <div v-for="message in mobileSelectedConv.messages" :key="message.id" class="flex" :class="message.role === 'user' ? 'justify-end' : 'justify-start'">
+              <div class="max-w-[85%] rounded-2xl px-3 py-2 text-sm" :class="message.role === 'user' ? 'bg-white/10 text-white whitespace-pre-wrap' : 'bg-white/5 text-white'">
+                <div v-if="message.role === 'assistant'" v-html="formatMarkdown(message.content)" class="markdown-content"></div>
+                <span v-else>{{ message.content }}</span>
+              </div>
             </div>
           </div>
-          <div class="p-4 border-t border-white/10">
+          <div class="p-4 border-t border-white/20">
             <button @click="openMobileConversation" class="w-full py-3 bg-white/10 text-white rounded-2xl text-sm font-medium">Открыть диалог</button>
           </div>
         </div>
       </div>
 
-      <div class="hidden md:flex w-96 flex-col border-r border-white/10">
-        <div class="p-6 border-b border-white/10">
+      <div class="hidden md:flex w-96 flex-col border-r border-white/20">
+        <div class="p-6 border-b border-white/20">
           <h2 class="text-xl text-white mb-1" style="font-family: 'Space Grotesk', sans-serif;">История диалогов</h2>
           <p class="text-gray-400 text-sm">Всего: {{ conversations.length }}</p>
         </div>
-        <div class="p-4 border-b border-white/10">
+        <div class="p-4 border-b border-white/20">
           <div class="relative">
             <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
             <input v-model="searchQuery" type="text" placeholder="Поиск..." class="w-full pl-10 pr-3 py-2 bg-white/5 text-white text-sm placeholder-gray-400 rounded-xl border border-white/10 focus:outline-none" />
@@ -68,9 +68,6 @@
         </div>
         <div class="flex-1 overflow-y-auto scrollbar-thin p-3">
           <div v-if="filteredConversations.length === 0" class="text-center py-12">
-            <div class="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center mx-auto mb-3">
-              <svg class="w-6 h-6 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" /></svg>
-            </div>
             <p class="text-gray-400 text-sm">{{ searchQuery ? 'Ничего не найдено' : 'История пуста' }}</p>
           </div>
           <div v-else class="space-y-2">
@@ -91,7 +88,7 @@
       </div>
 
       <div class="hidden md:flex flex-1 flex-col">
-        <div class="flex items-center justify-between p-6 border-b border-white/10">
+        <div class="flex items-center justify-between p-6 border-b border-white/20">
           <div v-if="selectedConversation">
             <h2 class="text-xl text-white mb-1" style="font-family: 'Space Grotesk', sans-serif;">{{ selectedConversation.title }}</h2>
             <p class="text-gray-400 text-sm">{{ formatDate(selectedConversation.createdAt) }}</p>
@@ -99,27 +96,20 @@
           <div v-else>
             <h2 class="text-xl text-white" style="font-family: 'Space Grotesk', sans-serif;">Предпросмотр</h2>
           </div>
-          <button @click="$emit('close')" class="p-2 hover:bg-white/10 rounded-xl transition-all text-gray-400 hover:text-white">
+          <button @click="$emit('close')" class="p-2 text-gray-400 hover:text-white transition-colors">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
           </button>
         </div>
         <div class="flex-1 overflow-y-auto scrollbar-thin p-6">
           <div v-if="!selectedConversation" class="flex flex-col items-center justify-center h-full">
-            <div class="w-16 h-16 rounded-2xl bg-white/5 flex items-center justify-center mb-4">
-              <svg class="w-8 h-8 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" /></svg>
-            </div>
+            <svg class="w-12 h-12 text-gray-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" /></svg>
             <p class="text-gray-400 text-lg">Выбери разговор для предпросмотра</p>
           </div>
           <div v-else class="space-y-4">
-            <div v-for="message in selectedConversation.messages" :key="message.id" class="flex gap-3" :class="message.role === 'user' ? 'justify-end' : 'justify-start'">
-              <div v-if="message.role === 'assistant'" class="w-8 h-8 rounded-full bg-white flex items-center justify-center flex-shrink-0">
-                <svg class="w-4 h-4 text-gray-900" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5z"/></svg>
-              </div>
-              <div class="max-w-2xl rounded-2xl px-4 py-3 bg-white/5 text-white">
-                <p class="text-sm whitespace-pre-wrap">{{ message.content }}</p>
-              </div>
-              <div v-if="message.role === 'user'" class="w-8 h-8 rounded-full bg-gradient-to-br from-gray-700 to-gray-800 flex items-center justify-center flex-shrink-0">
-                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
+            <div v-for="message in selectedConversation.messages" :key="message.id" class="flex" :class="message.role === 'user' ? 'justify-end' : 'justify-start'">
+              <div class="max-w-2xl rounded-2xl px-4 py-3 text-sm" :class="message.role === 'user' ? 'bg-white/10 text-white whitespace-pre-wrap' : 'bg-white/5 text-white'">
+                <div v-if="message.role === 'assistant'" v-html="formatMarkdown(message.content)" class="markdown-content"></div>
+                <span v-else>{{ message.content }}</span>
               </div>
             </div>
           </div>
@@ -131,6 +121,41 @@
 
 <script setup>
 import { ref, computed } from 'vue'
+import { marked } from 'marked'
+import hljs from 'highlight.js/lib/core'
+import javascript from 'highlight.js/lib/languages/javascript'
+import python from 'highlight.js/lib/languages/python'
+import typescript from 'highlight.js/lib/languages/typescript'
+import bash from 'highlight.js/lib/languages/bash'
+import json from 'highlight.js/lib/languages/json'
+
+hljs.registerLanguage('javascript', javascript)
+hljs.registerLanguage('js', javascript)
+hljs.registerLanguage('python', python)
+hljs.registerLanguage('py', python)
+hljs.registerLanguage('typescript', typescript)
+hljs.registerLanguage('ts', typescript)
+hljs.registerLanguage('bash', bash)
+hljs.registerLanguage('sh', bash)
+hljs.registerLanguage('json', json)
+
+const renderer = new marked.Renderer()
+renderer.code = (code, language) => {
+  const lang = language || ''
+  let highlighted = code
+  if (lang && hljs.getLanguage(lang)) {
+    try { highlighted = hljs.highlight(code, { language: lang }).value } catch {}
+  } else {
+    try { highlighted = hljs.highlightAuto(code).value } catch {}
+  }
+  return `<pre><code class="hljs language-${lang}">${highlighted}</code></pre>`
+}
+marked.setOptions({ renderer, breaks: true, gfm: true })
+
+const formatMarkdown = (content) => {
+  if (!content) return ''
+  try { return marked.parse(content) } catch { return content }
+}
 
 const props = defineProps({ isOpen: Boolean, conversations: Array, currentConversationId: Number })
 const emit = defineEmits(['close', 'select-conversation', 'delete-conversation'])
@@ -159,3 +184,22 @@ const formatDate = (date) => {
   return d.toLocaleDateString('ru-RU', { day: 'numeric', month: 'short' })
 }
 </script>
+
+<style scoped>
+.markdown-content { line-height: 1.5; }
+.markdown-content :deep(pre) { background: rgba(0,0,0,0.4); border-radius: 10px; padding: 12px; overflow-x: auto; margin: 8px 0; border: 1px solid rgba(255,255,255,0.1); }
+.markdown-content :deep(code) { font-family: 'JetBrains Mono', monospace; font-size: 0.85em; }
+.markdown-content :deep(pre code) { background: transparent; padding: 0; color: #abb2bf; }
+.markdown-content :deep(:not(pre) > code) { background: rgba(255,255,255,0.1); padding: 2px 5px; border-radius: 4px; color: #e06c75; }
+.markdown-content :deep(p) { margin-bottom: 8px; }
+.markdown-content :deep(ul), .markdown-content :deep(ol) { margin: 8px 0; padding-left: 18px; }
+.markdown-content :deep(li) { margin: 3px 0; }
+
+.markdown-content :deep(.hljs) { color: #abb2bf; }
+.markdown-content :deep(.hljs-comment) { color: #5c6370; font-style: italic; }
+.markdown-content :deep(.hljs-keyword) { color: #c678dd; }
+.markdown-content :deep(.hljs-string) { color: #98c379; }
+.markdown-content :deep(.hljs-number) { color: #d19a66; }
+.markdown-content :deep(.hljs-title) { color: #61afef; }
+.markdown-content :deep(.hljs-built_in) { color: #e6c07b; }
+</style>
