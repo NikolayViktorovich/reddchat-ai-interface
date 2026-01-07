@@ -138,21 +138,23 @@ const generate = async () => {
   showMobileResults.value = true
   
   try {
-    const formData = new FormData()
-    formData.append('prompt', prompt.value + (stylePrompts[selectedStyle.value] || ''))
-    formData.append('output_format', 'jpeg')
+    const fullPrompt = prompt.value + (stylePrompts[selectedStyle.value] || '')
     
-    const res = await fetch('https://api.stability.ai/v2beta/stable-image/generate/sd3', {
+    const res = await fetch('http://localhost:3000/generate', {
       method: 'POST',
-      headers: { 'Authorization': 'Bearer sk-31UHbA1wu6lMDcoZSioFaEH8pklLr1T0a5dXi7ehLVUEBc86', 'Accept': 'image/*' },
-      body: formData
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ prompt: fullPrompt })
     })
     
-    if (!res.ok) throw new Error(`Ошибка ${res.status}`)
-    const blob = await res.blob()
-    generatedImages.value.unshift({ url: URL.createObjectURL(blob), prompt: prompt.value, timestamp: Date.now() })
+    const data = await res.json()
+    
+    if (data.url) {
+      generatedImages.value.unshift({ url: data.url, prompt: prompt.value, timestamp: Date.now() })
+    } else {
+      throw new Error(data.error || 'Не удалось получить изображение')
+    }
   } catch (e) {
-    alert('Ошибка генерации')
+    alert('Ошибка генерации: ' + e.message)
   }
   isGenerating.value = false
 }
