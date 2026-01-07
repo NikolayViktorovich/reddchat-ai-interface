@@ -289,14 +289,16 @@ const handleSendMessage = async (content) => {
       })
     ]
     
-    const response = await fetch('https://zenmux.ai/api/v1/chat/completions', {
+    const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer sk-ai-v1-1274456ebe3da62129258f977166957a1bb6686740fadf473f3c997891747765'
+        'Authorization': 'Bearer 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',
+        'HTTP-Referer': 'https://reddchat.vercel.app',
+        'X-Title': 'REDDCHAT'
       },
       body: JSON.stringify({
-        model: 'xiaomi/mimo-v2-flash',
+        model: 'deepseek/deepseek-chat-v3-0324:free',
         messages: apiMessages,
         stream: true
       })
