@@ -223,15 +223,11 @@ const handleSendMessage = async (content) => {
   saveToLocalStorage()
 
   try {
-    const systemPrompt = {
-      role: 'system',
-      content: 'Ты полезный AI-ассистент. Отвечай на русском языке. Используй Markdown форматирование: заголовки (##), списки (- или 1.), **жирный**, *курсив*, `код`, ```блоки кода с указанием языка```. Структурируй ответы для лучшей читаемости.'
-    }
-    
-    const apiMessages = [
-      systemPrompt,
-      ...conv.messages.map(m => ({ role: m.role, content: m.apiContent || m.content }))
-    ]
+    // УБРАН system prompt из запроса
+    const apiMessages = conv.messages.map(m => ({ 
+      role: m.role, 
+      content: m.apiContent || m.content 
+    }))
     
     const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
       method: 'POST',
@@ -243,7 +239,7 @@ const handleSendMessage = async (content) => {
       },
       body: JSON.stringify({
         model: 'nex-agi/deepseek-v3.1-nex-n1:free',
-        messages: apiMessages,
+        messages: apiMessages, // Теперь без system prompt
         stream: true
       })
     })
@@ -335,18 +331,6 @@ const stopGeneration = () => {
   
   isCurrentlyTyping.value = false
   saveToLocalStorage()
-}
-
-const generateMockResponse = (userInput) => {
-  const responses = [
-    `Отличный вопрос! Давайте разберем это подробнее.\n\nВот несколько ключевых моментов:\n\n1. **Первый аспект**: Это важно учитывать при работе с данной темой\n2. **Второй аспект**: Здесь нужно обратить внимание на детали\n3. **Третий аспект**: Это поможет вам лучше понять концепцию\n\nЕсли нужны дополнительные разъяснения, спрашивайте!`,
-    
-    `Понимаю ваш запрос. Вот что я могу предложить:\n\n\`\`\`javascript\nconst example = () => {\n  console.log('Пример кода');\n  return 'Результат';\n}\n\`\`\`\n\nЭтот код демонстрирует базовый подход к решению задачи.`,
-    
-    `Интересная тема! Позвольте мне объяснить:\n\n> Ключевая идея заключается в том, что нужно учитывать контекст и специфику вашей задачи.\n\nОсновные рекомендации:\n- Начните с простого\n- Тестируйте каждый шаг\n- Документируйте процесс\n\nЧто именно вас интересует больше всего?`
-  ]
-  
-  return responses[Math.floor(Math.random() * responses.length)]
 }
 
 const updateModel = (model) => {
