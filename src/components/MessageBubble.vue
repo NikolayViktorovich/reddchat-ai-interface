@@ -114,6 +114,7 @@ marked.setOptions({
 })
 
 const props = defineProps({ message: Object })
+const emit = defineEmits(['continue'])
 const copied = ref(false)
 
 const formatted = computed(() => {

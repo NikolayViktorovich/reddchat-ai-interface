@@ -281,14 +281,14 @@ const handleSendMessage = async (content) => {
       })
     ]
 
-    const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+    const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer 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'
+        'Authorization': 'Bearer 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'
       },
       body: JSON.stringify({
-        model: 'llama-3.1-8b-instant',
+        model: 'deepseek/deepseek-r1-0528:free',
         messages: apiMessages,
         temperature: 0.7,
         max_tokens: 4096,
