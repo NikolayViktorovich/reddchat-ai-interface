@@ -1,5 +1,17 @@
 <template>
   <div class="w-72 bg-white/5 backdrop-blur-xl flex flex-col h-full rounded-3xl border border-white/10 mr-3">
+    <div class="p-6 border-b border-white/10 flex items-center gap-3">
+      <div class="w-10 h-10 rounded-full bg-white flex items-center justify-center flex-shrink-0">
+        <svg class="w-5 h-5 text-gray-900" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M10 1.944A11.954 11.954 0 012.166 5C2.056 5.649 2 6.319 2 7c0 5.225 3.34 9.67 8 11.317C14.66 16.67 18 12.225 18 7c0-.682-.057-1.35-.166-2.001A11.954 11.954 0 0110 1.944zM11 14a1 1 0 11-2 0 1 1 0 012 0zm0-7a1 1 0 10-2 0v3a1 1 0 102 0V7z" clip-rule="evenodd" />
+        </svg>
+      </div>
+      <div>
+        <h1 class="text-white text-lg font-semibold tracking-wider" style="font-family: 'Orbitron', sans-serif;">REDDCHAT</h1>
+        <p class="text-gray-400 text-xs">AI Assistant</p>
+      </div>
+    </div>
+    
     <div class="flex-1 overflow-y-auto scrollbar-thin py-2 pt-4">
       <button
         @click="$emit('new-chat')"
@@ -74,17 +86,6 @@
             </svg>
           </button>
         </div>
-      </div>
-    </div>
-
-    <div class="p-4">
-      <div class="p-4 mb-3">
-        <p class="text-white text-base font-semibold mb-1">Премиум возможности</p>
-        <p class="text-white text-base font-bold mb-3">REDDCHAT Pro</p>
-        <p class="text-gray-400 text-sm mb-4 leading-relaxed">Безлимитные запросы, генерация изображений, анализ кода и документов, приоритетная поддержка</p>
-        <button class="w-full bg-white hover:bg-gray-100 text-gray-900 text-sm font-semibold py-3 rounded-3xl transition-all duration-75 shadow-lg">
-          Активировать Pro
-        </button>
       </div>
     </div>
   </div>

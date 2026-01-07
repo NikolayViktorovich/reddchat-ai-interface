@@ -24,7 +24,7 @@
                 v-model="searchQuery"
                 type="text"
                 placeholder="Поиск..."
-                class="w-full pl-10 pr-3 py-2 bg-white/5 text-white text-sm placeholder-gray-400 rounded-xl border border-white/10 focus:outline-none focus:border-white/15 transition-all"
+                class="w-full pl-10 pr-3 py-2 bg-white/5 text-white text-sm placeholder-gray-400 rounded-xl border border-white/10 focus:outline-none transition-all"
               />
             </div>
           </div>

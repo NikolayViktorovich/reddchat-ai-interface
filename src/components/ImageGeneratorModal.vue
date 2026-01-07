@@ -19,7 +19,7 @@
               <textarea
                 v-model="prompt"
                 placeholder="Опишите что вы хотите увидеть..."
-                class="w-full h-32 px-4 py-3 bg-white/5 text-white placeholder-gray-500 rounded-2xl border border-white/10 focus:outline-none focus:border-white/15 transition-all resize-none text-sm"
+                class="w-full h-32 px-4 py-3 bg-white/5 text-white placeholder-gray-500 rounded-2xl border border-white/10 focus:outline-none transition-all resize-none text-sm"
               ></textarea>
             </div>
 
@@ -45,7 +45,7 @@
               <div class="relative">
                 <button
                   @click="showStyleDropdown = !showStyleDropdown"
-                  class="w-full px-4 py-3 bg-white/5 text-white rounded-2xl border border-white/10 hover:border-white/15 focus:outline-none focus:border-white/15 transition-all text-sm flex items-center justify-between"
+                  class="w-full px-4 py-3 bg-white/5 text-white rounded-2xl border border-white/10 hover:border-white/30 focus:outline-none transition-all text-sm flex items-center justify-between"
                 >
                   <span>{{ styles.find(s => s.value === selectedStyle)?.label }}</span>
                   <svg class="w-4 h-4 transition-transform duration-75" :class="showStyleDropdown ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24">
