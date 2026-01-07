@@ -84,18 +84,33 @@
               class="w-full pl-16 pr-16 py-5 bg-transparent text-white placeholder-gray-500 focus:outline-none text-sm"
             />
             
-            <button 
-              @click="sendMessage"
-              :disabled="!inputMessage.trim() || isLoading"
-              class="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full flex items-center justify-center transition-all duration-75"
-              :class="inputMessage.trim() && !isLoading
-                ? 'border-2 border-white/60 text-white/60 hover:bg-white/10 hover:border-white hover:text-white'
-                : 'border-2 border-white/10 text-gray-500 cursor-not-allowed'"
-            >
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-              </svg>
-            </button>
+            <transition name="button-switch" mode="out-in">
+              <button 
+                v-if="!isGenerating"
+                key="send"
+                @click="sendMessage"
+                :disabled="!inputMessage.trim() || isLoading"
+                class="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full flex items-center justify-center transition-all duration-75"
+                :class="inputMessage.trim() && !isLoading
+                  ? 'border-2 border-white/60 text-white/60 hover:bg-white/10 hover:border-white hover:text-white'
+                  : 'border-2 border-white/10 text-gray-500 cursor-not-allowed'"
+              >
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                </svg>
+              </button>
+              
+              <button 
+                v-else
+                key="stop"
+                @click="$emit('stop-generation')"
+                class="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full flex items-center justify-center transition-all duration-75 border-2 border-red-500/60 text-red-500/60 hover:bg-red-500/10 hover:border-red-500 hover:text-red-500"
+              >
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                  <rect x="6" y="6" width="12" height="12" rx="1" />
+                </svg>
+              </button>
+            </transition>
           </div>
         </div>
 
@@ -193,22 +208,37 @@
             class="w-full pl-16 pr-16 py-5 bg-transparent text-white placeholder-gray-500 focus:outline-none text-sm"
           />
           
-          <button 
-            @click="sendMessage"
-            :disabled="!inputMessage.trim() || isLoading"
-            class="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full flex items-center justify-center transition-all duration-75"
-            :class="inputMessage.trim() && !isLoading
-              ? 'border-2 border-white/60 text-white/60 hover:bg-white/10 hover:border-white hover:text-white'
-              : 'border-2 border-white/10 text-gray-500 cursor-not-allowed'"
-          >
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-            </svg>
-          </button>
+          <transition name="button-switch" mode="out-in">
+            <button 
+              v-if="!isGenerating"
+              key="send"
+              @click="sendMessage"
+              :disabled="!inputMessage.trim() || isLoading"
+              class="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full flex items-center justify-center transition-all duration-75"
+              :class="inputMessage.trim() && !isLoading
+                ? 'border-2 border-white/60 text-white/60 hover:bg-white/10 hover:border-white hover:text-white'
+                : 'border-2 border-white/10 text-gray-500 cursor-not-allowed'"
+            >
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+              </svg>
+            </button>
+            
+            <button 
+              v-else
+              key="stop"
+              @click="$emit('stop-generation')"
+              class="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full flex items-center justify-center transition-all duration-75 border-2 border-red-500/60 text-red-500/60 hover:bg-red-500/10 hover:border-red-500 hover:text-red-500"
+            >
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                <rect x="6" y="6" width="12" height="12" rx="1" />
+              </svg>
+            </button>
+          </transition>
         </div>
         
-        <p class="text-center text-gray-500 text-xs mt-3">
-          © 2026 REDDCHAT. Все права защищены. Проект создан в образовательных целях.
+        <p class="text-center text-gray-500 text-xs mt-3"> 
+          © 2026 REDDCHAT. Все права защищены.Разработан как пет-проект Nikolay Viktorovich.
         </p>
       </div>
     </div>
@@ -223,10 +253,11 @@ const props = defineProps({
   messages: Array,
   isLoading: Boolean,
   showWelcome: Boolean,
-  currentMode: String
+  currentMode: String,
+  isGenerating: Boolean
 })
 
-const emit = defineEmits(['send-message', 'change-mode'])
+const emit = defineEmits(['send-message', 'change-mode', 'stop-generation'])
 
 const inputMessage = ref('')
 const messagesContainer = ref(null)
@@ -348,5 +379,20 @@ watch(() => props.messages, () => {
 .mode-indicator-leave-to {
   opacity: 0;
   transform: translateY(-10px);
+}
+
+.button-switch-enter-active,
+.button-switch-leave-active {
+  transition: all 0.1s ease;
+}
+
+.button-switch-enter-from {
+  opacity: 0;
+  transform: scale(0.8) rotate(-90deg);
+}
+
+.button-switch-leave-to {
+  opacity: 0;
+  transform: scale(0.8) rotate(90deg);
 }
 </style>

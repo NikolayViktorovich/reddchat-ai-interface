@@ -15,6 +15,14 @@
   code, pre {
     font-family: 'JetBrains Mono', monospace;
   }
+  
+  * {
+    outline: none !important;
+  }
+  
+  *:focus {
+    outline: none !important;
+  }
 }
 
 @layer components {

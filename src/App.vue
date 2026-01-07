@@ -21,8 +21,10 @@
           :isLoading="isLoading"
           :showWelcome="showWelcome"
           :currentMode="currentMode"
+          :isGenerating="isCurrentlyTyping"
           @send-message="handleSendMessage"
           @change-mode="changeMode"
+          @stop-generation="stopGeneration"
         />
       </div>
     </div>
@@ -86,7 +88,7 @@ const currentModel = ref('GPT-4 Turbo')
 const currentMode = ref('chat')
 const confirmDialog = ref(null)
 let currentTypingTimeout = null
-let isCurrentlyTyping = false
+const isCurrentlyTyping = ref(false)
 
 const currentMessages = computed(() => {
   const conv = conversations.value.find(c => c.id === currentConversationId.value)
@@ -130,9 +132,9 @@ const deleteConversation = async (id) => {
 }
 
 const handleSendMessage = async (content) => {
-  if (isCurrentlyTyping && currentTypingTimeout) {
+  if (isCurrentlyTyping.value && currentTypingTimeout) {
     clearTimeout(currentTypingTimeout)
-    isCurrentlyTyping = false
+    isCurrentlyTyping.value = false
     
     const conv = conversations.value.find(c => c.id === currentConversationId.value)
     if (conv) {
@@ -168,31 +170,28 @@ const handleSendMessage = async (content) => {
   saveToLocalStorage()
 
   try {
-    const apiMessages = conv.messages.map(msg => ({
-      role: msg.role,
-      content: msg.content
-    }))
-
     const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
       method: 'POST',
       headers: {
-        'Authorization': 'Bearer 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',
-        'HTTP-Referer': 'https://reddchat.app',
-        'X-Title': 'REDDCHAT',
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer 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'
       },
       body: JSON.stringify({
         model: 'mistralai/devstral-2512:free',
-        messages: apiMessages
+        messages: conv.messages.map(m => ({
+          role: m.role,
+          content: m.content
+        }))
       })
     })
 
-    if (!response.ok) {
-      throw new Error('API request failed')
+    const data = await response.json()
+    
+    if (data.error) {
+      throw new Error(data.error.message || 'API Error')
     }
-
-    const result = await response.json()
-    const assistantMessage = result.choices[0].message
+    
+    const fullResponse = data.choices?.[0]?.message?.content || 'Извините, не удалось получить ответ.'
     
     const aiMessage = {
       id: Date.now() + 1,
@@ -206,15 +205,14 @@ const handleSendMessage = async (content) => {
     }
     conv.messages.push(aiMessage)
     isLoading.value = false
-    isCurrentlyTyping = true
+    isCurrentlyTyping.value = true
     
-    const fullResponse = assistantMessage.content
     let currentIndex = 0
     let lastWordCount = 0
     const typingSpeed = 15
     
     const typeNextChar = () => {
-      if (currentIndex < fullResponse.length && isCurrentlyTyping) {
+      if (currentIndex < fullResponse.length && isCurrentlyTyping.value) {
         const messageIndex = conv.messages.findIndex(m => m.id === aiMessage.id)
         if (messageIndex !== -1) {
           const currentText = fullResponse.substring(0, currentIndex + 1)
@@ -233,7 +231,7 @@ const handleSendMessage = async (content) => {
         if (messageIndex !== -1) {
           conv.messages[messageIndex].isTyping = false
         }
-        isCurrentlyTyping = false
+        isCurrentlyTyping.value = false
         saveToLocalStorage()
       }
     }
@@ -241,54 +239,37 @@ const handleSendMessage = async (content) => {
     currentTypingTimeout = setTimeout(typeNextChar, 100)
   } catch (error) {
     console.error('API Error:', error)
+    isLoading.value = false
     
-    const fullResponse = generateMockResponse(content)
-    
-    const aiMessage = {
+    const errorMessage = {
       id: Date.now() + 1,
       role: 'assistant',
-      content: '',
-      displayContent: '',
+      content: `Ошибка: ${error.message}`,
       timestamp: new Date(),
-      isTyping: true,
-      isStopped: false,
-      wordCount: 0
+      isTyping: false
     }
-    conv.messages.push(aiMessage)
-    isLoading.value = false
-    isCurrentlyTyping = true
-    
-    let currentIndex = 0
-    let lastWordCount = 0
-    const typingSpeed = 15
-    
-    const typeNextChar = () => {
-      if (currentIndex < fullResponse.length && isCurrentlyTyping) {
-        const messageIndex = conv.messages.findIndex(m => m.id === aiMessage.id)
-        if (messageIndex !== -1) {
-          const currentText = fullResponse.substring(0, currentIndex + 1)
-          conv.messages[messageIndex].content = currentText
-          
-          const wordCount = currentText.trim().split(/\s+/).length
-          if (wordCount > lastWordCount) {
-            conv.messages[messageIndex].wordCount = wordCount
-            lastWordCount = wordCount
-          }
-        }
-        currentIndex++
-        currentTypingTimeout = setTimeout(typeNextChar, typingSpeed)
-      } else {
-        const messageIndex = conv.messages.findIndex(m => m.id === aiMessage.id)
-        if (messageIndex !== -1) {
-          conv.messages[messageIndex].isTyping = false
-        }
-        isCurrentlyTyping = false
-        saveToLocalStorage()
-      }
-    }
-    
-    currentTypingTimeout = setTimeout(typeNextChar, 100)
+    conv.messages.push(errorMessage)
+    saveToLocalStorage()
   }
+}
+
+const stopGeneration = () => {
+  if (currentTypingTimeout) {
+    clearTimeout(currentTypingTimeout)
+    currentTypingTimeout = null
+  }
+  
+  const conv = conversations.value.find(c => c.id === currentConversationId.value)
+  if (conv) {
+    const lastMessage = conv.messages[conv.messages.length - 1]
+    if (lastMessage && lastMessage.role === 'assistant' && lastMessage.isTyping) {
+      lastMessage.isTyping = false
+      lastMessage.isStopped = true
+    }
+  }
+  
+  isCurrentlyTyping.value = false
+  saveToLocalStorage()
 }
 
 const generateMockResponse = (userInput) => {
