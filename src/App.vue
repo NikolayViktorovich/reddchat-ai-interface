@@ -200,17 +200,23 @@ const handleSendMessage = async (content) => {
   const conv = conversations.value.find(c => c.id === currentConversationId.value)
   if (!conv) return
 
+  const displayContent = typeof content === 'object' ? content.displayContent : content
+  const apiContent = typeof content === 'object' ? content.apiContent : content
+  const files = typeof content === 'object' ? content.files : []
+
   const userMessage = {
     id: Date.now(),
     role: 'user',
-    content,
+    content: displayContent,
+    apiContent: apiContent,
+    files: files,
     timestamp: new Date()
   }
 
   conv.messages.push(userMessage)
 
   if (conv.messages.length === 1) {
-    conv.title = content.slice(0, 50) + (content.length > 50 ? '...' : '')
+    conv.title = displayContent.slice(0, 50) + (displayContent.length > 50 ? '...' : '')
   }
 
   isLoading.value = true
@@ -222,76 +228,80 @@ const handleSendMessage = async (content) => {
       content: 'Ты полезный AI-ассистент. Отвечай на русском языке. Используй Markdown форматирование: заголовки (##), списки (- или 1.), **жирный**, *курсив*, `код`, ```блоки кода с указанием языка```. Структурируй ответы для лучшей читаемости.'
     }
     
+    const apiMessages = [
+      systemPrompt,
+      ...conv.messages.map(m => ({ role: m.role, content: m.apiContent || m.content }))
+    ]
+    
     const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer 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'
+        'Authorization': 'Bearer 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',
+        'HTTP-Referer': 'https://ai-chat.app',
+        'X-Title': 'AI Chat',
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        model: 'mistralai/devstral-2512:free',
-        messages: [
-          systemPrompt,
-          ...conv.messages.map(m => ({
-            role: m.role,
-            content: m.content
-          }))
-        ]
+        model: 'nex-agi/deepseek-v3.1-nex-n1:free',
+        messages: apiMessages,
+        stream: true
       })
     })
 
-    const data = await response.json()
-    
-    if (data.error) {
-      throw new Error(data.error.message || 'API Error')
+    if (!response.ok) {
+      const errorData = await response.json()
+      throw new Error(errorData.error?.message || 'API Error')
     }
-    
-    const fullResponse = data.choices?.[0]?.message?.content || 'Извините, не удалось получить ответ.'
-    
+
     const aiMessage = {
       id: Date.now() + 1,
       role: 'assistant',
       content: '',
-      displayContent: '',
       timestamp: new Date(),
       isTyping: true,
-      isStopped: false,
-      wordCount: 0
+      isStopped: false
     }
     conv.messages.push(aiMessage)
     isLoading.value = false
     isCurrentlyTyping.value = true
-    
-    let currentIndex = 0
-    let lastWordCount = 0
-    const typingSpeed = 15
-    
-    const typeNextChar = () => {
-      if (currentIndex < fullResponse.length && isCurrentlyTyping.value) {
-        const messageIndex = conv.messages.findIndex(m => m.id === aiMessage.id)
-        if (messageIndex !== -1) {
-          const currentText = fullResponse.substring(0, currentIndex + 1)
-          conv.messages[messageIndex].content = currentText
-          
-          const wordCount = currentText.trim().split(/\s+/).length
-          if (wordCount > lastWordCount) {
-            conv.messages[messageIndex].wordCount = wordCount
-            lastWordCount = wordCount
-          }
+
+    const reader = response.body.getReader()
+    const decoder = new TextDecoder()
+    let buffer = ''
+
+    while (true) {
+      const { done, value } = await reader.read()
+      if (done || !isCurrentlyTyping.value) break
+
+      buffer += decoder.decode(value, { stream: true })
+      const lines = buffer.split('\n')
+      buffer = lines.pop() || ''
+
+      for (const line of lines) {
+        if (line.startsWith('data: ')) {
+          const data = line.slice(6)
+          if (data === '[DONE]') break
+
+          try {
+            const parsed = JSON.parse(data)
+            const content = parsed.choices?.[0]?.delta?.content
+            if (content) {
+              const messageIndex = conv.messages.findIndex(m => m.id === aiMessage.id)
+              if (messageIndex !== -1) {
+                conv.messages[messageIndex].content += content
+              }
+            }
+          } catch (e) {}
         }
-        currentIndex++
-        currentTypingTimeout = setTimeout(typeNextChar, typingSpeed)
-      } else {
-        const messageIndex = conv.messages.findIndex(m => m.id === aiMessage.id)
-        if (messageIndex !== -1) {
-          conv.messages[messageIndex].isTyping = false
-        }
-        isCurrentlyTyping.value = false
-        saveToLocalStorage()
       }
     }
-    
-    currentTypingTimeout = setTimeout(typeNextChar, 100)
+
+    const messageIndex = conv.messages.findIndex(m => m.id === aiMessage.id)
+    if (messageIndex !== -1) {
+      conv.messages[messageIndex].isTyping = false
+    }
+    isCurrentlyTyping.value = false
+    saveToLocalStorage()
   } catch (error) {
     console.error('API Error:', error)
     isLoading.value = false

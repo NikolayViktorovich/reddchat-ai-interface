@@ -277,6 +277,7 @@ const messagesContainer = ref(null)
 const attachedFiles = ref([])
 const fileInput = ref(null)
 const fileInputWelcome = ref(null)
+const userScrolledUp = ref(false)
 
 const examplePrompts = [
   { short: 'Объясни алгоритм сортировки', full: 'Объясни мне подробно, как работает алгоритм быстрой сортировки с примерами' },
@@ -334,34 +335,75 @@ const typeText = () => {
 
 onMounted(() => {
   typeText()
+  if (messagesContainer.value) {
+    messagesContainer.value.addEventListener('scroll', handleScroll)
+  }
 })
 
 onUnmounted(() => {
   if (typingTimeout) {
     clearTimeout(typingTimeout)
   }
+  if (messagesContainer.value) {
+    messagesContainer.value.removeEventListener('scroll', handleScroll)
+  }
 })
 
+const handleScroll = () => {
+  if (!messagesContainer.value) return
+  const { scrollTop, scrollHeight, clientHeight } = messagesContainer.value
+  userScrolledUp.value = scrollHeight - scrollTop - clientHeight > 100
+}
+
 const sendMessage = () => {
-  if (inputMessage.value.trim() && !props.isLoading) {
-    let messageContent = inputMessage.value.trim()
+  if ((inputMessage.value.trim() || attachedFiles.value.length > 0) && !props.isLoading) {
+    let displayContent = inputMessage.value.trim()
+    let apiContent = inputMessage.value.trim()
+    const files = [...attachedFiles.value]
     
-    if (attachedFiles.value.length > 0) {
-      messageContent += '\n\n📎 Прикрепленные файлы:\n'
-      attachedFiles.value.forEach(file => {
-        messageContent += `- ${file.name}\n`
+    if (files.length > 0) {
+      apiContent += '\n\nПрикрепленные файлы:\n'
+      files.forEach(file => {
+        if (file.type.startsWith('image/')) {
+          apiContent += `\n--- ${file.name} (изображение base64) ---\n${file.content}\n`
+        } else {
+          apiContent += `\n--- ${file.name} ---\n${file.content}\n`
+        }
       })
     }
     
-    emit('send-message', messageContent)
+    emit('send-message', { displayContent, apiContent, files })
     inputMessage.value = ''
     attachedFiles.value = []
   }
 }
 
-const handleFileSelect = (event) => {
+const handleFileSelect = async (event) => {
   const files = Array.from(event.target.files)
-  attachedFiles.value.push(...files)
+  for (const file of files) {
+    try {
+      const content = await readFileContent(file)
+      attachedFiles.value.push({ name: file.name, content, type: file.type })
+    } catch (e) {
+      attachedFiles.value.push({ name: file.name, content: '[Не удалось прочитать файл]', type: file.type })
+    }
+  }
+  event.target.value = ''
+}
+
+const readFileContent = (file) => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader()
+    if (file.type.startsWith('image/')) {
+      reader.onload = () => resolve(reader.result)
+      reader.onerror = reject
+      reader.readAsDataURL(file)
+    } else {
+      reader.onload = () => resolve(reader.result)
+      reader.onerror = reject
+      reader.readAsText(file)
+    }
+  })
 }
 
 const removeFile = (index) => {
@@ -370,7 +412,7 @@ const removeFile = (index) => {
 
 watch(() => props.messages, () => {
   nextTick(() => {
-    if (messagesContainer.value) {
+    if (messagesContainer.value && !userScrolledUp.value) {
       messagesContainer.value.scrollTop = messagesContainer.value.scrollHeight
     }
   })

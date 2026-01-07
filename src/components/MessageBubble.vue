@@ -3,7 +3,26 @@
     <div v-if="message.role === 'user'" class="flex justify-end">
       <div class="max-w-3xl">
         <div class="bg-white/5 backdrop-blur-sm text-white rounded-3xl px-6 py-4 border border-white/10">
-          <p class="text-base leading-relaxed whitespace-pre-wrap">{{ message.content }}</p>
+          <p v-if="message.content" class="text-base leading-relaxed whitespace-pre-wrap">{{ message.content }}</p>
+          <div v-if="message.files && message.files.length > 0" class="mt-3 space-y-2">
+            <div v-for="(file, index) in message.files" :key="index">
+              <img 
+                v-if="file.type && file.type.startsWith('image/')" 
+                :src="file.content" 
+                :alt="file.name"
+                class="max-w-xs rounded-xl border border-white/10"
+              />
+              <div 
+                v-else 
+                class="flex items-center gap-2 px-3 py-2 bg-white/5 rounded-xl border border-white/10 text-sm"
+              >
+                <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                <span class="text-gray-300">{{ file.name }}</span>
+              </div>
+            </div>
+          </div>
         </div>
         <p class="text-xs text-gray-500 mt-2 text-right">{{ formatTime(message.timestamp) }}</p>
       </div>
