@@ -1,6 +1,7 @@
 <template>
-  <div v-if="isOpen" class="fixed inset-0 bg-black/70 flex items-end md:items-center justify-center z-50 md:p-6 animate-fade-in" @click.self="$emit('close')">
-    <div class="glass-modal w-full md:max-w-5xl h-[90vh] md:rounded-2xl rounded-t-3xl border-t md:border border-white/5 flex flex-col md:flex-row overflow-hidden animate-slide-up md:animate-scale-in">
+  <Transition name="modal">
+    <div v-if="isOpen" class="fixed inset-0 bg-black/70 flex items-end md:items-center justify-center z-50 md:p-6" @click.self="$emit('close')">
+      <div class="modal-content glass-modal w-full md:max-w-5xl h-[90vh] md:rounded-2xl rounded-t-3xl border-t md:border border-white/5 flex flex-col md:flex-row overflow-hidden">
       
       <div class="md:hidden flex items-center justify-between p-4 border-b border-white/5">
         <h2 class="text-lg text-white font-medium">Генерация</h2>
@@ -101,6 +102,7 @@
       </div>
     </div>
   </div>
+  </Transition>
 </template>
 
 <script setup>

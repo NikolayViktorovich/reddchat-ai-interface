@@ -1,10 +1,11 @@
 <template>
-  <div 
-    v-if="true"
-    class="fixed inset-0 bg-black/70 flex items-end md:items-center justify-center z-50 md:p-6 animate-fade-in" 
-    @click.self="$emit('close')"
-  >
-    <div class="glass-modal w-full md:max-w-lg md:rounded-2xl rounded-t-3xl border-t md:border border-white/5 shadow-2xl overflow-hidden max-h-[90vh] flex flex-col animate-slide-up md:animate-scale-in">
+  <Transition name="modal">
+    <div 
+      v-if="true"
+      class="fixed inset-0 bg-black/70 flex items-end md:items-center justify-center z-50 md:p-6" 
+      @click.self="$emit('close')"
+    >
+      <div class="modal-content glass-modal w-full md:max-w-lg md:rounded-2xl rounded-t-3xl border-t md:border border-white/5 shadow-2xl overflow-hidden max-h-[90vh] flex flex-col">
       <div class="flex items-center justify-between p-4 md:p-6 border-b border-white/5">
         <h2 class="text-lg text-white font-medium">Настройки</h2>
         <button @click="$emit('close')" class="p-2 text-gray-400 hover:text-white transition-colors">
@@ -63,7 +64,8 @@
         <button @click="saveSettings" class="flex-1 py-3 bg-white/10 text-white rounded-2xl text-sm border border-white/5 hover:bg-white/15">Сохранить</button>
       </div>
     </div>
-  </div>
+    </div>
+  </Transition>
 </template>
 
 <script setup>

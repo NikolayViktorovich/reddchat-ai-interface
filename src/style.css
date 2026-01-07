@@ -321,3 +321,40 @@
 .transition-fast {
   transition: all 0.15s ease;
 }
+
+
+/* Safe area for mobile browsers */
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+  .safe-area-bottom {
+    padding-bottom: calc(env(safe-area-inset-bottom) + 12px);
+  }
+}
+
+/* Sidebar animation */
+.sidebar-enter-active,
+.sidebar-leave-active {
+  transition: transform 0.2s ease-out;
+}
+
+.sidebar-enter-from,
+.sidebar-leave-to {
+  transform: translateX(-100%);
+}
+
+@media (min-width: 1024px) {
+  .sidebar-enter-from,
+  .sidebar-leave-to {
+    transform: translateX(0);
+  }
+}
+
+/* Overlay animation */
+.overlay-enter-active,
+.overlay-leave-active {
+  transition: opacity 0.2s ease;
+}
+
+.overlay-enter-from,
+.overlay-leave-to {
+  opacity: 0;
+}

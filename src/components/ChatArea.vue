@@ -1,10 +1,12 @@
 <template>
   <div class="flex-1 flex flex-col overflow-hidden">
     <div class="lg:hidden flex items-center justify-between pl-0 pr-2 pt-1 pb-3">
-      <button @click="$emit('toggle-sidebar')" class="p-2 text-gray-400 active:text-white">
-        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7h16M4 12h16M4 17h16" />
-        </svg>
+      <button @click="$emit('toggle-sidebar')" class="p-2 text-gray-300 active:text-white">
+        <div class="hamburger" :class="{ 'is-active': sidebarOpen }">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
       </button>
       <div class="text-center">
         <p class="text-base text-white/90 tracking-wide leading-none" style="font-family: 'Orbitron', sans-serif; font-weight: 300;">REDD</p>
@@ -103,7 +105,7 @@
       </div>
     </div>
 
-    <div v-if="!showWelcome" class="px-4 md:px-6 py-3 md:py-4 pb-20 md:pb-4">
+    <div v-if="!showWelcome" class="px-4 md:px-6 py-3 md:py-4 pb-4 mb-[env(safe-area-inset-bottom,0px)] md:mb-0">
       <div class="max-w-4xl mx-auto">
         <div v-if="attachedFiles.length" class="mb-3 flex flex-wrap gap-2">
           <div v-for="(file, index) in attachedFiles" :key="index" class="flex items-center gap-2 px-3 py-2 bg-white/5 rounded-xl border border-white/10 text-sm">
@@ -153,7 +155,8 @@ const props = defineProps({
   isLoading: Boolean,
   showWelcome: Boolean,
   currentMode: String,
-  isGenerating: Boolean
+  isGenerating: Boolean,
+  sidebarOpen: Boolean
 })
 
 const emit = defineEmits(['send-message', 'change-mode', 'stop-generation', 'toggle-sidebar'])
@@ -231,3 +234,38 @@ watch(() => props.messages, () => {
   nextTick(() => { if (messagesContainer.value && !userScrolledUp.value) messagesContainer.value.scrollTop = messagesContainer.value.scrollHeight })
 }, { deep: true })
 </script>
+
+
+<style scoped>
+.hamburger {
+  width: 20px;
+  height: 14px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.hamburger span {
+  display: block;
+  height: 2px;
+  width: 100%;
+  background: currentColor;
+  border-radius: 2px;
+  transition: all 0.25s ease;
+  transform-origin: center;
+}
+
+.hamburger.is-active span:nth-child(1) {
+  transform: translateY(6px) rotate(45deg);
+}
+
+.hamburger.is-active span:nth-child(2) {
+  opacity: 0;
+  transform: scaleX(0);
+}
+
+.hamburger.is-active span:nth-child(3) {
+  transform: translateY(-6px) rotate(-45deg);
+}
+</style>

@@ -1,29 +1,31 @@
 <template>
   <div class="flex h-screen gradient-bg p-2 md:p-3">
     <div class="relative z-10 flex w-full">
-      <div 
-        v-if="sidebarOpen" 
-        class="fixed inset-0 bg-black/50 z-40 lg:hidden animate-fade-in"
-        @click="sidebarOpen = false"
-      ></div>
+      <Transition name="overlay">
+        <div 
+          v-if="sidebarOpen" 
+          class="fixed inset-0 bg-black/50 z-40 lg:hidden"
+          @click="sidebarOpen = false"
+        ></div>
+      </Transition>
       
-      <Sidebar 
-        :conversations="conversations"
-        :currentConversationId="currentConversationId"
-        :currentMode="currentMode"
-        :class="[
-          'fixed lg:relative z-50 lg:z-auto transition-all duration-200',
-          sidebarOpen ? 'translate-x-0 visible' : '-translate-x-full invisible lg:translate-x-0 lg:visible'
-        ]"
-        @new-chat="handleNewChat"
-        @select-conversation="handleSelectConversation"
-        @delete-conversation="deleteConversation"
-        @show-history="handleShowHistory"
-        @show-image-generator="handleShowImageGenerator"
-        @show-document-analyzer="handleShowDocumentAnalyzer"
-        @show-translator="handleShowTranslator"
-        @change-mode="handleChangeMode"
-      />
+      <Transition name="sidebar">
+        <Sidebar 
+          v-show="sidebarOpen || isDesktop"
+          :conversations="conversations"
+          :currentConversationId="currentConversationId"
+          :currentMode="currentMode"
+          class="fixed lg:relative z-50 lg:z-auto"
+          @new-chat="handleNewChat"
+          @select-conversation="handleSelectConversation"
+          @delete-conversation="deleteConversation"
+          @show-history="handleShowHistory"
+          @show-image-generator="handleShowImageGenerator"
+          @show-document-analyzer="handleShowDocumentAnalyzer"
+          @show-translator="handleShowTranslator"
+          @change-mode="handleChangeMode"
+        />
+      </Transition>
 
       <div class="flex-1 flex flex-col w-full">
         <ChatArea 
@@ -32,6 +34,7 @@
           :showWelcome="showWelcome"
           :currentMode="currentMode"
           :isGenerating="isCurrentlyTyping"
+          :sidebarOpen="sidebarOpen"
           @send-message="handleSendMessage"
           @change-mode="changeMode"
           @stop-generation="stopGeneration"
@@ -43,7 +46,7 @@
     <SettingsModal 
       v-if="showSettings"
       :currentModel="currentModel"
-      @close="showSettings = false"
+      @close="closeSettings"
       @update-model="updateModel"
     />
 
@@ -51,7 +54,7 @@
       :isOpen="showHistory"
       :conversations="conversations"
       :currentConversationId="currentConversationId"
-      @close="showHistory = false"
+      @close="closeHistory"
       @select-conversation="selectConversation"
       @delete-conversation="deleteConversation"
     />
@@ -60,23 +63,23 @@
 
     <ImageGeneratorModal
       :isOpen="showImageGenerator"
-      @close="showImageGenerator = false"
+      @close="closeImageGenerator"
     />
 
     <DocumentAnalyzerModal
       :isOpen="showDocumentAnalyzer"
-      @close="showDocumentAnalyzer = false"
+      @close="closeDocumentAnalyzer"
     />
 
     <TranslatorModal
       :isOpen="showTranslator"
-      @close="showTranslator = false"
+      @close="closeTranslator"
     />
   </div>
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 import Sidebar from './components/Sidebar.vue'
 import Header from './components/Header.vue'
 import ChatArea from './components/ChatArea.vue'
@@ -101,6 +104,23 @@ const confirmDialog = ref(null)
 let currentTypingTimeout = null
 const isCurrentlyTyping = ref(false)
 const sidebarOpen = ref(false)
+const isDesktop = ref(window.innerWidth >= 1024)
+
+const handleResize = () => {
+  isDesktop.value = window.innerWidth >= 1024
+}
+
+onMounted(() => {
+  window.addEventListener('resize', handleResize)
+  loadFromLocalStorage()
+  if (conversations.value.length === 0) {
+    createNewChat()
+  }
+})
+
+onUnmounted(() => {
+  window.removeEventListener('resize', handleResize)
+})
 
 const currentMessages = computed(() => {
   const conv = conversations.value.find(c => c.id === currentConversationId.value)
@@ -155,6 +175,31 @@ const handleShowTranslator = () => {
 
 const handleChangeMode = (mode) => {
   changeMode(mode)
+  sidebarOpen.value = false
+}
+
+const closeSettings = () => {
+  showSettings.value = false
+  sidebarOpen.value = false
+}
+
+const closeHistory = () => {
+  showHistory.value = false
+  sidebarOpen.value = false
+}
+
+const closeImageGenerator = () => {
+  showImageGenerator.value = false
+  sidebarOpen.value = false
+}
+
+const closeDocumentAnalyzer = () => {
+  showDocumentAnalyzer.value = false
+  sidebarOpen.value = false
+}
+
+const closeTranslator = () => {
+  showTranslator.value = false
   sidebarOpen.value = false
 }
 
@@ -380,6 +425,7 @@ const loadFromLocalStorage = () => {
 }
 
 onMounted(() => {
+  window.addEventListener('resize', handleResize)
   loadFromLocalStorage()
   if (conversations.value.length === 0) {
     createNewChat()

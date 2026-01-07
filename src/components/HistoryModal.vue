@@ -1,6 +1,7 @@
 <template>
-  <div v-if="isOpen" class="fixed inset-0 bg-black/70 flex items-end md:items-center justify-center z-50 md:p-6 animate-fade-in" @click.self="$emit('close')">
-    <div class="glass-modal w-full md:max-w-7xl h-[90vh] md:rounded-2xl rounded-t-3xl border-t md:border border-white/5 flex flex-col md:flex-row overflow-hidden animate-slide-up md:animate-scale-in">
+  <Transition name="modal">
+    <div v-if="isOpen" class="fixed inset-0 bg-black/70 flex items-end md:items-center justify-center z-50 md:p-6" @click.self="$emit('close')">
+      <div class="modal-content glass-modal w-full md:max-w-7xl h-[90vh] md:rounded-2xl rounded-t-3xl border-t md:border border-white/5 flex flex-col md:flex-row overflow-hidden">
       <div class="md:hidden flex items-center justify-between p-4 border-b border-white/5">
         <h2 class="text-lg text-white font-medium">История диалогов</h2>
         <button @click="$emit('close')" class="p-2 text-gray-400 hover:text-white transition-colors">
@@ -16,43 +17,47 @@
           </div>
         </div>
 
-        <div v-if="!mobileSelectedConv" class="flex-1 overflow-y-auto">
-          <div v-if="filteredConversations.length === 0" class="flex flex-col items-center justify-center h-full p-6">
-            <p class="text-gray-400 text-sm">{{ searchQuery ? 'Ничего не найдено' : 'История пуста' }}</p>
-          </div>
-          <div v-else class="divide-y divide-white/5">
-            <div v-for="conv in filteredConversations" :key="conv.id" class="flex items-center justify-between p-4 active:bg-white/5" @click="mobileSelectedConv = conv">
-              <div class="flex-1 min-w-0 mr-3">
-                <h3 class="text-white text-sm truncate">{{ conv.title }}</h3>
-                <p class="text-gray-500 text-xs mt-1">{{ formatDate(conv.createdAt) }} • {{ conv.messages.length }} сообщ.</p>
+        <Transition name="slide-right" mode="out-in">
+          <div v-if="!mobileSelectedConv" key="list" class="flex-1 overflow-y-auto">
+            <div v-if="filteredConversations.length === 0" class="flex flex-col items-center justify-center h-full p-6">
+              <p class="text-gray-400 text-sm">{{ searchQuery ? 'Ничего не найдено' : 'История пуста' }}</p>
+            </div>
+            <div v-else class="divide-y divide-white/5">
+              <div v-for="conv in filteredConversations" :key="conv.id" class="flex items-center justify-between p-4 active:bg-white/5 transition-colors" @click="mobileSelectedConv = conv">
+                <div class="flex-1 min-w-0 mr-3">
+                  <h3 class="text-white text-sm truncate">{{ conv.title }}</h3>
+                  <p class="text-gray-500 text-xs mt-1">{{ formatDate(conv.createdAt) }} • {{ conv.messages.length }} сообщ.</p>
+                </div>
+                <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
               </div>
-              <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
             </div>
           </div>
-        </div>
 
-        <div v-else class="flex-1 flex flex-col overflow-hidden">
-          <div class="flex items-center gap-3 p-4 border-b border-white/5">
-            <button @click="mobileSelectedConv = null" class="p-1 text-gray-400">
-              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
-            </button>
-            <div class="flex-1 min-w-0">
-              <h3 class="text-white text-sm truncate">{{ mobileSelectedConv.title }}</h3>
-              <p class="text-gray-500 text-xs">{{ formatDate(mobileSelectedConv.createdAt) }}</p>
-            </div>
-          </div>
-          <div class="flex-1 overflow-y-auto p-4 space-y-3">
-            <div v-for="message in mobileSelectedConv.messages" :key="message.id" class="flex" :class="message.role === 'user' ? 'justify-end' : 'justify-start'">
-              <div class="max-w-[85%] rounded-2xl px-3 py-2 text-sm" :class="message.role === 'user' ? 'bg-white/10 text-white whitespace-pre-wrap' : 'bg-white/5 text-white'">
-                <div v-if="message.role === 'assistant'" v-html="formatMarkdown(message.content)" class="markdown-content"></div>
-                <span v-else>{{ message.content }}</span>
+          <div v-else key="detail" class="flex-1 flex flex-col overflow-hidden">
+            <div class="flex items-center gap-3 p-4 border-b border-white/5">
+              <button @click="mobileSelectedConv = null" class="p-1 text-gray-400">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
+              </button>
+              <div class="flex-1 min-w-0">
+                <h3 class="text-white text-sm truncate">{{ mobileSelectedConv.title }}</h3>
+                <p class="text-gray-500 text-xs">{{ formatDate(mobileSelectedConv.createdAt) }}</p>
               </div>
             </div>
+            <div class="flex-1 overflow-y-auto p-4 space-y-3">
+              <TransitionGroup name="message-fade" tag="div" class="space-y-3">
+                <div v-for="message in mobileSelectedConv.messages" :key="message.id" class="flex" :class="message.role === 'user' ? 'justify-end' : 'justify-start'">
+                  <div class="max-w-[85%] rounded-2xl px-3 py-2 text-sm" :class="message.role === 'user' ? 'bg-white/10 text-white whitespace-pre-wrap' : 'bg-white/5 text-white'">
+                    <div v-if="message.role === 'assistant'" v-html="formatMarkdown(message.content)" class="markdown-content"></div>
+                    <span v-else>{{ message.content }}</span>
+                  </div>
+                </div>
+              </TransitionGroup>
+            </div>
+            <div class="p-4 border-t border-white/5">
+              <button @click="openMobileConversation" class="w-full py-3 bg-white/10 text-white rounded-2xl text-sm font-medium">Открыть диалог</button>
+            </div>
           </div>
-          <div class="p-4 border-t border-white/5">
-            <button @click="openMobileConversation" class="w-full py-3 bg-white/10 text-white rounded-2xl text-sm font-medium">Открыть диалог</button>
-          </div>
-        </div>
+        </Transition>
       </div>
 
       <div class="hidden md:flex w-96 flex-col border-r border-white/5">
@@ -101,22 +106,27 @@
           </button>
         </div>
         <div class="flex-1 overflow-y-auto scrollbar-thin p-6">
-          <div v-if="!selectedConversation" class="flex flex-col items-center justify-center h-full">
-            <svg class="w-12 h-12 text-gray-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" /></svg>
-            <p class="text-gray-400 text-lg">Выбери разговор для предпросмотра</p>
-          </div>
-          <div v-else class="space-y-4">
-            <div v-for="message in selectedConversation.messages" :key="message.id" class="flex" :class="message.role === 'user' ? 'justify-end' : 'justify-start'">
-              <div class="max-w-2xl rounded-2xl px-4 py-3 text-sm" :class="message.role === 'user' ? 'bg-white/10 text-white whitespace-pre-wrap' : 'bg-white/5 text-white'">
-                <div v-if="message.role === 'assistant'" v-html="formatMarkdown(message.content)" class="markdown-content"></div>
-                <span v-else>{{ message.content }}</span>
-              </div>
+          <Transition name="preview-fade" mode="out-in">
+            <div v-if="!selectedConversation" key="empty" class="flex flex-col items-center justify-center h-full">
+              <svg class="w-12 h-12 text-gray-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" /></svg>
+              <p class="text-gray-400 text-lg">Выбери разговор для предпросмотра</p>
             </div>
-          </div>
+            <div v-else :key="selectedConvId" class="space-y-4">
+              <TransitionGroup name="message-stagger" tag="div" class="space-y-4">
+                <div v-for="(message, index) in selectedConversation.messages" :key="message.id" class="flex" :class="message.role === 'user' ? 'justify-end' : 'justify-start'" :style="{ '--delay': index * 0.01 + 's' }">
+                  <div class="max-w-2xl rounded-2xl px-4 py-3 text-sm" :class="message.role === 'user' ? 'bg-white/10 text-white whitespace-pre-wrap' : 'bg-white/5 text-white'">
+                    <div v-if="message.role === 'assistant'" v-html="formatMarkdown(message.content)" class="markdown-content"></div>
+                    <span v-else>{{ message.content }}</span>
+                  </div>
+                </div>
+              </TransitionGroup>
+            </div>
+          </Transition>
         </div>
       </div>
     </div>
-  </div>
+    </div>
+  </Transition>
 </template>
 
 <script setup>
@@ -186,6 +196,53 @@ const formatDate = (date) => {
 </script>
 
 <style scoped>
+/* Slide right transition for mobile */
+.slide-right-enter-active,
+.slide-right-leave-active {
+  transition: all 0.1s ease-out;
+}
+
+.slide-right-enter-from {
+  opacity: 0;
+  transform: translateX(15px);
+}
+
+.slide-right-leave-to {
+  opacity: 0;
+  transform: translateX(-15px);
+}
+
+/* Preview fade transition for desktop */
+.preview-fade-enter-active,
+.preview-fade-leave-active {
+  transition: all 0.08s ease;
+}
+
+.preview-fade-enter-from,
+.preview-fade-leave-to {
+  opacity: 0;
+}
+
+/* Message stagger animation */
+.message-stagger-enter-active {
+  transition: all 0.1s ease;
+  transition-delay: var(--delay, 0s);
+}
+
+.message-stagger-enter-from {
+  opacity: 0;
+  transform: translateY(5px);
+}
+
+/* Message fade for mobile */
+.message-fade-enter-active {
+  transition: all 0.08s ease;
+}
+
+.message-fade-enter-from {
+  opacity: 0;
+}
+
 .markdown-content { line-height: 1.5; }
 .markdown-content :deep(pre) { background: rgba(0,0,0,0.4); border-radius: 10px; padding: 12px; overflow-x: auto; margin: 8px 0; border: 1px solid rgba(255,255,255,0.1); }
 .markdown-content :deep(code) { font-family: 'JetBrains Mono', monospace; font-size: 0.85em; }
