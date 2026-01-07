@@ -103,7 +103,7 @@
       </div>
     </div>
 
-    <div v-if="!showWelcome" class="px-4 md:px-6 py-3 md:py-4 pb-16 md:pb-4">
+    <div v-if="!showWelcome" class="px-4 md:px-6 py-3 md:py-4 pb-20 md:pb-4">
       <div class="max-w-4xl mx-auto">
         <div v-if="attachedFiles.length" class="mb-3 flex flex-wrap gap-2">
           <div v-for="(file, index) in attachedFiles" :key="index" class="flex items-center gap-2 px-3 py-2 bg-white/5 rounded-xl border border-white/10 text-sm">
