@@ -289,17 +289,22 @@ const handleSendMessage = async (content) => {
       })
     ]
     
-    const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+    // Формируем prompt из сообщений для Ollama /api/generate
+    const prompt = apiMessages.map(m => {
+      if (m.role === 'system') return `System: ${m.content}`
+      if (m.role === 'user') return `User: ${m.content}`
+      if (m.role === 'assistant') return `Assistant: ${m.content}`
+      return m.content
+    }).join('\n\n') + '\n\nAssistant:'
+
+    const response = await fetch('http://localhost:11434/api/generate', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer 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',
-        'HTTP-Referer': 'https://reddchat.vercel.app',
-        'X-Title': 'REDDCHAT'
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        model: 'deepseek/deepseek-chat-v3-0324:free',
-        messages: apiMessages,
+        model: 'deepseek-r1:8b',
+        prompt: prompt,
         stream: true
       })
     })
