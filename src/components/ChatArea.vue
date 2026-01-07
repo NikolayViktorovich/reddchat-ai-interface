@@ -1,9 +1,9 @@
 <template>
   <div class="flex-1 flex flex-col overflow-hidden">
-    <div class="lg:hidden flex items-center justify-between px-4 py-3">
+    <div class="lg:hidden flex items-center justify-between pl-0 pr-2 pt-1 pb-3">
       <button @click="$emit('toggle-sidebar')" class="p-2 text-gray-400 active:text-white">
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7h16M4 12h16M4 17h16" />
         </svg>
       </button>
       <div class="text-center">
