@@ -5,6 +5,7 @@
 @layer base {
   html {
     height: 100%;
+    height: 100dvh;
     overflow: hidden;
     position: fixed;
     width: 100%;
@@ -14,6 +15,7 @@
     @apply bg-gray-900 text-white;
     font-family: 'SB Sans Interface', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     height: 100%;
+    height: 100dvh;
     overflow: hidden;
     position: fixed;
     width: 100%;
@@ -23,6 +25,7 @@
   
   #app {
     height: 100%;
+    height: 100dvh;
     overflow: hidden;
   }
   

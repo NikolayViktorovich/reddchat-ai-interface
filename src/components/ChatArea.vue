@@ -96,16 +96,20 @@
       <div v-else class="max-w-4xl mx-auto px-4 md:px-6 py-4 md:py-6">
         <MessageBubble v-for="message in messages" :key="message.id" :message="message" />
         <div v-if="isLoading" class="flex mb-8">
-          <div class="flex items-center gap-1.5">
-            <div class="w-2.5 h-2.5 bg-gray-400 rounded-full animate-dot-1"></div>
-            <div class="w-2.5 h-2.5 bg-gray-400 rounded-full animate-dot-2"></div>
-            <div class="w-2.5 h-2.5 bg-gray-400 rounded-full animate-dot-3"></div>
+          <div class="thinking-indicator">
+            <div class="spinner">
+              <svg class="w-5 h-5" viewBox="0 0 24 24">
+                <circle class="spinner-track" cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/>
+                <circle class="spinner-head" cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <span class="thinking-text">Думаю...</span>
           </div>
         </div>
       </div>
     </div>
 
-    <div v-if="!showWelcome" class="px-4 md:px-6 py-3 md:py-4 pb-4 mb-[env(safe-area-inset-bottom,0px)] md:mb-0">
+    <div v-if="!showWelcome" class="input-area px-4 md:px-6 py-3 md:py-4 pb-4 md:pb-4">
       <div class="max-w-4xl mx-auto">
         <div v-if="attachedFiles.length" class="mb-3 flex flex-wrap gap-2">
           <div v-for="(file, index) in attachedFiles" :key="index" class="flex items-center gap-2 px-3 py-2 bg-white/5 rounded-xl border border-white/10 text-sm">
@@ -267,5 +271,70 @@ watch(() => props.messages, () => {
 
 .hamburger.is-active span:nth-child(3) {
   transform: translateY(-6px) rotate(-45deg);
+}
+
+/* Thinking indicator */
+.thinking-indicator {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.spinner {
+  animation: spin 1s linear infinite;
+}
+
+.spinner-track {
+  opacity: 0.2;
+}
+
+.spinner-head {
+  stroke-dasharray: 45 200;
+  stroke-dashoffset: 0;
+  animation: spinner-dash 1.2s ease-in-out infinite;
+}
+
+@keyframes spin {
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes spinner-dash {
+  0% {
+    stroke-dasharray: 1 200;
+    stroke-dashoffset: 0;
+  }
+  50% {
+    stroke-dasharray: 45 200;
+    stroke-dashoffset: -20;
+  }
+  100% {
+    stroke-dasharray: 45 200;
+    stroke-dashoffset: -62;
+  }
+}
+
+.thinking-text {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 13px;
+}
+
+/* Mobile browser bottom bar fix */
+@media (max-width: 767px) {
+  .input-area {
+    padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+    margin-bottom: constant(safe-area-inset-bottom); /* iOS < 11.2 */
+    margin-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  
+  /* Fallback for Chrome Android */
+  @supports not (padding-bottom: env(safe-area-inset-bottom)) {
+    .input-area {
+      padding-bottom: 20px;
+    }
+  }
 }
 </style>

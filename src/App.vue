@@ -1,5 +1,5 @@
 <template>
-  <div class="flex h-screen gradient-bg p-2 md:p-3">
+  <div class="flex h-screen h-[100dvh] gradient-bg p-2 md:p-3">
     <div class="relative z-10 flex w-full">
       <Transition name="overlay">
         <div 
@@ -275,30 +275,43 @@ const handleSendMessage = async (content) => {
     
     const apiMessages = [
       systemPrompt,
-      ...conv.messages.map(m => ({ 
-        role: m.role, 
-        content: m.apiContent || m.content 
-      }))
+      ...conv.messages.map(m => {
+        let content = m.apiContent || m.content
+        // Если content это строка, оставляем как есть
+        // Если массив или объект, преобразуем в строку
+        if (typeof content !== 'string') {
+          content = JSON.stringify(content)
+        }
+        return { 
+          role: m.role, 
+          content: content
+        }
+      })
     ]
     
-    const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+    const response = await fetch('https://zenmux.ai/api/v1/chat/completions', {
       method: 'POST',
       headers: {
-        'Authorization': 'Bearer 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',
-        'HTTP-Referer': 'https://reddchat-ai-interface.vercel.app',
-        'X-Title': 'AI Chat',
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer sk-ai-v1-1274456ebe3da62129258f977166957a1bb6686740fadf473f3c997891747765'
       },
       body: JSON.stringify({
-        model: 'nex-agi/deepseek-v3.1-nex-n1:free',
+        model: 'xiaomi/mimo-v2-flash',
         messages: apiMessages,
         stream: true
       })
     })
 
     if (!response.ok) {
-      const errorData = await response.json()
-      throw new Error(errorData.error?.message || 'API Error')
+      const errorText = await response.text()
+      let errorMsg = 'API Error'
+      try {
+        const errorData = JSON.parse(errorText)
+        errorMsg = errorData.error?.message || errorData.message || errorData.error || errorMsg
+      } catch {
+        errorMsg = errorText || errorMsg
+      }
+      throw new Error(errorMsg)
     }
 
     const aiMessage = {
@@ -326,21 +339,22 @@ const handleSendMessage = async (content) => {
       buffer = lines.pop() || ''
 
       for (const line of lines) {
-        if (line.startsWith('data: ')) {
-          const data = line.slice(6)
-          if (data === '[DONE]') break
+        const trimmed = line.trim()
+        if (!trimmed || !trimmed.startsWith('data: ')) continue
+        
+        const data = trimmed.slice(6)
+        if (data === '[DONE]') break
 
-          try {
-            const parsed = JSON.parse(data)
-            const content = parsed.choices?.[0]?.delta?.content
-            if (content) {
-              const messageIndex = conv.messages.findIndex(m => m.id === aiMessage.id)
-              if (messageIndex !== -1) {
-                conv.messages[messageIndex].content += content
-              }
+        try {
+          const parsed = JSON.parse(data)
+          const content = parsed.choices?.[0]?.delta?.content
+          if (content) {
+            const messageIndex = conv.messages.findIndex(m => m.id === aiMessage.id)
+            if (messageIndex !== -1) {
+              conv.messages[messageIndex].content += content
             }
-          } catch (e) {}
-        }
+          }
+        } catch (e) {}
       }
     }
 
