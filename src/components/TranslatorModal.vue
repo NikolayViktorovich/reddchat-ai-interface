@@ -5,7 +5,7 @@
       class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-6"
       @click.self="$emit('close')"
     >
-      <div class="bg-[#1a1a1d] rounded-3xl border border-white/10 w-full max-w-6xl h-[90vh] flex flex-col shadow-2xl overflow-hidden">
+      <div class="bg-[#1a1a1d] rounded-2xl border border-white/10 w-full max-w-6xl h-[90vh] flex flex-col shadow-2xl overflow-hidden">
         
         <div class="flex items-center justify-between p-6 border-b border-white/10">
           <div>
@@ -53,15 +53,27 @@
                 </transition>
               </div>
               
-              <button
-                @click="swapLanguages"
-                class="p-2 hover:bg-white/10 rounded-xl transition-all duration-75 text-gray-400 hover:text-white"
-                title="Поменять языки местами"
-              >
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
-                </svg>
-              </button>
+              <div class="flex items-center gap-2">
+                <button
+                  @click="swapLanguages"
+                  class="p-2 hover:bg-white/5 rounded-lg transition-all duration-75 text-gray-400 hover:text-white"
+                  title="Поменять языки местами"
+                >
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+                  </svg>
+                </button>
+                
+                <button
+                  @click="clearText"
+                  class="p-2 hover:bg-white/5 rounded-lg transition-all duration-75 text-gray-400 hover:text-white"
+                  title="Очистить"
+                >
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
             </div>
 
             <div class="flex-1 p-6">
@@ -72,32 +84,10 @@
                 @input="debouncedTranslate"
               ></textarea>
             </div>
-
-            <div class="p-4 border-t border-white/10 flex items-center justify-between">
-              <p class="text-gray-500 text-xs">{{ sourceText.length }} / 5000 символов</p>
-              <div class="flex gap-2">
-                <button
-                  @click="clearText"
-                  class="px-4 py-2 bg-white/5 hover:bg-gray-800/80 text-white rounded-xl transition-all duration-75 text-sm"
-                >
-                  Очистить
-                </button>
-                <button
-                  @click="translateText"
-                  :disabled="!sourceText.trim() || isTranslating"
-                  class="px-4 py-2 rounded-xl transition-all duration-75 text-sm"
-                  :class="sourceText.trim() && !isTranslating
-                    ? 'bg-white hover:bg-gray-100 text-gray-900'
-                    : 'bg-white/5 text-gray-500 cursor-not-allowed'"
-                >
-                  {{ isTranslating ? 'Перевод...' : 'Перевести' }}
-                </button>
-              </div>
-            </div>
           </div>
 
           <div class="flex-1 flex flex-col">
-            <div class="p-4 border-b border-white/10">
+            <div class="p-4 border-b border-white/10 flex items-center justify-between">
               <div class="relative">
                 <button
                   @click="showTargetLangDropdown = !showTargetLangDropdown"
@@ -125,6 +115,20 @@
                   </div>
                 </transition>
               </div>
+              
+              <button
+                v-if="translatedText"
+                @click="copyTranslation"
+                class="p-2 hover:bg-white/5 rounded-lg transition-all duration-75 text-gray-400 hover:text-white"
+                :title="copied ? 'Скопировано' : 'Копировать'"
+              >
+                <svg v-if="!copied" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                </svg>
+                <svg v-else class="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+              </button>
             </div>
 
             <div class="flex-1 p-6 overflow-y-auto">
@@ -136,30 +140,16 @@
                 </div>
               </div>
               <div v-else-if="!translatedText" class="flex flex-col items-center justify-center h-full">
-                <svg class="w-16 h-16 text-gray-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" />
-                </svg>
+                <div class="w-16 h-16 rounded-2xl bg-white/5 flex items-center justify-center mb-4">
+                  <svg class="w-8 h-8 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" />
+                  </svg>
+                </div>
                 <p class="text-gray-400 text-lg">Перевод появится здесь</p>
               </div>
               <div v-else class="text-white text-base leading-relaxed whitespace-pre-wrap">
                 {{ translatedText }}
               </div>
-            </div>
-
-            <div class="p-4 border-t border-white/10 flex items-center justify-end gap-2">
-              <button
-                v-if="translatedText"
-                @click="copyTranslation"
-                class="px-4 py-2 bg-white/5 hover:bg-gray-800/80 text-white rounded-xl transition-all duration-75 text-sm flex items-center gap-2"
-              >
-                <svg v-if="!copied" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                </svg>
-                <svg v-else class="w-4 h-4 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                </svg>
-                {{ copied ? 'Скопировано' : 'Копировать' }}
-              </button>
             </div>
           </div>
         </div>

@@ -5,7 +5,7 @@
       class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-6"
       @click.self="$emit('close')"
     >
-      <div class="bg-[#1a1a1d] rounded-3xl border border-white/10 w-full max-w-5xl h-[90vh] flex shadow-2xl overflow-hidden">
+      <div class="bg-[#1a1a1d] rounded-2xl border border-white/10 w-full max-w-5xl h-[90vh] flex shadow-2xl overflow-hidden">
         
         <div class="w-96 flex flex-col border-r border-white/10 p-6">
           <div class="mb-6">
@@ -32,8 +32,8 @@
                   @click="selectedSize = size.value"
                   class="px-4 py-2 rounded-xl text-sm transition-all duration-75"
                   :class="selectedSize === size.value 
-                    ? 'bg-white text-gray-900' 
-                    : 'bg-white/5 text-gray-400 hover:bg-white/5'"
+                    ? 'bg-white/10 text-white border border-white/20' 
+                    : 'bg-white/5 text-gray-400 hover:bg-white/10 border border-white/10'"
                 >
                   {{ size.label }}
                 </button>
@@ -80,8 +80,8 @@
                   @click="selectedQuality = quality"
                   class="flex-1 px-4 py-2 rounded-xl text-sm transition-all duration-75"
                   :class="selectedQuality === quality 
-                    ? 'bg-white text-gray-900' 
-                    : 'bg-white/5 text-gray-400 hover:bg-white/5'"
+                    ? 'bg-white/10 text-white border border-white/20' 
+                    : 'bg-white/5 text-gray-400 hover:bg-white/10 border border-white/10'"
                 >
                   {{ quality }}
                 </button>
@@ -92,10 +92,10 @@
           <button
             @click="generateImage"
             :disabled="!prompt.trim() || isGenerating"
-            class="w-full py-3 rounded-2xl transition-all duration-75 mt-4"
+            class="w-full py-3 rounded-3xl transition-all duration-75 mt-4"
             :class="prompt.trim() && !isGenerating
-              ? 'bg-white hover:bg-gray-100 text-gray-900'
-              : 'bg-white/5 text-gray-500 cursor-not-allowed'"
+              ? 'bg-white/10 hover:bg-white/15 text-white border border-white/20'
+              : 'bg-white/5 text-gray-500 cursor-not-allowed border border-white/10'"
           >
             {{ isGenerating ? 'Генерация...' : 'Создать изображение' }}
           </button>
@@ -126,9 +126,11 @@
             </div>
 
             <div v-else-if="generatedImages.length === 0" class="flex flex-col items-center justify-center h-full">
-              <svg class="w-20 h-20 text-gray-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-              </svg>
+              <div class="w-16 h-16 rounded-2xl bg-white/5 flex items-center justify-center mb-4">
+                <svg class="w-8 h-8 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+              </div>
               <p class="text-gray-400 text-lg mb-2">Изображения появятся здесь</p>
               <p class="text-gray-500 text-sm">Опишите что хотите увидеть и нажмите "Создать"</p>
             </div>
@@ -147,7 +149,7 @@
                     class="p-3 bg-white/20 hover:bg-white/30 rounded-xl transition-all duration-75"
                   >
                     <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                     </svg>
                   </button>
                   <button 
@@ -155,7 +157,7 @@
                     class="p-3 bg-white/20 hover:bg-white/30 rounded-xl transition-all duration-75"
                   >
                     <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
                     </svg>
                   </button>
                 </div>
@@ -180,7 +182,7 @@
                 class="p-3 bg-white/5/80 hover:bg-white/5 rounded-xl transition-all duration-75 backdrop-blur-sm"
               >
                 <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                 </svg>
               </button>
               <button 
@@ -188,7 +190,7 @@
                 class="p-3 bg-white/5/80 hover:bg-white/5 rounded-xl transition-all duration-75 backdrop-blur-sm"
               >
                 <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
                 </svg>
               </button>
               <button 
@@ -196,7 +198,7 @@
                 class="p-3 bg-white/5/80 hover:bg-white/5 rounded-xl transition-all duration-75 backdrop-blur-sm"
               >
                 <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12" />
                 </svg>
               </button>
             </div>
@@ -245,7 +247,7 @@ const styles = [
   { label: '3D рендер', value: '3d' }
 ]
 
-const qualities = ['standard', 'hd']
+const qualities = ['STANDART', 'HD']
 
 const selectStyle = (value) => {
   selectedStyle.value = value

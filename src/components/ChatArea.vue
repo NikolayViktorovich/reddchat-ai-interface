@@ -29,10 +29,10 @@
           <button
             v-for="(prompt, index) in examplePrompts"
             :key="index"
-            @click="$emit('send-message', prompt)"
-            class="px-4 py-2 bg-white/5 hover:bg-white/5 text-gray-300 text-sm rounded-full transition-all backdrop-blur-sm border border-white/10"
+            @click="inputMessage = prompt.full"
+            class="px-4 py-2 bg-white/5 hover:bg-white/10 hover:border-white/30 text-gray-300 hover:text-white text-sm rounded-full transition-all duration-200 backdrop-blur-sm border border-white/10"
           >
-            {{ prompt }}
+            {{ prompt.short }}
           </button>
         </div>
 
@@ -235,12 +235,12 @@ const fileInput = ref(null)
 const fileInputWelcome = ref(null)
 
 const examplePrompts = [
-  'Объясни алгоритм сортировки',
-  'Помоги с домашним заданием',
-  'Напиши функцию на Python',
-  'Разбери эту ошибку в коде',
-  'Подготовь конспект лекции',
-  'Оптимизируй этот код'
+  { short: 'Объясни алгоритм сортировки', full: 'Объясни мне подробно, как работает алгоритм быстрой сортировки с примерами' },
+  { short: 'Помоги с домашним заданием', full: 'Помоги мне разобраться с домашним заданием по математике' },
+  { short: 'Напиши функцию на Python', full: 'Напиши функцию на Python для сортировки списка чисел' },
+  { short: 'Разбери эту ошибку в коде', full: 'Помоги разобраться с ошибкой в моем коде и объясни, как её исправить' },
+  { short: 'Подготовь конспект лекции', full: 'Подготовь краткий конспект по теме для подготовки к экзамену' },
+  { short: 'Оптимизируй этот код', full: 'Проанализируй мой код и предложи варианты оптимизации для улучшения производительности' }
 ]
 
 const typingText = ref('')

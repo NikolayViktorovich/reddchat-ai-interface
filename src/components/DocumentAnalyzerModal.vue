@@ -5,7 +5,7 @@
       class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-6"
       @click.self="$emit('close')"
     >
-      <div class="bg-[#1a1a1d] rounded-3xl border border-white/10 w-full max-w-5xl h-[90vh] flex shadow-2xl overflow-hidden">
+      <div class="bg-[#1a1a1d] rounded-2xl border border-white/10 w-full max-w-5xl h-[90vh] flex shadow-2xl overflow-hidden">
         
         <div class="w-96 flex flex-col border-r border-white/10 p-6">
           <div class="mb-6">
@@ -101,40 +101,15 @@
                 </button>
               </div>
             </div>
-
-            <div>
-              <label class="text-sm text-gray-400 mb-2 block">Тип анализа</label>
-              <div class="space-y-2">
-                <button
-                  v-for="type in analysisTypes"
-                  :key="type.value"
-                  @click="selectedAnalysisType = type.value"
-                  class="w-full px-4 py-3 rounded-xl text-sm text-left transition-all duration-75"
-                  :class="selectedAnalysisType === type.value 
-                    ? 'bg-white text-gray-900' 
-                    : 'bg-white/5 text-gray-400 hover:bg-white/5'"
-                >
-                  <div class="flex items-center gap-3">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" :d="type.icon" />
-                    </svg>
-                    <div>
-                      <p class="font-medium">{{ type.label }}</p>
-                      <p class="text-xs opacity-70">{{ type.description }}</p>
-                    </div>
-                  </div>
-                </button>
-              </div>
-            </div>
           </div>
 
           <button
             @click="analyzeDocument"
             :disabled="uploadedFiles.length === 0 || isAnalyzing"
-            class="w-full py-3 rounded-2xl transition-all duration-75 mt-4"
+            class="w-full py-3 rounded-3xl transition-all duration-75 mt-4"
             :class="uploadedFiles.length > 0 && !isAnalyzing
-              ? 'bg-white hover:bg-gray-100 text-gray-900'
-              : 'bg-white/5 text-gray-500 cursor-not-allowed'"
+              ? 'bg-white/10 hover:bg-white/15 text-white border border-white/20'
+              : 'bg-white/5 text-gray-500 cursor-not-allowed border border-white/10'"
           >
             {{ isAnalyzing ? 'Анализ...' : 'Начать анализ' }}
           </button>
@@ -164,9 +139,11 @@
             </div>
 
             <div v-else-if="!analysisResult" class="flex flex-col items-center justify-center h-full">
-              <svg class="w-20 h-20 text-gray-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-              </svg>
+              <div class="w-16 h-16 rounded-2xl bg-white/5 flex items-center justify-center mb-4">
+                <svg class="w-8 h-8 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+              </div>
               <p class="text-gray-400 text-lg mb-2">Результаты появятся здесь</p>
               <p class="text-gray-500 text-sm">Загрузите документ и нажмите "Начать анализ"</p>
             </div>
@@ -231,19 +208,19 @@
               <div class="flex gap-3">
                 <button 
                   @click="downloadReport"
-                  class="flex-1 px-4 py-3 bg-white/5 hover:bg-gray-800/80 text-white rounded-xl transition-all duration-75 flex items-center justify-center gap-2"
+                  class="flex-1 px-4 py-3 bg-white/5 hover:bg-white/10 text-white rounded-3xl transition-all duration-75 flex items-center justify-center gap-2"
                 >
                   <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                   </svg>
                   Скачать отчёт
                 </button>
                 <button 
                   @click="shareReport"
-                  class="flex-1 px-4 py-3 bg-white/5 hover:bg-gray-800/80 text-white rounded-xl transition-all duration-75 flex items-center justify-center gap-2"
+                  class="flex-1 px-4 py-3 bg-white/5 hover:bg-white/10 text-white rounded-3xl transition-all duration-75 flex items-center justify-center gap-2"
                 >
                   <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
                   </svg>
                   Поделиться
                 </button>
