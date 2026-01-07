@@ -20,10 +20,10 @@
           @select-conversation="handleSelectConversation"
           @delete-conversation="deleteConversation"
           @show-history="handleShowHistory"
-          @show-image-generator="handleShowImageGenerator"
-          @show-document-analyzer="handleShowDocumentAnalyzer"
           @show-translator="handleShowTranslator"
           @change-mode="handleChangeMode"
+          @pin-conversation="pinConversation"
+          @rename-conversation="renameConversation"
         />
       </Transition>
 
@@ -57,19 +57,11 @@
       @close="closeHistory"
       @select-conversation="selectConversation"
       @delete-conversation="deleteConversation"
+      @pin-conversation="pinConversation"
+      @rename-conversation="renameConversation"
     />
 
     <ConfirmDialog ref="confirmDialog" />
-
-    <ImageGeneratorModal
-      :isOpen="showImageGenerator"
-      @close="closeImageGenerator"
-    />
-
-    <DocumentAnalyzerModal
-      :isOpen="showDocumentAnalyzer"
-      @close="closeDocumentAnalyzer"
-    />
 
     <TranslatorModal
       :isOpen="showTranslator"
@@ -86,8 +78,6 @@ import ChatArea from './components/ChatArea.vue'
 import SettingsModal from './components/SettingsModal.vue'
 import HistoryModal from './components/HistoryModal.vue'
 import ConfirmDialog from './components/ConfirmDialog.vue'
-import ImageGeneratorModal from './components/ImageGeneratorModal.vue'
-import DocumentAnalyzerModal from './components/DocumentAnalyzerModal.vue'
 import TranslatorModal from './components/TranslatorModal.vue'
 
 const conversations = ref([])
@@ -95,8 +85,6 @@ const currentConversationId = ref(null)
 const isLoading = ref(false)
 const showSettings = ref(false)
 const showHistory = ref(false)
-const showImageGenerator = ref(false)
-const showDocumentAnalyzer = ref(false)
 const showTranslator = ref(false)
 const currentModel = ref('GPT-4 Turbo')
 const currentMode = ref('chat')
@@ -158,16 +146,6 @@ const handleShowHistory = () => {
   sidebarOpen.value = false
 }
 
-const handleShowImageGenerator = () => {
-  showImageGenerator.value = true
-  sidebarOpen.value = false
-}
-
-const handleShowDocumentAnalyzer = () => {
-  showDocumentAnalyzer.value = true
-  sidebarOpen.value = false
-}
-
 const handleShowTranslator = () => {
   showTranslator.value = true
   sidebarOpen.value = false
@@ -188,16 +166,6 @@ const closeHistory = () => {
   sidebarOpen.value = false
 }
 
-const closeImageGenerator = () => {
-  showImageGenerator.value = false
-  sidebarOpen.value = false
-}
-
-const closeDocumentAnalyzer = () => {
-  showDocumentAnalyzer.value = false
-  sidebarOpen.value = false
-}
-
 const closeTranslator = () => {
   showTranslator.value = false
   sidebarOpen.value = false
@@ -205,6 +173,22 @@ const closeTranslator = () => {
 
 const selectConversation = (id) => {
   currentConversationId.value = id
+}
+
+const pinConversation = (id) => {
+  const conv = conversations.value.find(c => c.id === id)
+  if (conv) {
+    conv.pinned = !conv.pinned
+    saveToLocalStorage()
+  }
+}
+
+const renameConversation = ({ id, title }) => {
+  const conv = conversations.value.find(c => c.id === id)
+  if (conv) {
+    conv.title = title
+    saveToLocalStorage()
+  }
 }
 
 const deleteConversation = async (id) => {
@@ -425,11 +409,4 @@ const loadFromLocalStorage = () => {
   }
 }
 
-onMounted(() => {
-  window.addEventListener('resize', handleResize)
-  loadFromLocalStorage()
-  if (conversations.value.length === 0) {
-    createNewChat()
-  }
-})
 </script>

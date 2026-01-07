@@ -77,14 +77,17 @@
   width: 150%;
   height: 60%;
   background: 
-    radial-gradient(ellipse at 30% 20%, rgba(139, 92, 246, 0.25) 0%, transparent 50%),
-    radial-gradient(ellipse at 70% 30%, rgba(20, 184, 166, 0.2) 0%, transparent 50%),
-    radial-gradient(ellipse at 50% 10%, rgba(99, 102, 241, 0.18) 0%, transparent 60%);
-  filter: blur(60px);
+    radial-gradient(ellipse at 20% 20%, rgba(139, 92, 246, 0.2) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 30%, rgba(20, 184, 166, 0.18) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 10%, rgba(99, 102, 241, 0.15) 0%, transparent 60%),
+    radial-gradient(ellipse at 30% 40%, rgba(236, 72, 153, 0.12) 0%, transparent 45%),
+    radial-gradient(ellipse at 70% 15%, rgba(251, 146, 60, 0.1) 0%, transparent 40%),
+    radial-gradient(ellipse at 60% 35%, rgba(34, 211, 238, 0.12) 0%, transparent 45%);
+  filter: blur(80px);
   pointer-events: none;
   z-index: 1;
-  will-change: transform, filter;
-  animation: gradientFloat 5s ease-in-out infinite, gradientColor 8s ease-in-out infinite;
+  will-change: transform;
+  animation: gradientFloat 20s ease-in-out infinite;
 }
 
 .gradient-bg::after {
@@ -99,20 +102,10 @@
 }
 
 @keyframes gradientFloat {
-  0%, 100% { transform: translateX(-50%) translateY(0); }
-  50% { transform: translateX(-50%) translateY(-3%); }
-}
-
-@keyframes gradientColor {
-  0%, 100% { 
-    filter: blur(60px) hue-rotate(0deg);
-  }
-  33% { 
-    filter: blur(60px) hue-rotate(30deg);
-  }
-  66% { 
-    filter: blur(60px) hue-rotate(-20deg);
-  }
+  0%, 100% { transform: translateX(-50%) translateY(0) scale(1); }
+  25% { transform: translateX(-48%) translateY(-2%) scale(1.02); }
+  50% { transform: translateX(-52%) translateY(-4%) scale(1); }
+  75% { transform: translateX(-50%) translateY(-2%) scale(0.98); }
 }
 
 @keyframes dotBounce {

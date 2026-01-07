@@ -200,10 +200,14 @@ const translateText = async () => {
   isTranslating.value = true
   translatedText.value = ''
   try {
-    const response = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(sourceText.value)}&langpair=${sourceLang.value}|${targetLang.value}`)
+    const response = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=${sourceLang.value}&tl=${targetLang.value}&dt=t&q=${encodeURIComponent(sourceText.value)}`)
     const data = await response.json()
-    if (data.responseStatus === 200 && data.responseData) translatedText.value = data.responseData.translatedText
-  } catch (error) {}
+    if (data && data[0]) {
+      translatedText.value = data[0].map(item => item[0]).join('')
+    }
+  } catch (error) {
+    console.error('Translation error:', error)
+  }
   isTranslating.value = false
 }
 
