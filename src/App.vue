@@ -237,7 +237,7 @@ const handleSendMessage = async (content) => {
       method: 'POST',
       headers: {
         'Authorization': 'Bearer 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',
-        'HTTP-Referer': 'https://ai-chat.app',
+        'HTTP-Referer': 'https://reddchat-ai-interface.vercel.app',
         'X-Title': 'AI Chat',
         'Content-Type': 'application/json'
       },
