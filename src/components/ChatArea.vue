@@ -28,7 +28,7 @@
     
     <div ref="messagesContainer" class="flex-1 overflow-y-auto scrollbar-thin">
       <div v-if="showWelcome" class="h-full flex flex-col items-center justify-center px-4 md:px-6 pb-20 md:pb-32">
-        <h2 class="text-3xl sm:text-5xl md:text-7xl text-white/30 mb-2 h-[50px] sm:h-[70px] md:h-[84px] flex items-center justify-center text-center font-light">
+        <h2 class="text-3xl sm:text-5xl md:text-7xl text-white/30 mb-6 md:mb-2 h-[50px] sm:h-[70px] md:h-[84px] flex items-center justify-center text-center font-light">
           {{ typingText }}
         </h2>
 
@@ -182,12 +182,12 @@ const typeText = () => {
   const word = typingWords[wordIdx]
   if (!deleting) {
     typingText.value = word.substring(0, ++charIdx)
-    if (charIdx === word.length) { deleting = true; timeout = setTimeout(typeText, 2000); return }
+    if (charIdx === word.length) { deleting = true; timeout = setTimeout(typeText, 1800); return }
   } else {
     typingText.value = word.substring(0, --charIdx)
-    if (charIdx === 0) { deleting = false; wordIdx = (wordIdx + 1) % typingWords.length; timeout = setTimeout(typeText, 500); return }
+    if (charIdx === 0) { deleting = false; wordIdx = (wordIdx + 1) % typingWords.length; timeout = setTimeout(typeText, 800); return }
   }
-  timeout = setTimeout(typeText, deleting ? 50 : 100)
+  timeout = setTimeout(typeText, deleting ? 20 : 50)
 }
 
 const handleScroll = () => {

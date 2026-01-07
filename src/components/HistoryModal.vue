@@ -1,7 +1,7 @@
 <template>
   <div v-if="isOpen" class="fixed inset-0 bg-black/70 flex items-end md:items-center justify-center z-50 md:p-6 animate-fade-in" @click.self="$emit('close')">
-    <div class="glass-modal w-full md:max-w-7xl h-[90vh] md:rounded-2xl rounded-t-3xl border-t md:border border-white/20 flex flex-col md:flex-row overflow-hidden animate-slide-up md:animate-scale-in">
-      <div class="md:hidden flex items-center justify-between p-4 border-b border-white/20">
+    <div class="glass-modal w-full md:max-w-7xl h-[90vh] md:rounded-2xl rounded-t-3xl border-t md:border border-white/5 flex flex-col md:flex-row overflow-hidden animate-slide-up md:animate-scale-in">
+      <div class="md:hidden flex items-center justify-between p-4 border-b border-white/5">
         <h2 class="text-lg text-white font-medium">История диалогов</h2>
         <button @click="$emit('close')" class="p-2 text-gray-400 hover:text-white transition-colors">
           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
@@ -9,10 +9,10 @@
       </div>
 
       <div class="md:hidden flex-1 flex flex-col overflow-hidden">
-        <div class="p-3 border-b border-white/20">
+        <div class="p-3 border-b border-white/5">
           <div class="relative">
             <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
-            <input v-model="searchQuery" type="text" placeholder="Поиск..." class="w-full pl-10 pr-3 py-2.5 bg-white/5 text-white text-sm placeholder-gray-400 rounded-xl border border-white/10 focus:outline-none" />
+            <input v-model="searchQuery" type="text" placeholder="Поиск..." class="w-full pl-10 pr-3 py-2.5 bg-white/5 text-white text-sm placeholder-gray-400 rounded-xl border border-white/5 focus:outline-none" />
           </div>
         </div>
 
@@ -32,7 +32,7 @@
         </div>
 
         <div v-else class="flex-1 flex flex-col overflow-hidden">
-          <div class="flex items-center gap-3 p-4 border-b border-white/20">
+          <div class="flex items-center gap-3 p-4 border-b border-white/5">
             <button @click="mobileSelectedConv = null" class="p-1 text-gray-400">
               <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
             </button>
@@ -49,21 +49,21 @@
               </div>
             </div>
           </div>
-          <div class="p-4 border-t border-white/20">
+          <div class="p-4 border-t border-white/5">
             <button @click="openMobileConversation" class="w-full py-3 bg-white/10 text-white rounded-2xl text-sm font-medium">Открыть диалог</button>
           </div>
         </div>
       </div>
 
-      <div class="hidden md:flex w-96 flex-col border-r border-white/20">
-        <div class="p-6 border-b border-white/20">
+      <div class="hidden md:flex w-96 flex-col border-r border-white/5">
+        <div class="p-6 border-b border-white/5">
           <h2 class="text-xl text-white mb-1" style="font-family: 'Space Grotesk', sans-serif;">История диалогов</h2>
           <p class="text-gray-400 text-sm">Всего: {{ conversations.length }}</p>
         </div>
-        <div class="p-4 border-b border-white/20">
+        <div class="p-4 border-b border-white/5">
           <div class="relative">
             <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
-            <input v-model="searchQuery" type="text" placeholder="Поиск..." class="w-full pl-10 pr-3 py-2 bg-white/5 text-white text-sm placeholder-gray-400 rounded-xl border border-white/10 focus:outline-none" />
+            <input v-model="searchQuery" type="text" placeholder="Поиск..." class="w-full pl-10 pr-3 py-2 bg-white/5 text-white text-sm placeholder-gray-400 rounded-xl border border-white/5 focus:outline-none" />
           </div>
         </div>
         <div class="flex-1 overflow-y-auto scrollbar-thin p-3">
@@ -88,7 +88,7 @@
       </div>
 
       <div class="hidden md:flex flex-1 flex-col">
-        <div class="flex items-center justify-between p-6 border-b border-white/20">
+        <div class="flex items-center justify-between p-6 border-b border-white/5">
           <div v-if="selectedConversation">
             <h2 class="text-xl text-white mb-1" style="font-family: 'Space Grotesk', sans-serif;">{{ selectedConversation.title }}</h2>
             <p class="text-gray-400 text-sm">{{ formatDate(selectedConversation.createdAt) }}</p>
