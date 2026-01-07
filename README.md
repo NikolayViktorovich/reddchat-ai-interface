@@ -1,5 +1,6 @@
 # REDD-CHAT AI ASSISTENT
-
+![Скриншот](https://i.postimg.cc/KjCRZZHT/Snimok-ekrana-2026-01-08-v-02-13-21.png)
+![Скриншот](https://i.postimg.cc/FKGzYbBC/Snimok-ekrana-2026-01-08-v-02-15-29.png)
 <div align="center">
 
 ![Vue.js](https://img.shields.io/badge/Vue.js-3.x-4FC08D?style=for-the-badge&logo=vue.js&logoColor=white)
