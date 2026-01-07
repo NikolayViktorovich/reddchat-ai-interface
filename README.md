@@ -1,109 +1,57 @@
-# REDD-CHAT AI ASSISTENT
+# REDD-CHAT
+
+Современный AI-ассистент с минималистичным glassmorphism дизайном. Приложение предоставляет удобный интерфейс для общения с нейросетью DeepSeek R1, встроенный переводчик и гибкое управление историей диалогов.
+
 ![Скриншот](https://i.postimg.cc/KjCRZZHT/Snimok-ekrana-2026-01-08-v-02-13-21.png)
 ![Скриншот](https://i.postimg.cc/FKGzYbBC/Snimok-ekrana-2026-01-08-v-02-15-29.png)
-<div align="center">
 
-![Vue.js](https://img.shields.io/badge/Vue.js-3.x-4FC08D?style=for-the-badge&logo=vue.js&logoColor=white)
-![Vite](https://img.shields.io/badge/Vite-5.x-646CFF?style=for-the-badge&logo=vite&logoColor=white)
-![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.x-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
+## Live Demo
 
-Минималистичный AI-чат с современным glassmorphism дизайном
+[Посмотреть Демо](https://reddchat-ai-interface.vercel.app/)
 
-[Демо](#) • [Установка](#установка) • [Возможности](#возможности)
+## Основные функции:
 
-</div>
+- AI Чат - общение с DeepSeek R1 через OpenRouter API
+- Переводчик - перевод текста на базе Google Translate
+- История диалогов - поиск, закрепление, переименование
+- Режим программиста - специализированные ответы для разработчиков
 
----
+## Возможности интерфейса:
 
-## О проекте
-
-Современный интерфейс с анимированным градиентным фоном, стеклянными панелями и плавными переходами.
-
----
-
-## Возможности
-
-### AI Чат
-- Интеграция с **DeepSeek R1** через OpenRouter API
-- Потоковая генерация ответов (streaming)
-- Поддержка Markdown в ответах (заголовки, списки, код)
-- Подсветка синтаксиса в блоках кода
-- Возможность остановить генерацию
-
-### Управление диалогами
-- Создание новых чатов
-- Закрепление важных диалогов
-- Переименование диалогов
-- Удаление с подтверждением
-- Поиск по истории
-
-### Переводчик
-- Встроенный переводчик на базе Google Translate API
-- Поддержка множества языков
-- Автоопределение языка
-- Быстрая смена направления перевода
-
-### Дизайн
 - Glassmorphism UI с размытием фона
 - Анимированный градиентный фон
-- Плавные переходы и микроанимации
-- Кастомные иконки при наведении
-- Адаптивный дизайн (mobile-first)
-
-### Хранение данных
+- Потоковая генерация ответов (streaming)
+- Поддержка Markdown и подсветка кода
+- Адаптивный дизайн для мобильных устройств
 - Автосохранение в localStorage
-- Сохранение истории диалогов
-- Сохранение настроек и режимов
 
----
+## Ключевые технологии:
 
-## Технологии
+- **Frontend:** Vue.js 3.4 + Composition API
+- **Сборка:** Vite 5.0
+- **Стили:** Tailwind CSS 3.4, PostCSS, Autoprefixer
+- **Контент:** Marked, Highlight.js
+- **APIs:** OpenRouter API, Google Translate API
 
-### Frontend
-- **Vue.js 3.4**
-- **Composition API**
+## Установка и Запуск
 
-### Сборка и разработка
-- **Vite 5.0**
-- **@vitejs/plugin-vue**
-
-### Стилизация
-- **Tailwind CSS 3.4**
-- **PostCSS 8.4**
-- **Autoprefixer 10.4**
-
-### Обработка контента
-- **Marked 11.2**
-- **Highlight.js 11.11**
-
-### HTTP и сеть
-- **Axios 1.13**
-- **Fetch API**
-
-### API интеграции
-- **OpenRouter API**
-- **Google Translate API**
-
-### Шрифты
-- **SB Sans Interface**
-- **Orbitron**
-- **JetBrains Mono**
-
-### Дополнительно
-- **localStorage API**
-- **CSS Animations**
-- **SVG Icons** 
-- **Glassmorphism**
-
----
-
-## Установка
-
+1. Клонируйте репозиторий:
 ```bash
 git clone https://github.com/your-username/redd-chat.git
+```
+
+2. Установите зависимости:
+```bash
 cd redd-chat
 npm install
+```
+
+3. Запустите dev-сервер:
+```bash
 npm run dev
 ```
 
-Сборка: `npm run build`
+4. Сборка для продакшена:
+```bash
+npm run build
+```
