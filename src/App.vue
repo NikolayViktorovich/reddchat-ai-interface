@@ -268,57 +268,37 @@ const handleSendMessage = async (content) => {
   saveToLocalStorage()
 
   try {
-    const systemPrompt = {
-      role: 'system',
-      content: 'Ты полезный и профессиональный AI-ассистент. Отвечай на русском языке. Используй Markdown форматирование: заголовки (##), списки (- или 1.), **жирный**, *курсив*, `код`, ```блоки кода с указанием языка```. Структурируй ответы для лучшей читаемости.'
-    }
+    const systemPrompt = 'Ты полезный и профессиональный AI-ассистент. Отвечай на русском языке. Используй Markdown форматирование: заголовки (##), списки (- или 1.), **жирный**, *курсив*, `код`, ```блоки кода с указанием языка```. Структурируй ответы для лучшей читаемости.'
     
     const apiMessages = [
-      systemPrompt,
+      { role: 'system', content: systemPrompt },
       ...conv.messages.map(m => {
         let content = m.apiContent || m.content
-        // Если content это строка, оставляем как есть
-        // Если массив или объект, преобразуем в строку
         if (typeof content !== 'string') {
           content = JSON.stringify(content)
         }
-        return { 
-          role: m.role, 
-          content: content
-        }
+        return { role: m.role, content }
       })
     ]
-    
-    // Формируем prompt из сообщений для Ollama /api/generate
-    const prompt = apiMessages.map(m => {
-      if (m.role === 'system') return `System: ${m.content}`
-      if (m.role === 'user') return `User: ${m.content}`
-      if (m.role === 'assistant') return `Assistant: ${m.content}`
-      return m.content
-    }).join('\n\n') + '\n\nAssistant:'
 
-    const response = await fetch('http://localhost:11434/api/generate', {
+    const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer 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'
       },
       body: JSON.stringify({
-        model: 'deepseek-r1:8b',
-        prompt: prompt,
+        model: 'llama-3.1-8b-instant',
+        messages: apiMessages,
+        temperature: 0.7,
+        max_tokens: 4096,
         stream: true
       })
     })
 
     if (!response.ok) {
-      const errorText = await response.text()
-      let errorMsg = 'API Error'
-      try {
-        const errorData = JSON.parse(errorText)
-        errorMsg = errorData.error?.message || errorData.message || errorData.error || errorMsg
-      } catch {
-        errorMsg = errorText || errorMsg
-      }
-      throw new Error(errorMsg)
+      const errorData = await response.json().catch(() => ({}))
+      throw new Error(errorData.error?.message || `HTTP ${response.status}`)
     }
 
     const aiMessage = {
@@ -347,7 +327,7 @@ const handleSendMessage = async (content) => {
 
       for (const line of lines) {
         const trimmed = line.trim()
-        if (!trimmed || !trimmed.startsWith('data: ')) continue
+        if (!trimmed.startsWith('data: ')) continue
         
         const data = trimmed.slice(6)
         if (data === '[DONE]') break
@@ -356,18 +336,18 @@ const handleSendMessage = async (content) => {
           const parsed = JSON.parse(data)
           const content = parsed.choices?.[0]?.delta?.content
           if (content) {
-            const messageIndex = conv.messages.findIndex(m => m.id === aiMessage.id)
-            if (messageIndex !== -1) {
-              conv.messages[messageIndex].content += content
+            const idx = conv.messages.findIndex(m => m.id === aiMessage.id)
+            if (idx !== -1) {
+              conv.messages[idx].content += content
             }
           }
-        } catch (e) {}
+        } catch {}
       }
     }
 
-    const messageIndex = conv.messages.findIndex(m => m.id === aiMessage.id)
-    if (messageIndex !== -1) {
-      conv.messages[messageIndex].isTyping = false
+    const idx = conv.messages.findIndex(m => m.id === aiMessage.id)
+    if (idx !== -1) {
+      conv.messages[idx].isTyping = false
     }
     isCurrentlyTyping.value = false
     saveToLocalStorage()
