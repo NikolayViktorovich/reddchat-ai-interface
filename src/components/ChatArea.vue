@@ -21,7 +21,7 @@
     
     <div ref="messagesContainer" class="flex-1 overflow-y-auto scrollbar-thin">
       <div v-if="showWelcome" class="h-full flex flex-col items-center justify-center px-6 pb-32">
-        <h2 class="text-7xl text-white/30 mb-2 min-h-[84px]" style="font-family: 'Josefin Sans', sans-serif; font-weight: 100; letter-spacing: -0.02em; line-height: 1.2;">
+        <h2 class="text-7xl text-white/30 mb-2 h-[84px] flex items-center justify-center" style="font-family: 'Josefin Sans', sans-serif; font-weight: 100; letter-spacing: -0.02em; line-height: 1.2;">
           {{ typingText }}
         </h2>
 
