@@ -95,3 +95,14 @@
 - **Glassmorphism**
 
 ---
+
+## Установка
+
+```bash
+git clone https://github.com/your-username/redd-chat.git
+cd redd-chat
+npm install
+npm run dev
+```
+
+Сборка: `npm run build`
