@@ -217,6 +217,11 @@ const handleSendMessage = async (content) => {
   saveToLocalStorage()
 
   try {
+    const systemPrompt = {
+      role: 'system',
+      content: 'Ты полезный AI-ассистент. Отвечай на русском языке. Используй Markdown форматирование: заголовки (##), списки (- или 1.), **жирный**, *курсив*, `код`, ```блоки кода с указанием языка```. Структурируй ответы для лучшей читаемости.'
+    }
+    
     const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
       method: 'POST',
       headers: {
@@ -225,10 +230,13 @@ const handleSendMessage = async (content) => {
       },
       body: JSON.stringify({
         model: 'mistralai/devstral-2512:free',
-        messages: conv.messages.map(m => ({
-          role: m.role,
-          content: m.content
-        }))
+        messages: [
+          systemPrompt,
+          ...conv.messages.map(m => ({
+            role: m.role,
+            content: m.content
+          }))
+        ]
       })
     })
 

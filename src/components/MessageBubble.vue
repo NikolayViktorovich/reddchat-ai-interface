@@ -12,15 +12,8 @@
     <div v-else class="flex">
       <div class="max-w-3xl">
         <div class="text-white">
-          <div v-if="message.isTyping" class="text-base leading-relaxed whitespace-pre-wrap">
-            <span 
-              v-for="(word, index) in message.content.split(/(\s+)/)" 
-              :key="index"
-              class="animate-word-appear"
-              :style="{ animationDelay: `${Math.floor(index / 2) * 0.03}s` }"
-            >{{ word }}</span>
-          </div>
-          <div v-else v-html="formattedContent" class="markdown-content text-base"></div>
+          <div v-html="formattedContent" class="markdown-content text-base"></div>
+          <span v-if="message.isTyping" class="inline-block w-2 h-5 bg-white/50 ml-1 animate-pulse"></span>
         </div>
         <div class="flex items-center gap-3 mt-2">
           <p class="text-xs text-gray-500">{{ formatTime(message.timestamp) }}</p>
@@ -128,7 +121,12 @@ const props = defineProps({
 const copied = ref(false)
 
 const formattedContent = computed(() => {
-  return marked(props.message.content)
+  if (!props.message.content) return ''
+  try {
+    return marked.parse(props.message.content)
+  } catch (e) {
+    return props.message.content
+  }
 })
 
 const formatTime = (timestamp) => {

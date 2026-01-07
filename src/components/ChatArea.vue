@@ -251,7 +251,7 @@
         </div>
         
         <p class="text-center text-gray-500 text-xs mt-2 md:mt-3"> 
-          © 2026 REDDCHAT. Все права защищены.Разработан как пет-проект Nikolay Viktorovich.
+          © 2026 REDDCHAT. Все права защищены. Разработан как пет-проект Nikolay Viktorovich.
         </p>
       </div>
     </div>
