@@ -1,5 +1,5 @@
 <template>
-  <div class="w-72 h-full bg-white/5 backdrop-blur-xl flex flex-col rounded-3xl border border-white/10 mr-0 lg:mr-3">
+  <div class="w-72 h-full glass-sidebar flex flex-col rounded-3xl border border-white/10 mr-0 lg:mr-3">
     <div class="p-4 md:p-6 border-b border-white/10 flex items-center gap-3">
       <div class="w-10 h-10 rounded-full bg-white flex items-center justify-center flex-shrink-0">
         <svg class="w-5 h-5 text-gray-900" fill="currentColor" viewBox="0 0 20 20">
@@ -12,7 +12,7 @@
     <div class="flex-1 overflow-y-auto scrollbar-thin py-2 pt-4">
       <button
         @click="$emit('new-chat')"
-        class="w-full flex items-center gap-3 px-4 py-2.5 text-gray-400 hover:bg-white/10 hover:text-white active:bg-white/15 transition-all duration-75 text-sm"
+        class="w-full flex items-center gap-3 px-4 py-2.5 text-gray-500 hover:text-white active:text-white/80 transition-colors duration-150 text-sm"
       >
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
@@ -20,21 +20,21 @@
         <span>Новый чат</span>
       </button>
 
-      <button class="w-full flex items-center gap-3 px-4 py-2.5 text-gray-400 hover:bg-white/10 hover:text-white active:bg-white/15 transition-all duration-75 text-sm" @click="$emit('show-history')">
+      <button class="w-full flex items-center gap-3 px-4 py-2.5 text-gray-500 hover:text-white active:text-white/80 transition-colors duration-150 text-sm" @click="$emit('show-history')">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
         </svg>
         <span>История диалогов</span>
       </button>
 
-      <button class="w-full flex items-center gap-3 px-4 py-2.5 text-gray-400 hover:bg-white/10 hover:text-white active:bg-white/15 transition-all duration-75 text-sm" @click="$emit('show-image-generator')">
+      <button class="w-full flex items-center gap-3 px-4 py-2.5 text-gray-500 hover:text-white active:text-white/80 transition-colors duration-150 text-sm" @click="$emit('show-image-generator')">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
         </svg>
         <span>Генерация изображений</span>
       </button>
 
-      <button class="w-full flex items-center gap-3 px-4 py-2.5 text-gray-400 hover:bg-white/10 hover:text-white active:bg-white/15 transition-all duration-75 text-sm" @click="$emit('show-document-analyzer')">
+      <button class="w-full flex items-center gap-3 px-4 py-2.5 text-gray-500 hover:text-white active:text-white/80 transition-colors duration-150 text-sm" @click="$emit('show-document-analyzer')">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
         </svg>
@@ -42,8 +42,8 @@
       </button>
 
       <button 
-        class="w-full flex items-center gap-3 px-4 py-2.5 text-gray-400 hover:bg-white/10 hover:text-white active:bg-white/15 transition-all duration-75 text-sm"
-        :class="currentMode === 'programmer' ? 'bg-white/10 text-white' : ''"
+        class="w-full flex items-center gap-3 px-4 py-2.5 transition-colors duration-150 text-sm"
+        :class="currentMode === 'programmer' ? 'text-white' : 'text-gray-500 hover:text-white'"
         @click="$emit('change-mode', 'programmer')"
       >
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -53,7 +53,7 @@
       </button>
 
       <button 
-        class="w-full flex items-center gap-3 px-4 py-2.5 text-gray-400 hover:bg-white/10 hover:text-white active:bg-white/15 transition-all duration-75 text-sm"
+        class="w-full flex items-center gap-3 px-4 py-2.5 text-gray-500 hover:text-white active:text-white/80 transition-colors duration-150 text-sm"
         @click="$emit('show-translator')"
       >
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -70,8 +70,8 @@
           @click="$emit('select-conversation', conv.id)"
           class="group relative mb-1 px-3 py-2 rounded-md cursor-pointer transition-colors text-sm"
           :class="conv.id === currentConversationId 
-            ? 'bg-white/10 text-white' 
-            : 'hover:bg-white/5 text-gray-400'"
+            ? 'text-white' 
+            : 'text-gray-500 hover:text-white'"
         >
           <p class="truncate">{{ conv.title }}</p>
           <button

@@ -3,7 +3,7 @@
     <div class="relative z-10 flex w-full">
       <div 
         v-if="sidebarOpen" 
-        class="fixed inset-0 bg-black/50 z-40 lg:hidden"
+        class="fixed inset-0 bg-black/50 z-40 lg:hidden animate-fade-in"
         @click="sidebarOpen = false"
       ></div>
       
