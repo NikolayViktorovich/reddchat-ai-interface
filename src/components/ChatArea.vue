@@ -24,7 +24,7 @@
     </div>
     
     <div ref="messagesContainer" class="flex-1 overflow-y-auto scrollbar-thin">
-      <div v-if="showWelcome" class="h-full flex flex-col items-center justify-center px-4 md:px-6 pb-20 md:pb-32 pb-safe">
+      <div v-if="showWelcome" class="h-full flex flex-col items-center justify-center px-4 md:px-6 pb-20 md:pb-32">
         <h2 class="text-3xl sm:text-5xl md:text-7xl text-white/30 mb-2 h-[50px] sm:h-[70px] md:h-[84px] flex items-center justify-center text-center" style="font-family: 'Josefin Sans', sans-serif; font-weight: 100;">
           {{ typingText }}
         </h2>
@@ -100,7 +100,7 @@
       </div>
     </div>
 
-    <div v-if="!showWelcome" class="px-4 md:px-6 py-3 md:py-4 pb-safe">
+    <div v-if="!showWelcome" class="px-4 md:px-6 py-3 md:py-4">
       <div class="max-w-4xl mx-auto">
         <div v-if="attachedFiles.length" class="mb-3 flex flex-wrap gap-2">
           <div v-for="(file, index) in attachedFiles" :key="index" class="flex items-center gap-2 px-3 py-2 bg-white/5 rounded-xl border border-white/10 text-sm">

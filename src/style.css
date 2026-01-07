@@ -44,17 +44,6 @@
   }
 }
 
-/* Safe area for mobile browsers */
-.pb-safe {
-  padding-bottom: calc(0.75rem + env(safe-area-inset-bottom, 0px));
-}
-
-@supports (padding-bottom: env(safe-area-inset-bottom)) {
-  .pb-safe {
-    padding-bottom: calc(0.75rem + env(safe-area-inset-bottom));
-  }
-}
-
 @layer components {
   .scrollbar-thin::-webkit-scrollbar {
     width: 6px;
