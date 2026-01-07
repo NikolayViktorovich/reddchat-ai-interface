@@ -1,21 +1,31 @@
 <template>
-  <div class="flex h-screen gradient-bg p-3">
+  <div class="flex h-screen gradient-bg p-2 md:p-3">
     <div class="relative z-10 flex w-full">
+      <div 
+        v-if="sidebarOpen" 
+        class="fixed inset-0 bg-black/50 z-40 lg:hidden"
+        @click="sidebarOpen = false"
+      ></div>
+      
       <Sidebar 
         :conversations="conversations"
         :currentConversationId="currentConversationId"
         :currentMode="currentMode"
-        @new-chat="createNewChat"
-        @select-conversation="selectConversation"
+        :class="[
+          'fixed lg:relative z-50 lg:z-auto transition-transform duration-200',
+          sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
+        ]"
+        @new-chat="handleNewChat"
+        @select-conversation="handleSelectConversation"
         @delete-conversation="deleteConversation"
-        @show-history="showHistory = true"
-        @show-image-generator="showImageGenerator = true"
-        @show-document-analyzer="showDocumentAnalyzer = true"
-        @show-translator="showTranslator = true"
-        @change-mode="changeMode"
+        @show-history="handleShowHistory"
+        @show-image-generator="handleShowImageGenerator"
+        @show-document-analyzer="handleShowDocumentAnalyzer"
+        @show-translator="handleShowTranslator"
+        @change-mode="handleChangeMode"
       />
 
-      <div class="flex-1 flex flex-col">
+      <div class="flex-1 flex flex-col w-full">
         <ChatArea 
           :messages="currentMessages"
           :isLoading="isLoading"
@@ -25,6 +35,7 @@
           @send-message="handleSendMessage"
           @change-mode="changeMode"
           @stop-generation="stopGeneration"
+          @toggle-sidebar="sidebarOpen = !sidebarOpen"
         />
       </div>
     </div>
@@ -89,6 +100,7 @@ const currentMode = ref('chat')
 const confirmDialog = ref(null)
 let currentTypingTimeout = null
 const isCurrentlyTyping = ref(false)
+const sidebarOpen = ref(false)
 
 const currentMessages = computed(() => {
   const conv = conversations.value.find(c => c.id === currentConversationId.value)
@@ -109,6 +121,41 @@ const createNewChat = () => {
   conversations.value.unshift(newConv)
   currentConversationId.value = newConv.id
   saveToLocalStorage()
+}
+
+const handleNewChat = () => {
+  createNewChat()
+  sidebarOpen.value = false
+}
+
+const handleSelectConversation = (id) => {
+  selectConversation(id)
+  sidebarOpen.value = false
+}
+
+const handleShowHistory = () => {
+  showHistory.value = true
+  sidebarOpen.value = false
+}
+
+const handleShowImageGenerator = () => {
+  showImageGenerator.value = true
+  sidebarOpen.value = false
+}
+
+const handleShowDocumentAnalyzer = () => {
+  showDocumentAnalyzer.value = true
+  sidebarOpen.value = false
+}
+
+const handleShowTranslator = () => {
+  showTranslator.value = true
+  sidebarOpen.value = false
+}
+
+const handleChangeMode = (mode) => {
+  changeMode(mode)
+  sidebarOpen.value = false
 }
 
 const selectConversation = (id) => {

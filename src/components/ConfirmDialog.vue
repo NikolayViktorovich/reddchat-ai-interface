@@ -2,7 +2,7 @@
   <transition name="fade">
     <div 
       v-if="isOpen"
-      class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-6"
+      class="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-6"
       @click.self="cancel"
     >
       <div class="bg-[#1a1a1d] rounded-2xl border border-white/10 w-full max-w-md shadow-2xl">
@@ -110,14 +110,10 @@ defineExpose({ show })
 </script>
 
 <style scoped>
-.fade-enter-active,
-.fade-leave-active {
-  transition: all 0.08s ease;
+.fade-enter-active, .fade-leave-active { 
+  transition: opacity 0.1s ease; 
 }
-
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
-  transform: scale(0.95);
+.fade-enter-from, .fade-leave-to { 
+  opacity: 0; 
 }
 </style>

@@ -1,7 +1,20 @@
 <template>
   <div class="flex-1 flex flex-col overflow-hidden">
+    <div class="lg:hidden flex items-center justify-between px-4 py-3 border-b border-white/10">
+      <button 
+        @click="$emit('toggle-sidebar')"
+        class="p-2 text-gray-400 hover:text-white transition-colors"
+      >
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+      </button>
+      <h1 class="text-white text-sm font-semibold tracking-wider" style="font-family: 'Orbitron', sans-serif;">REDDCHAT</h1>
+      <div class="w-10"></div>
+    </div>
+    
     <transition name="mode-indicator">
-      <div v-if="currentMode === 'programmer'" class="px-6 pt-4 pb-2">
+      <div v-if="currentMode === 'programmer'" class="px-4 md:px-6 pt-4 pb-2">
         <div class="max-w-4xl mx-auto flex items-center justify-between bg-white/5 backdrop-blur-xl rounded-2xl px-4 py-3 border border-white/10">
           <div class="flex items-center gap-3">
             <div>
@@ -20,23 +33,23 @@
     </transition>
     
     <div ref="messagesContainer" class="flex-1 overflow-y-auto scrollbar-thin">
-      <div v-if="showWelcome" class="h-full flex flex-col items-center justify-center px-6 pb-32">
-        <h2 class="text-7xl text-white/30 mb-2 h-[84px] flex items-center justify-center" style="font-family: 'Josefin Sans', sans-serif; font-weight: 100; letter-spacing: -0.02em; line-height: 1.2;">
+      <div v-if="showWelcome" class="h-full flex flex-col items-center justify-center px-4 md:px-6 pb-20 md:pb-32">
+        <h2 class="text-3xl sm:text-5xl md:text-7xl text-white/30 mb-2 h-[50px] sm:h-[70px] md:h-[84px] flex items-center justify-center text-center" style="font-family: 'Josefin Sans', sans-serif; font-weight: 100; letter-spacing: -0.02em; line-height: 1.2;">
           {{ typingText }}
         </h2>
 
-        <div class="flex flex-wrap justify-center gap-3 max-w-4xl mb-8 mt-8">
+        <div class="flex flex-wrap justify-center gap-2 md:gap-3 max-w-4xl mb-6 md:mb-8 mt-6 md:mt-8 px-2">
           <button
             v-for="(prompt, index) in examplePrompts"
             :key="index"
             @click="inputMessage = prompt.full"
-            class="px-4 py-2 bg-white/5 hover:bg-white/10 hover:border-white/30 text-gray-300 hover:text-white text-sm rounded-full transition-all duration-200 backdrop-blur-sm border border-white/10"
+            class="px-3 md:px-4 py-2 bg-white/5 hover:bg-white/10 hover:border-white/30 text-gray-300 hover:text-white text-xs md:text-sm rounded-full transition-all duration-200 backdrop-blur-sm border border-white/10"
           >
             {{ prompt.short }}
           </button>
         </div>
 
-        <div class="w-full max-w-3xl">
+        <div class="w-full max-w-3xl px-2 md:px-0">
           <div v-if="attachedFiles.length > 0" class="mb-3 flex flex-wrap gap-2">
             <div
               v-for="(file, index) in attachedFiles"
@@ -61,7 +74,7 @@
           <div class="relative bg-white/5 backdrop-blur-xl rounded-3xl border border-white/10 shadow-xl">
             <button 
               @click="$refs.fileInputWelcome.click()"
-              class="absolute left-5 top-1/2 -translate-y-1/2 p-2 hover:bg-white/5/50 rounded-xl transition-colors"
+              class="absolute left-3 md:left-5 top-1/2 -translate-y-1/2 p-2 hover:bg-white/5/50 rounded-xl transition-colors"
             >
               <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
@@ -81,7 +94,7 @@
               @keydown.enter.exact.prevent="sendMessage"
               type="text"
               placeholder="Напишите сообщение..."
-              class="w-full pl-16 pr-16 py-5 bg-transparent text-white placeholder-gray-500 focus:outline-none text-sm"
+              class="w-full pl-12 md:pl-16 pr-14 md:pr-16 py-4 md:py-5 bg-transparent text-white placeholder-gray-500 focus:outline-none text-sm"
             />
             
             <transition name="button-switch" mode="out-in">
@@ -90,12 +103,12 @@
                 key="send"
                 @click="sendMessage"
                 :disabled="!inputMessage.trim() || isLoading"
-                class="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full flex items-center justify-center transition-all duration-75"
+                class="absolute right-3 md:right-4 top-1/2 -translate-y-1/2 w-9 h-9 md:w-10 md:h-10 rounded-full flex items-center justify-center transition-all duration-75"
                 :class="inputMessage.trim() && !isLoading
                   ? 'border-2 border-white/60 text-white/60 hover:bg-white/10 hover:border-white hover:text-white'
                   : 'border-2 border-white/10 text-gray-500 cursor-not-allowed'"
               >
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
                 </svg>
               </button>
@@ -104,9 +117,9 @@
                 v-else
                 key="stop"
                 @click="$emit('stop-generation')"
-                class="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full flex items-center justify-center transition-all duration-75 border-2 border-red-500/60 text-red-500/60 hover:bg-red-500/10 hover:border-red-500 hover:text-red-500"
+                class="absolute right-3 md:right-4 top-1/2 -translate-y-1/2 w-9 h-9 md:w-10 md:h-10 rounded-full flex items-center justify-center transition-all duration-75 border-2 border-red-500/60 text-red-500/60 hover:bg-red-500/10 hover:border-red-500 hover:text-red-500"
               >
-                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                <svg class="w-4 h-4 md:w-5 md:h-5" fill="currentColor" viewBox="0 0 24 24">
                   <rect x="6" y="6" width="12" height="12" rx="1" />
                 </svg>
               </button>
@@ -114,7 +127,7 @@
           </div>
         </div>
 
-        <div class="flex items-center gap-8 mt-12">
+        <div class="hidden md:flex items-center gap-8 mt-12">
           <button class="flex items-center gap-2 text-gray-400 hover:text-white transition-colors text-sm">
             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
               <path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5z"/>
@@ -142,7 +155,7 @@
         </div>
       </div>
 
-      <div v-else class="max-w-4xl mx-auto px-6 py-6">
+      <div v-else class="max-w-4xl mx-auto px-4 md:px-6 py-4 md:py-6">
         <MessageBubble
           v-for="message in messages"
           :key="message.id"
@@ -159,7 +172,7 @@
       </div>
     </div>
 
-    <div v-if="!showWelcome" class="px-6 py-4">
+    <div v-if="!showWelcome" class="px-4 md:px-6 py-3 md:py-4">
       <div class="max-w-4xl mx-auto">
         <div v-if="attachedFiles.length > 0" class="mb-3 flex flex-wrap gap-2">
           <div
@@ -185,7 +198,7 @@
         <div class="relative bg-white/5 backdrop-blur-xl rounded-3xl border border-white/10 shadow-xl">
           <button 
             @click="$refs.fileInput.click()"
-            class="absolute left-5 top-1/2 -translate-y-1/2 p-2 hover:bg-white/5/50 rounded-xl transition-colors"
+            class="absolute left-3 md:left-5 top-1/2 -translate-y-1/2 p-2 hover:bg-white/5/50 rounded-xl transition-colors"
           >
             <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
@@ -205,7 +218,7 @@
             @keydown.enter.exact.prevent="sendMessage"
             type="text"
             placeholder="Напишите сообщение..."
-            class="w-full pl-16 pr-16 py-5 bg-transparent text-white placeholder-gray-500 focus:outline-none text-sm"
+            class="w-full pl-12 md:pl-16 pr-14 md:pr-16 py-4 md:py-5 bg-transparent text-white placeholder-gray-500 focus:outline-none text-sm"
           />
           
           <transition name="button-switch" mode="out-in">
@@ -214,12 +227,12 @@
               key="send"
               @click="sendMessage"
               :disabled="!inputMessage.trim() || isLoading"
-              class="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full flex items-center justify-center transition-all duration-75"
+              class="absolute right-3 md:right-4 top-1/2 -translate-y-1/2 w-9 h-9 md:w-10 md:h-10 rounded-full flex items-center justify-center transition-all duration-75"
               :class="inputMessage.trim() && !isLoading
                 ? 'border-2 border-white/60 text-white/60 hover:bg-white/10 hover:border-white hover:text-white'
                 : 'border-2 border-white/10 text-gray-500 cursor-not-allowed'"
             >
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg class="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
               </svg>
             </button>
@@ -228,16 +241,16 @@
               v-else
               key="stop"
               @click="$emit('stop-generation')"
-              class="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full flex items-center justify-center transition-all duration-75 border-2 border-red-500/60 text-red-500/60 hover:bg-red-500/10 hover:border-red-500 hover:text-red-500"
+              class="absolute right-3 md:right-4 top-1/2 -translate-y-1/2 w-9 h-9 md:w-10 md:h-10 rounded-full flex items-center justify-center transition-all duration-75 border-2 border-red-500/60 text-red-500/60 hover:bg-red-500/10 hover:border-red-500 hover:text-red-500"
             >
-              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+              <svg class="w-4 h-4 md:w-5 md:h-5" fill="currentColor" viewBox="0 0 24 24">
                 <rect x="6" y="6" width="12" height="12" rx="1" />
               </svg>
             </button>
           </transition>
         </div>
         
-        <p class="text-center text-gray-500 text-xs mt-3"> 
+        <p class="text-center text-gray-500 text-xs mt-2 md:mt-3"> 
           © 2026 REDDCHAT. Все права защищены.Разработан как пет-проект Nikolay Viktorovich.
         </p>
       </div>
@@ -257,7 +270,7 @@ const props = defineProps({
   isGenerating: Boolean
 })
 
-const emit = defineEmits(['send-message', 'change-mode', 'stop-generation'])
+const emit = defineEmits(['send-message', 'change-mode', 'stop-generation', 'toggle-sidebar'])
 
 const inputMessage = ref('')
 const messagesContainer = ref(null)
