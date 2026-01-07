@@ -12,8 +12,8 @@
         :currentConversationId="currentConversationId"
         :currentMode="currentMode"
         :class="[
-          'fixed lg:relative z-50 lg:z-auto transition-transform duration-200',
-          sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
+          'fixed lg:relative z-50 lg:z-auto transition-all duration-200',
+          sidebarOpen ? 'translate-x-0 visible' : '-translate-x-full invisible lg:translate-x-0 lg:visible'
         ]"
         @new-chat="handleNewChat"
         @select-conversation="handleSelectConversation"
