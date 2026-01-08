@@ -129,7 +129,6 @@
               </div>
             </div>
             <div v-else-if="!translatedText" class="flex flex-col items-center justify-center h-full">
-              <svg class="w-12 h-12 text-gray-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" /></svg>
               <p class="text-gray-400 text-lg">Перевод появится здесь</p>
             </div>
             <div v-else class="text-white text-base leading-relaxed whitespace-pre-wrap">{{ translatedText }}</div>

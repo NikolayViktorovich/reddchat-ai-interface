@@ -72,13 +72,13 @@
           </div>
           
           <div class="relative bg-white/5 rounded-3xl border border-white/10">
-            <button @click="$refs.fileInputWelcome.click()" class="absolute left-3 md:left-5 top-1/2 -translate-y-1/2 p-2">
+            <button @click="$refs.fileInputWelcome.click()" class="absolute left-3 md:left-4 top-1/2 -translate-y-1/2 p-2">
               <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
               </svg>
             </button>
             <input ref="fileInputWelcome" type="file" class="hidden" :accept="currentMode === 'programmer' ? '*' : 'image/*,.pdf,.doc,.docx,.txt,.md'" multiple @change="handleFileSelect" />
-            <input v-model="inputMessage" @keydown.enter.exact.prevent="sendMessage" type="text" placeholder="Напишите сообщение..." class="w-full pl-12 md:pl-16 pr-14 md:pr-16 py-4 md:py-5 bg-transparent text-white placeholder-gray-500 focus:outline-none text-sm" />
+            <textarea :key="'welcome-' + textareaKey" ref="textareaWelcome" v-model="inputMessage" @keydown.enter.exact.prevent="sendMessage" @input="autoResize($refs.textareaWelcome)" placeholder="Напишите сообщение..." class="w-full pl-12 md:pl-14 pr-14 md:pr-16 py-4 md:py-5 bg-transparent text-white placeholder-gray-500 focus:outline-none text-sm resize-none min-h-[56px] max-h-[200px] overflow-y-auto scrollbar-thin leading-[24px]" rows="1"></textarea>
             <button v-if="!isGenerating" @click="sendMessage" :disabled="!canSend" class="absolute right-3 md:right-4 top-1/2 -translate-y-1/2 w-9 h-9 md:w-10 md:h-10 rounded-full flex items-center justify-center border-2" :class="canSend ? 'border-white/60 text-white/60 active:bg-white/10' : 'border-white/10 text-gray-500'">
               <svg class="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
@@ -126,13 +126,13 @@
         </div>
         
         <div class="relative bg-white/5 rounded-3xl border border-white/10">
-          <button @click="$refs.fileInput.click()" class="absolute left-3 md:left-5 top-1/2 -translate-y-1/2 p-2">
+          <button @click="$refs.fileInput.click()" class="absolute left-3 md:left-4 top-1/2 -translate-y-1/2 p-2">
             <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
             </svg>
           </button>
           <input ref="fileInput" type="file" class="hidden" :accept="currentMode === 'programmer' ? '*' : 'image/*,.pdf,.doc,.docx,.txt,.md'" multiple @change="handleFileSelect" />
-          <input v-model="inputMessage" @keydown.enter.exact.prevent="sendMessage" type="text" placeholder="Напишите сообщение..." class="w-full pl-12 md:pl-16 pr-14 md:pr-16 py-4 md:py-5 bg-transparent text-white placeholder-gray-500 focus:outline-none text-sm" />
+          <textarea :key="'chat-' + textareaKey" ref="textareaChat" v-model="inputMessage" @keydown.enter.exact.prevent="sendMessage" @input="autoResize($refs.textareaChat)" placeholder="Напишите сообщение..." class="w-full pl-12 md:pl-14 pr-14 md:pr-16 py-4 md:py-5 bg-transparent text-white placeholder-gray-500 focus:outline-none text-sm resize-none min-h-[56px] max-h-[200px] overflow-y-auto scrollbar-thin leading-[24px]" rows="1"></textarea>
           <button v-if="!isGenerating" @click="sendMessage" :disabled="!canSend" class="absolute right-3 md:right-4 top-1/2 -translate-y-1/2 w-9 h-9 md:w-10 md:h-10 rounded-full flex items-center justify-center border-2" :class="canSend ? 'border-white/60 text-white/60 active:bg-white/10' : 'border-white/10 text-gray-500'">
             <svg class="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
@@ -169,6 +169,9 @@ const inputMessage = ref('')
 const messagesContainer = ref(null)
 const attachedFiles = ref([])
 const userScrolledUp = ref(false)
+const textareaWelcome = ref(null)
+const textareaChat = ref(null)
+const textareaKey = ref(0)
 
 const canSend = computed(() => (inputMessage.value.trim() || attachedFiles.value.length) && !props.isLoading)
 
@@ -217,6 +220,7 @@ const sendMessage = () => {
   emit('send-message', { displayContent: inputMessage.value.trim(), apiContent, files })
   inputMessage.value = ''
   attachedFiles.value = []
+  textareaKey.value++
 }
 
 const handleFileSelect = async (e) => {
@@ -233,6 +237,12 @@ const handleFileSelect = async (e) => {
 }
 
 const removeFile = (i) => attachedFiles.value.splice(i, 1)
+
+const autoResize = (el) => {
+  if (!el) return
+  el.style.height = 'auto'
+  el.style.height = Math.min(el.scrollHeight, 200) + 'px'
+}
 
 watch(() => props.messages, () => {
   nextTick(() => { if (messagesContainer.value && !userScrolledUp.value) messagesContainer.value.scrollTop = messagesContainer.value.scrollHeight })
