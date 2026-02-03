@@ -8,61 +8,11 @@
     <meta name="mobile-web-app-capable" content="yes" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Josefin+Sans:wght@100;200;300;400;500;600;700&family=Orbitron:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/@fontsource/inter@5.0.8/index.min.css" rel="stylesheet">
-    <style>
-      @font-face {
-        font-family: 'SB Sans Interface';
-        src: url('https://cdn.jsdelivr.net/gh/nicepkg/nicepkg-fonts@main/SBSansInterface-Regular.woff2') format('woff2');
-        font-weight: 400;
-        font-style: normal;
-        font-display: swap;
-      }
-      @font-face {
-        font-family: 'SB Sans Interface';
-        src: url('https://cdn.jsdelivr.net/gh/nicepkg/nicepkg-fonts@main/SBSansInterface-Light.woff2') format('woff2');
-        font-weight: 300;
-        font-style: normal;
-        font-display: swap;
-      }
-      @font-face {
-        font-family: 'SB Sans Interface';
-        src: url('https://cdn.jsdelivr.net/gh/nicepkg/nicepkg-fonts@main/SBSansInterface-Semibold.woff2') format('woff2');
-        font-weight: 600;
-        font-style: normal;
-        font-display: swap;
-      }
-    </style>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     <title>REDDCHAT</title>
   </head>
   <body>
     <div id="app"></div>
-    
-    <div id="splash-screen" style="position:fixed;inset:0;background:#0a0a0a;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;transition:opacity 0.3s ease-out">
-      <div style="text-align:center">
-        <p style="font-family:'Orbitron',sans-serif;font-weight:300;font-size:2rem;color:rgba(255,255,255,0.9);letter-spacing:0.1em;margin:0;line-height:1">REDD</p>
-        <p style="font-family:'Orbitron',sans-serif;font-weight:600;font-size:2rem;color:rgba(255,255,255,0.9);letter-spacing:0.1em;margin:0;line-height:1">CHAT</p>
-      </div>
-      <div style="margin-top:2rem;width:120px;height:2px;background:rgba(255,255,255,0.1);border-radius:2px;overflow:hidden">
-        <div id="splash-bar" style="width:0%;height:100%;background:rgba(255,255,255,0.6);transition:width 0.4s ease-out"></div>
-      </div>
-    </div>
-    
-    <script>
-      (function(){
-        var bar = document.getElementById('splash-bar');
-        var splash = document.getElementById('splash-screen');
-        setTimeout(function(){ bar.style.width = '70%'; }, 50);
-        setTimeout(function(){ bar.style.width = '100%'; }, 400);
-        window.addEventListener('load', function(){
-          setTimeout(function(){
-            splash.style.opacity = '0';
-            setTimeout(function(){ splash.remove(); }, 300);
-          }, 600);
-        });
-      })();
-    </script>
-    
     <script type="module" src="/src/main.js"></script>
   </body>
 </html>

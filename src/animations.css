@@ -1,0 +1,85 @@
+/* Subtle, functional animations - human approach */
+
+/* Hover states - barely noticeable but feel good */
+button, a, [role="button"] {
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+
+button:active:not(:disabled), 
+a:active, 
+[role="button"]:active {
+  transform: scale(0.98);
+}
+
+/* Input focus - subtle glow */
+input:focus, 
+textarea:focus, 
+select:focus {
+  transition: border-color 0.15s ease;
+}
+
+/* Message appear - fade in from bottom */
+@keyframes messageAppear {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.message-appear {
+  animation: messageAppear 0.2s ease-out;
+}
+
+/* Typing indicator - subtle pulse */
+@keyframes typingPulse {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 1; }
+}
+
+.typing-dot {
+  animation: typingPulse 1.4s ease-in-out infinite;
+}
+
+.typing-dot:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.typing-dot:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+/* Smooth scroll behavior */
+.smooth-scroll {
+  scroll-behavior: smooth;
+}
+
+/* Hover lift - for cards */
+.hover-lift {
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.hover-lift:hover {
+  transform: translateY(-1px);
+}
+
+/* Focus visible - accessibility */
+*:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.3);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Reduce motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

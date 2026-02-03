@@ -11,6 +11,7 @@
       
       <Transition name="sidebar">
         <Sidebar 
+          ref="sidebarRef"
           v-show="sidebarOpen || isDesktop"
           :conversations="conversations"
           :currentConversationId="currentConversationId"
@@ -18,7 +19,7 @@
           class="fixed lg:relative z-50 lg:z-auto"
           @new-chat="handleNewChat"
           @select-conversation="handleSelectConversation"
-          @delete-conversation="deleteConversation"
+          @delete-conversation="handleDeleteConversation"
           @show-history="handleShowHistory"
           @show-translator="handleShowTranslator"
           @change-mode="handleChangeMode"
@@ -33,11 +34,11 @@
           :isLoading="isLoading"
           :showWelcome="showWelcome"
           :currentMode="currentMode"
-          :isGenerating="isCurrentlyTyping"
+          :isGenerating="isStreaming"
           :sidebarOpen="sidebarOpen"
           @send-message="handleSendMessage"
-          @change-mode="changeMode"
-          @stop-generation="stopGeneration"
+          @change-mode="handleChangeMode"
+          @stop-generation="handleStopGeneration"
           @toggle-sidebar="sidebarOpen = !sidebarOpen"
         />
       </div>
@@ -55,10 +56,10 @@
       :conversations="conversations"
       :currentConversationId="currentConversationId"
       @close="closeHistory"
-      @select-conversation="selectConversation"
-      @delete-conversation="deleteConversation"
+      @select-conversation="handleSelectConversation"
+      @delete-conversation="handleDeleteConversation"
       @pin-conversation="pinConversation"
-      @rename-conversation="renameConversation"
+      @rename-conversation="handleRenameConversation"
     />
 
     <ConfirmDialog ref="confirmDialog" />
@@ -73,340 +74,164 @@
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import Sidebar from './components/Sidebar.vue'
-import Header from './components/Header.vue'
 import ChatArea from './components/ChatArea.vue'
-import SettingsModal from './components/SettingsModal.vue'
 import HistoryModal from './components/HistoryModal.vue'
 import ConfirmDialog from './components/ConfirmDialog.vue'
 import TranslatorModal from './components/TranslatorModal.vue'
+import { useConversations } from './composables/useConversations'
+import { useChat } from './composables/useChat'
+import { storage } from './utils/storage'
+import { STORAGE_KEYS, MODES } from './constants'
 
-const conversations = ref([])
-const currentConversationId = ref(null)
-const isLoading = ref(false)
+const {
+  conversations,
+  currentConversationId,
+  currentMessages,
+  loadConversations,
+  createConversation,
+  selectConversation,
+  deleteConversation,
+  togglePin,
+  renameConversation,
+  addMessage,
+  updateLastMessage
+} = useConversations()
+
+const { isLoading, isStreaming, sendChatMessage, stopGeneration } = useChat()
+
 const showSettings = ref(false)
 const showHistory = ref(false)
 const showTranslator = ref(false)
 const currentModel = ref('GPT-4 Turbo')
-const currentMode = ref('chat')
+const currentMode = ref(MODES.CHAT)
 const confirmDialog = ref(null)
-let currentTypingTimeout = null
-const isCurrentlyTyping = ref(false)
 const sidebarOpen = ref(false)
 const isDesktop = ref(window.innerWidth >= 1024)
+const sidebarRef = ref(null)
 
-const handleResize = () => {
-  isDesktop.value = window.innerWidth >= 1024
-}
+const showWelcome = computed(() => !currentMessages.value.length)
+
+const handleResize = () => isDesktop.value = window.innerWidth >= 1024
 
 onMounted(() => {
   window.addEventListener('resize', handleResize)
-  loadFromLocalStorage()
-  if (conversations.value.length === 0) {
-    createNewChat()
-  }
+  loadConversations()
+  currentModel.value = storage.get(STORAGE_KEYS.CURRENT_MODEL, 'GPT-4 Turbo')
+  currentMode.value = storage.get(STORAGE_KEYS.CURRENT_MODE, MODES.CHAT)
+  if (!conversations.value.length) createConversation()
 })
 
-onUnmounted(() => {
-  window.removeEventListener('resize', handleResize)
-})
+onUnmounted(() => window.removeEventListener('resize', handleResize))
 
-const currentMessages = computed(() => {
-  const conv = conversations.value.find(c => c.id === currentConversationId.value)
-  return conv ? conv.messages : []
-})
-
-const showWelcome = computed(() => {
-  return currentMessages.value.length === 0
-})
-
-const createNewChat = () => {
-  const newConv = {
-    id: Date.now(),
-    title: 'Новый чат',
-    messages: [],
-    createdAt: new Date()
-  }
-  conversations.value.unshift(newConv)
-  currentConversationId.value = newConv.id
-  saveToLocalStorage()
-}
+const closeSidebar = () => sidebarOpen.value = false
 
 const handleNewChat = () => {
-  createNewChat()
-  sidebarOpen.value = false
+  createConversation()
+  closeSidebar()
 }
 
 const handleSelectConversation = (id) => {
   selectConversation(id)
-  sidebarOpen.value = false
+  closeSidebar()
 }
 
 const handleShowHistory = () => {
   showHistory.value = true
-  sidebarOpen.value = false
+  closeSidebar()
 }
 
 const handleShowTranslator = () => {
   showTranslator.value = true
-  sidebarOpen.value = false
+  closeSidebar()
 }
 
 const handleChangeMode = (mode) => {
-  changeMode(mode)
-  sidebarOpen.value = false
+  currentMode.value = mode
+  storage.set(STORAGE_KEYS.CURRENT_MODE, mode)
+  closeSidebar()
 }
 
 const closeSettings = () => {
   showSettings.value = false
   sidebarOpen.value = false
+  sidebarRef.value?.closeMenus()
 }
 
 const closeHistory = () => {
   showHistory.value = false
   sidebarOpen.value = false
+  sidebarRef.value?.closeMenus()
 }
 
 const closeTranslator = () => {
   showTranslator.value = false
   sidebarOpen.value = false
+  sidebarRef.value?.closeMenus()
 }
 
-const selectConversation = (id) => {
-  currentConversationId.value = id
-}
+const pinConversation = (id) => togglePin(id)
 
-const pinConversation = (id) => {
-  const conv = conversations.value.find(c => c.id === id)
-  if (conv) {
-    conv.pinned = !conv.pinned
-    saveToLocalStorage()
-  }
-}
+const handleRenameConversation = ({ id, title }) => renameConversation(id, title)
 
-const renameConversation = ({ id, title }) => {
-  const conv = conversations.value.find(c => c.id === id)
-  if (conv) {
-    conv.title = title
-    saveToLocalStorage()
-  }
-}
-
-const deleteConversation = async (id) => {
-  const confirmed = await confirmDialog.value.show(
+const handleDeleteConversation = async (id) => {
+  const ok = await confirmDialog.value.show(
     'Удалить диалог?',
     'Вы уверены, что хотите удалить этот диалог? Это действие нельзя отменить.',
     'delete_conversation'
   )
-  
-  if (confirmed) {
-    conversations.value = conversations.value.filter(c => c.id !== id)
-    if (currentConversationId.value === id) {
-      currentConversationId.value = conversations.value[0]?.id || null
-    }
-    saveToLocalStorage()
-  }
+  if (ok) deleteConversation(id)
 }
 
 const handleSendMessage = async (content) => {
-  if (isCurrentlyTyping.value && currentTypingTimeout) {
-    clearTimeout(currentTypingTimeout)
-    isCurrentlyTyping.value = false
-    
-    const conv = conversations.value.find(c => c.id === currentConversationId.value)
-    if (conv) {
-      const lastMessage = conv.messages[conv.messages.length - 1]
-      if (lastMessage && lastMessage.role === 'assistant' && lastMessage.isTyping) {
-        lastMessage.isTyping = false
-        lastMessage.isStopped = true
-      }
-    }
-  }
-  
-  if (!currentConversationId.value) {
-    createNewChat()
-  }
+  if (isStreaming.value) stopGeneration()
+  if (!currentConversationId.value) createConversation()
 
-  const conv = conversations.value.find(c => c.id === currentConversationId.value)
-  if (!conv) return
+  const isObj = typeof content === 'object'
+  const displayContent = isObj ? content.displayContent : content
+  const apiContent = isObj ? content.apiContent : content
+  const files = isObj ? content.files : []
 
-  const displayContent = typeof content === 'object' ? content.displayContent : content
-  const apiContent = typeof content === 'object' ? content.apiContent : content
-  const files = typeof content === 'object' ? content.files : []
-
-  const userMessage = {
+  addMessage({
     id: Date.now(),
     role: 'user',
     content: displayContent,
-    apiContent: apiContent,
-    files: files,
+    apiContent,
+    files,
     timestamp: new Date()
-  }
+  })
 
-  conv.messages.push(userMessage)
-
-  if (conv.messages.length === 1) {
-    conv.title = displayContent.slice(0, 50) + (displayContent.length > 50 ? '...' : '')
-  }
-
-  isLoading.value = true
-  saveToLocalStorage()
-
-  try {
-    const systemPrompt = 'Ты полезный и профессиональный AI-ассистент. Отвечай на русском языке. Используй Markdown форматирование: заголовки (##), списки (- или 1.), **жирный**, *курсив*, `код`, ```блоки кода с указанием языка```. Структурируй ответы для лучшей читаемости.'
-    
-    const apiMessages = [
-      { role: 'system', content: systemPrompt },
-      ...conv.messages.map(m => {
-        let content = m.apiContent || m.content
-        if (typeof content !== 'string') {
-          content = JSON.stringify(content)
-        }
-        return { role: m.role, content }
-      })
-    ]
-
-    const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer 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'
-      },
-      body: JSON.stringify({
-        model: 'deepseek/deepseek-r1-0528:free',
-        messages: apiMessages,
-        temperature: 0.7,
-        max_tokens: 4096,
-        stream: true
-      })
-    })
-
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}))
-      throw new Error(errorData.error?.message || `HTTP ${response.status}`)
-    }
-
-    const aiMessage = {
-      id: Date.now() + 1,
-      role: 'assistant',
-      content: '',
-      timestamp: new Date(),
-      isTyping: true,
-      isStopped: false
-    }
-    conv.messages.push(aiMessage)
-    isLoading.value = false
-    isCurrentlyTyping.value = true
-
-    const reader = response.body.getReader()
-    const decoder = new TextDecoder()
-    let buffer = ''
-
-    while (true) {
-      const { done, value } = await reader.read()
-      if (done || !isCurrentlyTyping.value) break
-
-      buffer += decoder.decode(value, { stream: true })
-      const lines = buffer.split('\n')
-      buffer = lines.pop() || ''
-
-      for (const line of lines) {
-        const trimmed = line.trim()
-        if (!trimmed.startsWith('data: ')) continue
-        
-        const data = trimmed.slice(6)
-        if (data === '[DONE]') break
-
-        try {
-          const parsed = JSON.parse(data)
-          const content = parsed.choices?.[0]?.delta?.content
-          if (content) {
-            const idx = conv.messages.findIndex(m => m.id === aiMessage.id)
-            if (idx !== -1) {
-              conv.messages[idx].content += content
-            }
-          }
-        } catch {}
-      }
-    }
-
-    const idx = conv.messages.findIndex(m => m.id === aiMessage.id)
-    if (idx !== -1) {
-      conv.messages[idx].isTyping = false
-    }
-    isCurrentlyTyping.value = false
-    saveToLocalStorage()
-  } catch (error) {
-    console.error('API Error:', error)
-    isLoading.value = false
-    
-    const errorMessage = {
-      id: Date.now() + 1,
-      role: 'assistant',
-      content: `Ошибка: ${error.message}`,
-      timestamp: new Date(),
-      isTyping: false
-    }
-    conv.messages.push(errorMessage)
-    saveToLocalStorage()
-  }
-}
-
-const stopGeneration = () => {
-  if (currentTypingTimeout) {
-    clearTimeout(currentTypingTimeout)
-    currentTypingTimeout = null
+  const aiMsg = {
+    id: Date.now() + 1,
+    role: 'assistant',
+    content: '',
+    timestamp: new Date(),
+    isTyping: true,
+    isStopped: false
   }
   
-  const conv = conversations.value.find(c => c.id === currentConversationId.value)
-  if (conv) {
-    const lastMessage = conv.messages[conv.messages.length - 1]
-    if (lastMessage && lastMessage.role === 'assistant' && lastMessage.isTyping) {
-      lastMessage.isTyping = false
-      lastMessage.isStopped = true
+  addMessage(aiMsg)
+
+  await sendChatMessage(
+    currentMessages.value,
+    chunk => {
+      aiMsg.content += chunk
+      updateLastMessage({ content: aiMsg.content })
+    },
+    () => updateLastMessage({ isTyping: false }),
+    e => {
+      console.error('Chat error:', e)
+      updateLastMessage({ content: `Ошибка: ${e.message}`, isTyping: false })
     }
-  }
-  
-  isCurrentlyTyping.value = false
-  saveToLocalStorage()
+  )
 }
 
-const updateModel = (model) => {
-  currentModel.value = model
-  saveToLocalStorage()
+const handleStopGeneration = () => {
+  stopGeneration()
+  updateLastMessage({ isTyping: false, isStopped: true })
 }
 
-const changeMode = (mode) => {
-  currentMode.value = mode
-  saveToLocalStorage()
+const updateModel = m => {
+  currentModel.value = m
+  storage.set(STORAGE_KEYS.CURRENT_MODEL, m)
 }
-
-const saveToLocalStorage = () => {
-  localStorage.setItem('conversations', JSON.stringify(conversations.value))
-  localStorage.setItem('currentConversationId', currentConversationId.value)
-  localStorage.setItem('currentModel', currentModel.value)
-  localStorage.setItem('currentMode', currentMode.value)
-}
-
-const loadFromLocalStorage = () => {
-  const saved = localStorage.getItem('conversations')
-  if (saved) {
-    conversations.value = JSON.parse(saved)
-  }
-  
-  const savedId = localStorage.getItem('currentConversationId')
-  if (savedId) {
-    currentConversationId.value = parseInt(savedId)
-  }
-  
-  const savedModel = localStorage.getItem('currentModel')
-  if (savedModel) {
-    currentModel.value = savedModel
-  }
-  
-  const savedMode = localStorage.getItem('currentMode')
-  if (savedMode) {
-    currentMode.value = savedMode
-  }
-}
-
 </script>

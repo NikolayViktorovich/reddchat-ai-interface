@@ -1,28 +1,28 @@
 <template>
   <Transition name="modal">
-    <div v-if="isOpen" class="fixed inset-0 bg-black/70 flex items-end md:items-center justify-center z-50 md:p-6" @click.self="$emit('close')">
-      <div class="modal-content glass-modal w-full md:max-w-7xl h-[90vh] md:rounded-2xl rounded-t-3xl border-t md:border border-white/5 flex flex-col md:flex-row overflow-hidden">
-      <div class="md:hidden flex items-center justify-between p-4 border-b border-white/5">
-        <h2 class="text-lg text-white font-medium">История диалогов</h2>
+    <div v-if="isOpen" class="fixed inset-0 bg-black/80 flex items-end md:items-center justify-center z-50 md:p-6" @click.self="$emit('close')">
+      <div class="modal-content glass-modal w-full md:max-w-7xl h-[90vh] md:rounded-xl rounded-t-2xl border-t md:border border-white/10 flex flex-col md:flex-row overflow-hidden">
+      <div class="md:hidden flex items-center justify-between p-4 border-b border-white/10">
+        <h2 class="text-base text-white">История диалогов</h2>
         <button @click="$emit('close')" class="p-2 text-gray-400 hover:text-white transition-colors">
           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
         </button>
       </div>
 
       <div class="md:hidden flex-1 flex flex-col overflow-hidden">
-        <div class="p-3 border-b border-white/5">
+        <div class="p-3 border-b border-white/10">
           <div class="relative">
-            <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
-            <input v-model="searchQuery" type="text" placeholder="Поиск..." class="w-full pl-10 pr-3 py-2.5 bg-white/5 text-white text-sm placeholder-gray-400 rounded-xl border border-white/5 focus:outline-none" />
+            <svg class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+            <input v-model="searchQuery" type="text" placeholder="Поиск..." class="w-full pl-11 pr-4 py-2.5 bg-white/5 text-white text-sm placeholder-gray-500 rounded-full border border-white/10 focus:outline-none focus:border-white/20" />
           </div>
         </div>
 
         <Transition name="slide-right" mode="out-in">
           <div v-if="!mobileSelectedConv" key="list" class="flex-1 overflow-y-auto">
             <div v-if="filteredConversations.length === 0" class="flex flex-col items-center justify-center h-full p-6">
-              <p class="text-gray-400 text-sm">{{ searchQuery ? 'Ничего не найдено' : 'История пуста' }}</p>
+              <p class="text-gray-500 text-sm">{{ searchQuery ? 'Ничего не найдено' : 'История пуста' }}</p>
             </div>
-            <div v-else class="divide-y divide-white/5">
+            <div v-else class="divide-y divide-white/10">
               <div v-for="conv in filteredConversations" :key="conv.id" class="flex items-center justify-between p-4 active:bg-white/5 transition-colors" @click="mobileSelectedConv = conv">
                 <div class="flex-1 min-w-0 mr-3">
                   <div class="flex items-center gap-2">
@@ -37,8 +37,8 @@
           </div>
 
           <div v-else key="detail" class="flex-1 flex flex-col overflow-hidden">
-            <div class="flex items-center gap-3 p-4 border-b border-white/5">
-              <button @click="mobileSelectedConv = null" class="p-1 text-gray-400"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg></button>
+            <div class="flex items-center gap-3 p-4 border-b border-white/10">
+              <button @click="mobileSelectedConv = null" class="p-1 text-gray-500"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg></button>
               <div class="flex-1 min-w-0">
                 <h3 class="text-white text-sm truncate">{{ mobileSelectedConv.title }}</h3>
                 <p class="text-gray-500 text-xs">{{ formatDate(mobileSelectedConv.createdAt) }}</p>
@@ -46,36 +46,36 @@
             </div>
             <div class="flex-1 overflow-y-auto p-4 space-y-3">
               <div v-for="message in mobileSelectedConv.messages" :key="message.id" class="flex" :class="message.role === 'user' ? 'justify-end' : 'justify-start'">
-                <div class="max-w-[85%] rounded-2xl px-3 py-2 text-sm" :class="message.role === 'user' ? 'bg-white/10 text-white whitespace-pre-wrap' : 'bg-white/5 text-white'">
+                <div class="max-w-[85%] rounded-xl px-3 py-2 text-sm" :class="message.role === 'user' ? 'bg-white/10 text-white whitespace-pre-wrap' : 'bg-white/5 text-white'">
                   <div v-if="message.role === 'assistant'" v-html="formatMarkdown(message.content)" class="markdown-content"></div>
                   <span v-else>{{ message.content }}</span>
                 </div>
               </div>
             </div>
-            <div class="p-4 border-t border-white/5">
-              <button @click="openMobileConversation" class="w-full py-3 bg-white/10 text-white rounded-2xl text-sm font-medium">Открыть диалог</button>
+            <div class="p-4 border-t border-white/10">
+              <button @click="openMobileConversation" class="w-full py-3 bg-white/10 text-white rounded-lg text-sm hover:bg-white/15">Открыть диалог</button>
             </div>
           </div>
         </Transition>
       </div>
 
-      <div class="hidden md:flex w-96 flex-col border-r border-white/5">
-        <div class="p-6 border-b border-white/5">
-          <h2 class="text-xl text-white mb-1">История диалогов</h2>
-          <p class="text-gray-400 text-sm">Всего: {{ conversations.length }}</p>
+      <div class="hidden md:flex w-96 flex-col border-r border-white/10">
+        <div class="p-5 border-b border-white/10">
+          <h2 class="text-lg text-white mb-1">История диалогов</h2>
+          <p class="text-gray-500 text-sm">Всего: {{ conversations.length }}</p>
         </div>
-        <div class="p-4 border-b border-white/5">
+        <div class="p-4 border-b border-white/10">
           <div class="relative">
-            <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
-            <input v-model="searchQuery" type="text" placeholder="Поиск..." class="w-full pl-10 pr-3 py-2 bg-white/5 text-white text-sm placeholder-gray-400 rounded-xl border border-white/5 focus:outline-none" />
+            <svg class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+            <input v-model="searchQuery" type="text" placeholder="Поиск..." class="w-full pl-11 pr-4 py-2 bg-white/5 text-white text-sm placeholder-gray-500 rounded-full border border-white/10 focus:outline-none focus:border-white/20" />
           </div>
         </div>
         <div class="flex-1 overflow-y-auto scrollbar-thin p-3">
-          <div v-if="filteredConversations.length === 0" class="text-center py-12"><p class="text-gray-400 text-sm">{{ searchQuery ? 'Ничего не найдено' : 'История пуста' }}</p></div>
+          <div v-if="filteredConversations.length === 0" class="text-center py-12"><p class="text-gray-500 text-sm">{{ searchQuery ? 'Ничего не найдено' : 'История пуста' }}</p></div>
           <div v-else class="space-y-1">
             <div v-if="pinnedConversations.length" class="mb-4">
-              <p class="text-xs text-gray-400 mb-2 px-2">Закреплённые</p>
-              <div v-for="conv in pinnedConversations" :key="conv.id" class="group relative bg-transparent hover:bg-white/5 rounded-xl cursor-pointer transition-all" :class="{ 'bg-white/10': conv.id === selectedConvId }" @click="selectedConvId = conv.id" @dblclick="openConversation">
+              <p class="text-xs text-gray-500 mb-2 px-2 uppercase tracking-wide">Закреплено</p>
+              <div v-for="conv in pinnedConversations" :key="conv.id" class="group relative bg-transparent hover:bg-white/5 rounded-lg cursor-pointer transition-all" :class="{ 'bg-white/5': conv.id === selectedConvId }" @click="selectedConvId = conv.id" @dblclick="openConversation">
                 <div v-if="editingId === conv.id" class="flex items-center gap-1 p-3" @click.stop>
                   <input v-model="editingTitle" @keydown.enter="saveEdit(conv.id)" @keydown.escape="cancelEdit" class="flex-1 bg-white/10 text-white text-sm px-2 py-1 rounded border border-white/20 focus:outline-none min-w-0" autofocus />
                   <button @click="saveEdit(conv.id)" class="p-1 text-white hover:bg-white/10 rounded"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg></button>
@@ -90,16 +90,16 @@
                     <svg class="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="6" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="18" r="1.5"/></svg>
                   </button>
                 </div>
-                <div v-if="openMenuId === conv.id" class="absolute right-0 top-full mt-1 w-44 bg-[#252528] rounded-xl border border-white/10 shadow-xl z-50 overflow-hidden animate-dropdown">
-                  <button @click.stop="startEdit(conv)" class="w-full flex items-center gap-3 px-3 py-2.5 text-sm text-gray-300 hover:bg-white/10 hover:text-white"><svg class="w-[18px] h-[18px]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>Переименовать</button>
-                  <button @click.stop="handlePin(conv.id)" class="w-full flex items-center gap-3 px-3 py-2.5 text-sm text-white hover:bg-white/10"><svg class="w-[18px] h-[18px]" fill="currentColor" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M5 5v14l7-4 7 4V5a2 2 0 00-2-2H7a2 2 0 00-2 2z"/></svg>Открепить</button>
-                  <button @click.stop="handleDelete(conv.id)" class="w-full flex items-center gap-3 px-3 py-2.5 text-sm text-gray-300 hover:bg-white/10 hover:text-white"><svg class="w-[18px] h-[18px]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>Удалить</button>
+                <div v-if="openMenuId === conv.id" class="absolute right-0 top-full mt-1 w-44 bg-[#18181b] rounded-lg border border-white/10 shadow-xl z-50 overflow-hidden animate-dropdown">
+                  <button @click.stop="startEdit(conv)" class="w-full flex items-center gap-3 px-3 py-2 text-sm text-gray-400 hover:bg-white/5 hover:text-white"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>Переименовать</button>
+                  <button @click.stop="handlePin(conv.id)" class="w-full flex items-center gap-3 px-3 py-2 text-sm text-gray-400 hover:bg-white/5 hover:text-white"><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M5 5v14l7-4 7 4V5a2 2 0 00-2-2H7a2 2 0 00-2 2z"/></svg>Открепить</button>
+                  <button @click.stop="handleDelete(conv.id)" class="w-full flex items-center gap-3 px-3 py-2 text-sm text-gray-400 hover:bg-white/5 hover:text-white"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>Удалить</button>
                 </div>
               </div>
             </div>
             <div v-if="unpinnedConversations.length">
-              <p v-if="pinnedConversations.length" class="text-xs text-gray-400 mb-2 px-2">Остальные</p>
-              <div v-for="conv in unpinnedConversations" :key="conv.id" class="group relative bg-transparent hover:bg-white/5 rounded-xl cursor-pointer transition-all" :class="{ 'bg-white/10': conv.id === selectedConvId }" @click="selectedConvId = conv.id" @dblclick="openConversation">
+              <p v-if="pinnedConversations.length" class="text-xs text-gray-500 mb-2 px-2 uppercase tracking-wide">Остальные</p>
+              <div v-for="conv in unpinnedConversations" :key="conv.id" class="group relative bg-transparent hover:bg-white/5 rounded-lg cursor-pointer transition-all" :class="{ 'bg-white/5': conv.id === selectedConvId }" @click="selectedConvId = conv.id" @dblclick="openConversation">
                 <div v-if="editingId === conv.id" class="flex items-center gap-1 p-3" @click.stop>
                   <input v-model="editingTitle" @keydown.enter="saveEdit(conv.id)" @keydown.escape="cancelEdit" class="flex-1 bg-white/10 text-white text-sm px-2 py-1 rounded border border-white/20 focus:outline-none min-w-0" autofocus />
                   <button @click="saveEdit(conv.id)" class="p-1 text-white hover:bg-white/10 rounded"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg></button>
@@ -126,18 +126,18 @@
       </div>
 
       <div class="hidden md:flex flex-1 flex-col">
-        <div class="flex items-center justify-between p-6 border-b border-white/5">
-          <div v-if="selectedConversation"><h2 class="text-xl text-white mb-1">{{ selectedConversation.title }}</h2><p class="text-gray-400 text-sm">{{ formatDate(selectedConversation.createdAt) }}</p></div>
-          <div v-else><h2 class="text-xl text-white">Предпросмотр</h2></div>
-          <button @click="$emit('close')" class="p-2 text-gray-400 hover:text-white transition-colors"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg></button>
+        <div class="flex items-center justify-between p-5 border-b border-white/10">
+          <div v-if="selectedConversation"><h2 class="text-lg text-white mb-1">{{ selectedConversation.title }}</h2><p class="text-gray-500 text-sm">{{ formatDate(selectedConversation.createdAt) }}</p></div>
+          <div v-else><h2 class="text-lg text-white">Предпросмотр</h2></div>
+          <button @click="$emit('close')" class="p-2 text-gray-500 hover:text-white transition-colors"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg></button>
         </div>
-        <div class="flex-1 overflow-y-auto scrollbar-thin p-6">
+        <div class="flex-1 overflow-y-auto scrollbar-thin p-5">
           <div v-if="!selectedConversation" class="flex flex-col items-center justify-center h-full">
-            <p class="text-gray-400 text-lg">Выбери разговор для предпросмотра</p>
+            <p class="text-gray-500">Выберите диалог для просмотра</p>
           </div>
           <div v-else class="space-y-4">
             <div v-for="message in selectedConversation.messages" :key="message.id" class="flex" :class="message.role === 'user' ? 'justify-end' : 'justify-start'">
-              <div class="max-w-2xl rounded-2xl px-4 py-3 text-sm" :class="message.role === 'user' ? 'bg-white/10 text-white whitespace-pre-wrap' : 'bg-white/5 text-white'">
+              <div class="max-w-2xl rounded-xl px-4 py-3 text-sm" :class="message.role === 'user' ? 'bg-white/10 text-white whitespace-pre-wrap' : 'bg-white/5 text-white'">
                 <div v-if="message.role === 'assistant'" v-html="formatMarkdown(message.content)" class="markdown-content"></div>
                 <span v-else>{{ message.content }}</span>
               </div>
@@ -151,7 +151,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
 import { marked } from 'marked'
 
 const formatMarkdown = (content) => { if (!content) return ''; try { return marked.parse(content) } catch { return content } }
@@ -184,10 +184,27 @@ const handlePin = (id) => { emit('pin-conversation', id); openMenuId.value = nul
 const handleDelete = (id) => { emit('delete-conversation', id); openMenuId.value = null; if (selectedConvId.value === id) selectedConvId.value = null }
 const openConversation = () => { if (selectedConvId.value) { emit('select-conversation', selectedConvId.value); emit('close') } }
 const openMobileConversation = () => { if (mobileSelectedConv.value) { emit('select-conversation', mobileSelectedConv.value.id); emit('close'); mobileSelectedConv.value = null } }
-const handleClickOutside = (e) => { if (openMenuId.value && !e.target.closest('.group')) openMenuId.value = null }
+const handleClickOutside = (e) => { 
+  if (openMenuId.value && !e.target.closest('.group')) {
+    openMenuId.value = null
+  }
+  if (editingId.value && !e.target.closest('.group')) {
+    editingId.value = null
+    editingTitle.value = ''
+  }
+}
 
 onMounted(() => document.addEventListener('click', handleClickOutside))
 onUnmounted(() => document.removeEventListener('click', handleClickOutside))
+
+watch(() => props.isOpen, (newVal) => {
+  if (!newVal) {
+    openMenuId.value = null
+    editingId.value = null
+    editingTitle.value = ''
+    mobileSelectedConv.value = null
+  }
+})
 
 const formatDate = (date) => {
   const d = new Date(date), now = new Date(), diff = now - d, days = Math.floor(diff / (1000 * 60 * 60 * 24))
