@@ -18,6 +18,7 @@ export function useChat() {
       const reader = res.body.getReader()
       const decoder = new TextDecoder()
       let buffer = ''
+      let reasoningDetails = null
 
       while (true) {
         const { done, value } = await reader.read()
@@ -36,14 +37,24 @@ export function useChat() {
 
           try {
             const parsed = JSON.parse(data)
-            const content = parsed.choices?.[0]?.delta?.content
-            if (content) onChunk?.(content)
+            const delta = parsed.choices?.[0]?.delta
+            
+            if (delta?.reasoning) {
+              onChunk?.(delta.reasoning, 'reasoning')
+            }
+            else if (delta?.content) {
+              onChunk?.(delta.content, 'content')
+            }
+            
+            if (delta?.reasoning_details) {
+              reasoningDetails = delta.reasoning_details
+            }
           } catch {}
         }
       }
 
       isStreaming.value = false
-      onComplete?.()
+      onComplete?.(reasoningDetails)
     } catch (e) {
       isLoading.value = false
       isStreaming.value = false

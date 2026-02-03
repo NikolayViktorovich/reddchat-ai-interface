@@ -204,6 +204,7 @@ const handleSendMessage = async (content) => {
     id: Date.now() + 1,
     role: 'assistant',
     content: '',
+    reasoning: '',
     timestamp: new Date(),
     isTyping: true,
     isStopped: false
@@ -213,11 +214,22 @@ const handleSendMessage = async (content) => {
 
   await sendChatMessage(
     currentMessages.value,
-    chunk => {
-      aiMsg.content += chunk
-      updateLastMessage({ content: aiMsg.content })
+    (chunk, type) => {
+      if (type === 'reasoning') {
+        aiMsg.reasoning += chunk
+        updateLastMessage({ reasoning: aiMsg.reasoning })
+      } else {
+        aiMsg.content += chunk
+        updateLastMessage({ content: aiMsg.content })
+      }
     },
-    () => updateLastMessage({ isTyping: false }),
+    (reasoningDetails) => {
+      if (reasoningDetails) {
+        updateLastMessage({ isTyping: false, reasoning_details: reasoningDetails })
+      } else {
+        updateLastMessage({ isTyping: false })
+      }
+    },
     e => {
       console.error('Chat error:', e)
       updateLastMessage({ content: `Ошибка: ${e.message}`, isTyping: false })

@@ -1,6 +1,5 @@
 <template>
   <div class="flex-1 flex flex-col overflow-hidden">
-    <!-- Mobile Header -->
     <div class="lg:hidden flex items-center justify-between px-4 py-3 border-b border-white/10">
       <button @click="$emit('toggle-sidebar')" class="p-2 text-white hover:text-white/80 transition-colors">
         <div class="hamburger" :class="{ 'is-active': sidebarOpen }">
@@ -19,7 +18,6 @@
       </Transition>
     </div>
 
-    <!-- Programmer Mode Banner -->
     <div v-if="currentMode === 'programmer'" class="px-4 md:px-6 pt-4 pb-3">
       <div class="max-w-4xl mx-auto flex items-center justify-between bg-white/5 rounded-lg border border-white/10" style="padding: clamp(0.75rem, 1.5vw, 1rem);">
         <div class="flex items-center gap-3">
@@ -199,7 +197,6 @@ watch(() => props.messages, () => {
   transform: translateY(-6px) rotate(-45deg);
 }
 
-/* Mobile browser bottom bar fix */
 @media (max-width: 767px) {
   .input-area {
     padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px));
@@ -207,7 +204,6 @@ watch(() => props.messages, () => {
     margin-bottom: env(safe-area-inset-bottom, 0px);
   }
   
-  /* Fallback for Chrome Android */
   @supports not (padding-bottom: env(safe-area-inset-bottom)) {
     .input-area {
       padding-bottom: 20px;

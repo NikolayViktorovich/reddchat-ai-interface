@@ -76,7 +76,8 @@ export function useConversations() {
   const updateLast = (updates) => {
     const conv = current.value
     if (!conv?.messages.length) return
-    Object.assign(conv.messages[conv.messages.length - 1], updates)
+    const lastIndex = conv.messages.length - 1
+    conv.messages[lastIndex] = { ...conv.messages[lastIndex], ...updates }
     save()
   }
 

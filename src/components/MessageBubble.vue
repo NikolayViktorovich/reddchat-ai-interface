@@ -19,10 +19,20 @@
     </div>
 
     <div v-else class="flex">
-      <div class="max-w-3xl">
+      <div class="max-w-3xl w-full">
+        <div v-if="message.reasoning && message.isTyping" class="mb-3 bg-white/5 border border-white/10 rounded-xl px-4 py-3">
+          <div class="flex items-center gap-2 mb-2">
+            <svg class="w-4 h-4 text-white/50 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+            </svg>
+            <span class="text-xs text-white/50 font-medium">Думаю...</span>
+          </div>
+          <p class="text-sm text-white/40 leading-relaxed whitespace-pre-wrap break-words" style="word-break: break-word; overflow-wrap: break-word;">{{ message.reasoning }}</p>
+        </div>
+
         <div class="text-white">
           <div v-html="formatted" class="markdown-content break-words" style="font-size: clamp(0.875rem, 2vw, 1rem); word-break: break-word; overflow-wrap: break-word;"></div>
-          <span v-if="message.isTyping" class="inline-block w-1.5 h-4 bg-white/50 ml-0.5 animate-pulse"></span>
+          <span v-if="message.isTyping && message.content" class="inline-block w-1.5 h-4 bg-white/50 ml-0.5 animate-pulse"></span>
         </div>
         <div class="flex items-center gap-2 mt-1.5">
           <p class="text-xs text-white/40">{{ formatTime(message.timestamp) }}</p>
@@ -150,7 +160,6 @@ const copy = async () => {
 .markdown-content a { color: #61afef; word-break: break-all; }
 .markdown-content p { margin-bottom: 10px; }
 
-/* Highlight.js Atom One Dark theme colors */
 .hljs { color: #abb2bf; }
 .hljs-comment, .hljs-quote { color: #5c6370; font-style: italic; }
 .hljs-doctag, .hljs-keyword, .hljs-formula { color: #c678dd; }
