@@ -42,10 +42,9 @@ export function useChat() {
             if (delta?.reasoning) {
               onChunk?.(delta.reasoning, 'reasoning')
             }
-            else if (delta?.content) {
+            if (delta?.content) {
               onChunk?.(delta.content, 'content')
             }
-            
             if (delta?.reasoning_details) {
               reasoningDetails = delta.reasoning_details
             }
