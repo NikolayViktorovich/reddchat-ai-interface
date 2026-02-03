@@ -14,7 +14,7 @@
     <div class="flex items-center gap-2">
       <button
         @click="$emit('toggle-settings')"
-        class="p-2 hover:bg-gray-100 rounded-md transition-colors"
+        class="p-2 hover:bg-gray-100 rounded-full transition-colors"
         title="Настройки"
       >
         <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
