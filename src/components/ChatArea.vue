@@ -28,39 +28,28 @@
           </div>
           <div>
             <p class="text-white font-medium" style="font-size: clamp(0.875rem, 1.5vw, 1rem);">Режим программиста</p>
-            <p class="text-gray-500" style="font-size: clamp(0.75rem, 1.2vw, 0.875rem);">Загружайте любые файлы кода</p>
+            <p class="text-white/50" style="font-size: clamp(0.75rem, 1.2vw, 0.875rem);">Загружайте любые файлы кода</p>
           </div>
         </div>
-        <button @click="$emit('change-mode', 'chat')" class="text-gray-500 hover:text-white bg-white/5 hover:bg-white/10 rounded-lg transition-colors" style="padding: clamp(0.375rem, 1vw, 0.5rem) clamp(0.75rem, 1.5vw, 1rem); font-size: clamp(0.75rem, 1.2vw, 0.875rem);">Выйти</button>
+        <button @click="$emit('change-mode', 'chat')" class="text-white/50 hover:text-white bg-white/5 hover:bg-white/10 rounded-lg transition-colors" style="padding: clamp(0.375rem, 1vw, 0.5rem) clamp(0.75rem, 1.5vw, 1rem); font-size: clamp(0.75rem, 1.2vw, 0.875rem);">Выйти</button>
       </div>
     </div>
     
     <div ref="messagesContainer" class="flex-1 overflow-y-auto scrollbar-thin">
-      <div v-if="showWelcome" class="h-full flex flex-col items-center justify-center px-4 md:px-6 pb-4 md:pb-32">
-        <div class="flex-1 flex flex-col items-center justify-center w-full">
-          <h2 class="text-white/30 mb-12 text-center font-light" style="font-size: clamp(2rem, 5vw, 3rem);">
+      <div v-if="showWelcome" class="h-full flex flex-col items-center px-4 md:px-6 pb-4 md:pb-32">
+        <div class="flex-1 flex flex-col items-center justify-center w-full max-w-4xl">
+          <h2 class="text-white/30 text-center font-light mb-8 md:mb-12" style="font-size: clamp(2rem, 5vw, 3rem);">
             Чем могу помочь?
           </h2>
 
-          <div class="hidden md:flex flex-wrap justify-center gap-3 max-w-4xl mb-8 mt-8 px-2">
+          <div class="flex flex-wrap justify-center gap-2 md:gap-3 mb-8 px-2">
             <button
               v-for="(prompt, index) in examplePrompts"
               :key="index"
               @click="inputMessage = prompt.full"
-              class="bg-white/5 hover:bg-white/10 text-white rounded-full border border-white/10"
-              style="padding: clamp(0.5rem, 1vw, 0.75rem) clamp(1rem, 2vw, 1.25rem); font-size: clamp(0.875rem, 1vw, 1rem);"
-            >
-              {{ prompt.short }}
-            </button>
-          </div>
-
-          <div class="flex md:hidden flex-wrap justify-center gap-2 mb-8 px-2">
-            <button
-              v-for="(prompt, index) in examplePrompts.slice(0, 3)"
-              :key="index"
-              @click="inputMessage = prompt.full"
-              class="bg-white/5 active:bg-white/10 text-white rounded-full border border-white/10"
-              style="padding: clamp(0.5rem, 1.5vw, 0.75rem) clamp(1rem, 3vw, 1.25rem); font-size: clamp(0.875rem, 2vw, 1rem);"
+              class="bg-white/5 hover:bg-white/10 active:bg-white/10 text-white rounded-full border border-white/10 md:block"
+              :class="index > 2 ? 'hidden md:block' : ''"
+              style="padding: clamp(0.5rem, 1.5vw, 0.75rem) clamp(1rem, 2vw, 1.25rem); font-size: clamp(0.875rem, 1.5vw, 1rem);"
             >
               {{ prompt.short }}
             </button>

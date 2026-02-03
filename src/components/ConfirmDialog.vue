@@ -10,7 +10,7 @@
       </div>
 
       <div class="p-5">
-        <p class="text-gray-600 text-sm leading-relaxed mb-4">{{ message }}</p>
+        <p class="text-white text-sm leading-relaxed mb-4">{{ message }}</p>
         <label class="flex items-center gap-3 cursor-pointer group">
           <div class="relative">
             <input type="checkbox" v-model="dontAskAgain" class="sr-only peer" />
@@ -20,7 +20,7 @@
               </svg>
             </div>
           </div>
-          <span class="text-sm text-gray-600 group-hover:text-gray-500 transition-colors">Больше не спрашивать</span>
+          <span class="text-sm text-white/70 group-hover:text-white transition-colors">Больше не спрашивать</span>
         </label>
       </div>
 

@@ -13,7 +13,7 @@
   
   body {
     @apply bg-black text-white;
-    font-family: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
     height: 100%;
     height: 100dvh;
     overflow: hidden;
@@ -21,6 +21,8 @@
     width: 100%;
     overscroll-behavior: none;
     -webkit-overflow-scrolling: touch;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
   
   #app {
@@ -30,7 +32,9 @@
   }
   
   h1, h2, h3, h4, h5, h6 {
-    font-family: 'IBM Plex Sans', sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+    font-weight: 600;
+    letter-spacing: -0.02em;
   }
   
   code, pre {

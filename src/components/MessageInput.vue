@@ -174,7 +174,7 @@ defineExpose({
   border: 1px solid rgba(50, 50, 50, 1);
   border-radius: 9999px;
   transition: border-color 0.2s;
-  padding: 0.5rem 1rem;
+  padding: 0.625rem 1.25rem;
   display: flex;
   align-items: center;
   gap: 0.75rem;
@@ -182,7 +182,7 @@ defineExpose({
 
 @media (max-width: 640px) {
   .input-container {
-    padding: 0.5rem 0.75rem;
+    padding: 0.625rem 1rem;
     background: rgba(10, 10, 10, 1);
     border: 1px solid rgba(50, 50, 50, 1);
   }
@@ -222,10 +222,10 @@ defineExpose({
   flex: 1;
   background: transparent;
   color: white;
-  font-size: 0.875rem;
+  font-size: 0.9375rem;
   line-height: 1.5rem;
   resize: none;
-  min-height: 20px;
+  min-height: 22px;
   max-height: 200px;
   overflow-y: auto;
   border: none;

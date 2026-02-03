@@ -8,7 +8,7 @@
       <div class="modal-content glass-modal w-full md:max-w-6xl h-[90vh] md:rounded-xl rounded-t-2xl border-t md:border border-white/10 flex flex-col shadow-2xl overflow-hidden">
       <div class="flex items-center justify-between p-4 border-b border-white/10">
         <h2 class="text-base text-white">Переводчик</h2>
-        <button @click="$emit('close')" class="p-2 text-gray-500 hover:text-white transition-colors">
+        <button @click="$emit('close')" class="p-2 text-white/50 hover:text-white transition-colors">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
           </svg>
@@ -21,7 +21,7 @@
             {{ languages.find(l => l.code === sourceLang)?.name }}
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
           </button>
-          <button @click="swapLanguages" class="p-2 text-gray-500 hover:text-white">
+          <button @click="swapLanguages" class="p-2 text-white/50 hover:text-white">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" /></svg>
           </button>
           <button @click="showTargetLangDropdown = !showTargetLangDropdown" class="flex items-center gap-2 px-3 py-2 bg-white/5 rounded-lg text-white text-sm border border-white/10 hover:bg-white/10">
@@ -43,7 +43,7 @@
               </div>
             </div>
             <div v-else-if="!translatedText" class="flex items-center justify-center h-full">
-              <p class="text-gray-500 text-sm">Перевод появится здесь</p>
+              <p class="text-white/40 text-sm">Перевод появится здесь</p>
             </div>
             <div v-else class="text-white text-base">{{ translatedText }}</div>
           </div>
@@ -56,24 +56,24 @@
         <div v-if="showSourceLangDropdown" class="absolute inset-x-0 bottom-0 bg-[#18181b] rounded-t-2xl border-t border-white/10 max-h-[60vh] overflow-y-auto z-10 animate-slide-up" @click.self="showSourceLangDropdown = false">
           <div class="p-4 border-b border-white/10 flex items-center justify-between">
             <span class="text-white text-sm">Исходный язык</span>
-            <button @click="showSourceLangDropdown = false" class="p-2 text-gray-500">
+            <button @click="showSourceLangDropdown = false" class="p-2 text-white/50">
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
             </button>
           </div>
           <div class="divide-y divide-white/10">
-            <button v-for="lang in languages" :key="lang.code" @click="selectSourceLang(lang.code)" class="w-full px-4 py-3 text-left text-sm" :class="sourceLang === lang.code ? 'text-white bg-white/5' : 'text-gray-500'">{{ lang.name }}</button>
+            <button v-for="lang in languages" :key="lang.code" @click="selectSourceLang(lang.code)" class="w-full px-4 py-3 text-left text-sm" :class="sourceLang === lang.code ? 'text-white bg-white/5' : 'text-white/50'">{{ lang.name }}</button>
           </div>
         </div>
 
         <div v-if="showTargetLangDropdown" class="absolute inset-x-0 bottom-0 bg-[#18181b] rounded-t-2xl border-t border-white/10 max-h-[60vh] overflow-y-auto z-10 animate-slide-up" @click.self="showTargetLangDropdown = false">
           <div class="p-4 border-b border-white/10 flex items-center justify-between">
             <span class="text-white text-sm">Язык перевода</span>
-            <button @click="showTargetLangDropdown = false" class="p-2 text-gray-500">
+            <button @click="showTargetLangDropdown = false" class="p-2 text-white/50">
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
             </button>
           </div>
           <div class="divide-y divide-white/10">
-            <button v-for="lang in languages" :key="lang.code" @click="selectTargetLang(lang.code)" class="w-full px-4 py-3 text-left text-sm" :class="targetLang === lang.code ? 'text-white bg-white/5' : 'text-gray-500'">{{ lang.name }}</button>
+            <button v-for="lang in languages" :key="lang.code" @click="selectTargetLang(lang.code)" class="w-full px-4 py-3 text-left text-sm" :class="targetLang === lang.code ? 'text-white bg-white/5' : 'text-white/50'">{{ lang.name }}</button>
           </div>
         </div>
       </div>
@@ -87,14 +87,14 @@
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
               </button>
               <div v-if="showSourceLangDropdown" class="absolute z-10 mt-2 w-64 bg-[#18181b] rounded-lg border border-white/10 overflow-hidden shadow-2xl max-h-80 overflow-y-auto animate-dropdown">
-                <button v-for="lang in languages" :key="lang.code" @click.stop="selectSourceLang(lang.code)" class="w-full px-4 py-3 text-left text-sm hover:bg-white/5" :class="sourceLang === lang.code ? 'text-white bg-white/5' : 'text-gray-500'">{{ lang.name }}</button>
+                <button v-for="lang in languages" :key="lang.code" @click.stop="selectSourceLang(lang.code)" class="w-full px-4 py-3 text-left text-sm hover:bg-white/5" :class="sourceLang === lang.code ? 'text-white bg-white/5' : 'text-white/50'">{{ lang.name }}</button>
               </div>
             </div>
             <div class="flex items-center gap-2">
-              <button @click="swapLanguages" class="p-2 hover:bg-white/5 rounded-lg text-gray-500 hover:text-white">
+              <button @click="swapLanguages" class="p-2 hover:bg-white/5 rounded-lg text-white/50 hover:text-white">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" /></svg>
               </button>
-              <button @click="clearText" class="p-2 hover:bg-white/5 rounded-lg text-gray-500 hover:text-white">
+              <button @click="clearText" class="p-2 hover:bg-white/5 rounded-lg text-white/50 hover:text-white">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
               </button>
             </div>
@@ -112,10 +112,10 @@
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
               </button>
               <div v-if="showTargetLangDropdown" class="absolute z-10 mt-2 w-64 bg-[#18181b] rounded-lg border border-white/10 overflow-hidden shadow-2xl max-h-80 overflow-y-auto animate-dropdown">
-                <button v-for="lang in languages" :key="lang.code" @click.stop="selectTargetLang(lang.code)" class="w-full px-4 py-3 text-left text-sm hover:bg-white/5" :class="targetLang === lang.code ? 'text-white bg-white/5' : 'text-gray-500'">{{ lang.name }}</button>
+                <button v-for="lang in languages" :key="lang.code" @click.stop="selectTargetLang(lang.code)" class="w-full px-4 py-3 text-left text-sm hover:bg-white/5" :class="targetLang === lang.code ? 'text-white bg-white/5' : 'text-white/50'">{{ lang.name }}</button>
               </div>
             </div>
-            <button v-if="translatedText" @click="copyTranslation" class="p-2 hover:bg-white/5 rounded-lg text-gray-500 hover:text-white">
+            <button v-if="translatedText" @click="copyTranslation" class="p-2 hover:bg-white/5 rounded-lg text-white/50 hover:text-white">
               <svg v-if="!copied" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>
               <svg v-else class="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
             </button>
@@ -129,7 +129,7 @@
               </div>
             </div>
             <div v-else-if="!translatedText" class="flex flex-col items-center justify-center h-full">
-              <p class="text-gray-500">Перевод появится здесь</p>
+              <p class="text-white/40">Перевод появится здесь</p>
             </div>
             <div v-else class="text-white text-base leading-relaxed whitespace-pre-wrap">{{ translatedText }}</div>
           </div>

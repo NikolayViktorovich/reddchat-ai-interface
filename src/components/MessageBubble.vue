@@ -3,31 +3,31 @@
     <div v-if="message.role === 'user'" class="flex justify-end">
       <div class="max-w-3xl">
         <div class="bg-white/5 text-white rounded-2xl px-5 py-3 border border-white/10">
-          <p v-if="message.content" class="leading-relaxed whitespace-pre-wrap" style="font-size: clamp(0.875rem, 2vw, 1rem);">{{ message.content }}</p>
+          <p v-if="message.content" class="leading-relaxed whitespace-pre-wrap break-words" style="font-size: clamp(0.875rem, 2vw, 1rem); word-break: break-word; overflow-wrap: break-word;">{{ message.content }}</p>
           <div v-if="message.files?.length" class="mt-3 space-y-2">
             <template v-for="(file, i) in message.files" :key="i">
               <img v-if="file.type?.startsWith('image/')" :src="file.content" :alt="file.name" class="max-w-xs rounded-lg border border-white/10" loading="lazy" />
               <div v-else class="flex items-center gap-2 px-3 py-2 bg-white/5 rounded-lg border border-white/10 text-sm">
-                <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
-                <span class="text-gray-400">{{ file.name }}</span>
+                <svg class="w-4 h-4 text-white/50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
+                <span class="text-white/60">{{ file.name }}</span>
               </div>
             </template>
           </div>
         </div>
-        <p class="text-xs text-gray-600 mt-1.5 text-right">{{ formatTime(message.timestamp) }}</p>
+        <p class="text-xs text-white/40 mt-1.5 text-right">{{ formatTime(message.timestamp) }}</p>
       </div>
     </div>
 
     <div v-else class="flex">
       <div class="max-w-3xl">
         <div class="text-white">
-          <div v-html="formatted" class="markdown-content" style="font-size: clamp(0.875rem, 2vw, 1rem);"></div>
+          <div v-html="formatted" class="markdown-content break-words" style="font-size: clamp(0.875rem, 2vw, 1rem); word-break: break-word; overflow-wrap: break-word;"></div>
           <span v-if="message.isTyping" class="inline-block w-1.5 h-4 bg-white/50 ml-0.5 animate-pulse"></span>
         </div>
         <div class="flex items-center gap-2 mt-1.5">
-          <p class="text-xs text-gray-600">{{ formatTime(message.timestamp) }}</p>
-          <span v-if="message.isStopped" class="text-xs text-gray-600">• Остановлено</span>
-          <button v-if="!message.isTyping" @click="copy" class="p-1 text-gray-600 hover:text-gray-400">
+          <p class="text-xs text-white/40">{{ formatTime(message.timestamp) }}</p>
+          <span v-if="message.isStopped" class="text-xs text-white/40">• Остановлено</span>
+          <button v-if="!message.isTyping" @click="copy" class="p-1 text-white/40 hover:text-white/70">
             <svg v-if="!copied" class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>
             <svg v-else class="w-3.5 h-3.5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
           </button>
@@ -134,16 +134,20 @@ const copy = async () => {
 </script>
 
 <style>
-.markdown-content { line-height: 1.6; }
+.markdown-content { 
+  line-height: 1.6; 
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
 .markdown-content pre { background: rgba(0,0,0,0.4); border-radius: 12px; padding: 16px; overflow-x: auto; margin: 12px 0; border: 1px solid rgba(255,255,255,0.1); }
-.markdown-content code { font-family: 'JetBrains Mono', monospace; font-size: 0.85em; }
-.markdown-content pre code { background: transparent; padding: 0; color: #abb2bf; }
+.markdown-content code { font-family: 'JetBrains Mono', monospace; font-size: 0.85em; word-break: break-all; }
+.markdown-content pre code { background: transparent; padding: 0; color: #abb2bf; word-break: normal; }
 .markdown-content :not(pre) > code { background: rgba(255,255,255,0.1); padding: 2px 6px; border-radius: 4px; color: #e06c75; }
 .markdown-content h1, .markdown-content h2, .markdown-content h3 { margin-top: 20px; margin-bottom: 10px; }
 .markdown-content ul, .markdown-content ol { margin: 10px 0; padding-left: 20px; }
 .markdown-content li { margin: 4px 0; }
 .markdown-content blockquote { border-left: 3px solid rgba(255,255,255,0.2); padding-left: 12px; margin: 10px 0; color: rgba(255,255,255,0.7); }
-.markdown-content a { color: #61afef; }
+.markdown-content a { color: #61afef; word-break: break-all; }
 .markdown-content p { margin-bottom: 10px; }
 
 /* Highlight.js Atom One Dark theme colors */
