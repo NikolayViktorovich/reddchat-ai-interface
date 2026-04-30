@@ -1,6 +1,6 @@
 const API_URL = import.meta.env.VITE_API_URL || 'https://openrouter.ai/api/v1/chat/completions'
-const API_KEY = import.meta.env.VITE_API_KEY || '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'
-const MODEL = import.meta.env.VITE_MODEL || 'tngtech/deepseek-r1t-chimera:free'
+const API_KEY = import.meta.env.VITE_API_KEY || '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'
+const MODEL = import.meta.env.VITE_MODEL || 'google/gemma-4-31b-it:free'
 
 class APIError extends Error {
   constructor(message, status, data) {
