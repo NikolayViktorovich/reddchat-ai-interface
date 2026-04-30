@@ -7,7 +7,7 @@
 
 ## Live Demo
 
-[Посмотреть Демо](https://reddchat-ai-interface.vercel.app/)
+[Посмотреть Демо](https://reddchat-ai-interface-791x.vercel.app/)
 
 ## Особенности
 
